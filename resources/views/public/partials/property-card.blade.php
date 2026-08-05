@@ -9,8 +9,8 @@
         <h3><a href="{{ route('properties.show', $property) }}">{{ $property->title }}</a></h3>
         <div class="property-meta">
             <span><i class="material-symbols-rounded">square_foot</i>{{ number_format($property->area) }} m²</span>
-            @if($property->bedrooms)<span><i class="material-symbols-rounded">bed</i>{{ $property->bedrooms }}</span>@endif
-            <span><i class="material-symbols-rounded">bathtub</i>{{ number_format($property->bathrooms, 1) }}</span>
+            @if((int) $property->bedrooms > 0)<span><i class="material-symbols-rounded">bed</i>{{ $property->bedrooms }}</span>@endif
+            @if((float) $property->bathrooms > 0)<span><i class="material-symbols-rounded">bathtub</i>{{ $property->bathrooms_label }}</span>@endif
         </div>
         <div class="property-price">
             <div><small>Desde</small><strong>{{ $property->currency === 'USD' ? 'US$' : 'S/' }} {{ number_format($property->price) }}</strong></div>

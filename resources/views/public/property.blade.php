@@ -19,8 +19,6 @@
         'mainEntity' => [
             '@type' => 'Accommodation', 'name' => $property->title,
             'floorSize' => ['@type' => 'QuantitativeValue', 'value' => (float) $property->area, 'unitCode' => 'MTK'],
-            'numberOfBedrooms' => (int) $property->bedrooms,
-            'numberOfBathroomsTotal' => (float) $property->bathrooms,
             'address' => ['@type' => 'PostalAddress', 'streetAddress' => $property->address, 'addressLocality' => $property->district, 'addressRegion' => 'Lima', 'addressCountry' => 'PE'],
             'offers' => ['@type' => 'Offer', 'price' => (float) $property->price, 'priceCurrency' => $property->currency, 'availability' => 'https://schema.org/InStock'],
         ],
@@ -30,6 +28,12 @@
             '@type' => 'GeoCoordinates', 'latitude' => (float) $property->latitude,
             'longitude' => (float) $property->longitude,
         ];
+    }
+    if ((int) $property->bedrooms > 0) {
+        $propertySchema['mainEntity']['numberOfBedrooms'] = (int) $property->bedrooms;
+    }
+    if ((float) $property->bathrooms > 0) {
+        $propertySchema['mainEntity']['numberOfBathroomsTotal'] = (float) $property->bathrooms;
     }
 @endphp
 
@@ -67,8 +71,12 @@
         <div class="detail-main">
             <div class="property-feature-grid">
                 <article><span class="material-symbols-rounded">square_foot</span><div><strong>{{ number_format($property->area, 2) }} m²</strong><small>Área total</small></div></article>
-                <article><span class="material-symbols-rounded">bathtub</span><div><strong>{{ number_format($property->bathrooms, 1) }}</strong><small>Baños</small></div></article>
-                <article><span class="material-symbols-rounded">bed</span><div><strong>{{ $property->bedrooms }}</strong><small>Dormitorios</small></div></article>
+                @if((float) $property->bathrooms > 0)
+                    <article><span class="material-symbols-rounded">bathtub</span><div><strong>{{ $property->bathrooms_label }}</strong><small>Baños</small></div></article>
+                @endif
+                @if((int) $property->bedrooms > 0)
+                    <article><span class="material-symbols-rounded">bed</span><div><strong>{{ $property->bedrooms }}</strong><small>Dormitorios</small></div></article>
+                @endif
                 <article><span class="material-symbols-rounded">verified</span><div><strong>{{ $property->status_label }}</strong><small>Estado</small></div></article>
                 @foreach($property->features as $feature)
                     <article><span class="material-symbols-rounded">{{ $feature->icon }}</span><div><strong>{{ $feature->value }}</strong><small>{{ $feature->label }}</small></div></article>

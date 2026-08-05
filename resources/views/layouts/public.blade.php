@@ -82,6 +82,11 @@
             <span class="brand-logo-frame"><img src="{{ $logoUrl }}" alt="" width="46" height="47"></span>
             <span><strong>Carmen Mestanza</strong><small>Asesoría inmobiliaria</small></span>
         </a>
+        <a class="header-remax" href="https://www.remax.pe/" target="_blank" rel="noopener noreferrer"
+            aria-label="Carmen Mestanza, agente asociada a RE/MAX Perú">
+            <span>Agente asociada</span>
+            <img src="{{ asset('images/remax-logo-light.svg') }}" alt="RE/MAX Perú" width="92" height="46">
+        </a>
         <button class="menu-toggle" data-menu-toggle aria-label="Abrir menú" aria-expanded="false">Menú</button>
         <nav class="main-nav" data-menu aria-label="Navegación principal">
             <a href="{{ route('home') }}#servicios">Servicios</a>

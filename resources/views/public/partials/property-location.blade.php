@@ -9,9 +9,9 @@
             'key' => $googleMapsKey, 'q' => $latitude.','.$longitude,
             'zoom' => 16, 'language' => 'es', 'region' => 'PE',
         ])
-        : 'https://www.openstreetmap.org/export/embed.html?'.http_build_query([
-            'bbox' => ($longitude - .008).','.($latitude - .005).','.($longitude + .008).','.($latitude + .005),
-            'layer' => 'mapnik', 'marker' => $latitude.','.$longitude,
+        : 'https://maps.google.com/maps?'.http_build_query([
+            'q' => $latitude.','.$longitude, 'z' => 16,
+            'hl' => 'es', 'output' => 'embed',
         ]);
 @endphp
 <section class="property-map-section">
@@ -25,8 +25,5 @@
     <div class="property-map-frame">
         <iframe src="{{ $embedUrl }}" title="Mapa de {{ $property->title }}"
             loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        @if(! $googleMapsKey)
-            <span class="map-provider-note">Vista cartográfica · abre Google Maps para navegación</span>
-        @endif
     </div>
 </section>

@@ -52,18 +52,43 @@ class PublicSiteTest extends TestCase
             ->assertDontSee('Oficina premium con vista urbana');
     }
 
-    public function test_property_location_uses_google_maps_when_configured(): void
+    public function test_property_location_always_uses_an_embedded_google_map(): void
     {
         $this->seed();
         $property = Property::firstOrFail();
 
         $this->get(route('properties.show', $property))->assertOk()
             ->assertSee('Abrir en Google Maps')
-            ->assertSee('openstreetmap.org/export/embed.html', false);
+            ->assertSee('maps.google.com/maps', false)
+            ->assertDontSee('openstreetmap.org', false);
         config(['services.google_maps.key' => 'testing-key']);
         $this->get(route('properties.show', $property))->assertOk()
             ->assertSee('google.com/maps/embed/v1/place', false)
             ->assertSee('testing-key', false);
+    }
+
+    public function test_zero_rooms_are_hidden_and_bathroom_decimals_only_show_when_needed(): void
+    {
+        $property = Property::create([
+            'title' => 'Terreno industrial', 'slug' => 'terreno-industrial',
+            'code' => 'TER-001', 'type' => 'terreno', 'operation' => 'venta',
+            'district' => 'Chilca', 'price' => 300000, 'currency' => 'USD',
+            'bedrooms' => 0, 'bathrooms' => 0, 'area' => 30000,
+            'status' => 'available', 'is_published' => true,
+        ]);
+
+        $this->get(route('properties.show', $property))->assertOk()
+            ->assertDontSee('>Baños<', false)
+            ->assertDontSee('>Dormitorios<', false);
+
+        $property->update(['bathrooms' => 1.5]);
+        $this->get(route('properties.show', $property))->assertOk()
+            ->assertSee('>1.5</strong><small>Baños</small>', false);
+
+        $property->update(['bathrooms' => 2]);
+        $this->get(route('properties.show', $property))->assertOk()
+            ->assertSee('>2</strong><small>Baños</small>', false)
+            ->assertDontSee('>2.0</strong><small>Baños</small>', false);
     }
 
     public function test_unpublished_property_is_hidden_from_public_pages(): void

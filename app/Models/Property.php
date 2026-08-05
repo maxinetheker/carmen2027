@@ -76,6 +76,11 @@ class Property extends Model
         return ucfirst((string) $this->type);
     }
 
+    public function getBathroomsLabelAttribute(): string
+    {
+        return rtrim(rtrim(number_format((float) $this->bathrooms, 1, '.', ''), '0'), '.');
+    }
+
     public function getCoverUrlAttribute(): string
     {
         $media = $this->relationLoaded('media')

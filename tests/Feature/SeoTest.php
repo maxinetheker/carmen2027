@@ -17,7 +17,8 @@ class SeoTest extends TestCase
     public function test_public_pages_expose_search_metadata_and_sitemap(): void
     {
         $this->seed();
-        $property = Property::firstOrFail();
+        $property = Property::where('bedrooms', '>', 0)
+            ->whereNotNull('latitude')->whereNotNull('longitude')->firstOrFail();
 
         $this->get(route('home'))->assertOk()
             ->assertSee('rel="canonical"', false)
