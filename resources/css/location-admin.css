@@ -1,0 +1,12 @@
+.location-editor-card { margin-top: 1rem; }
+.location-status-badge { white-space: nowrap; }
+.location-picker { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.location-map { background: #dfe7ef; height: 430px; width: 100%; z-index: 1; }
+.location-map-pin { align-items: center; background: var(--accent); border: 3px solid #fff; border-radius: 50% 50% 50% 0; box-shadow: 0 6px 20px rgba(7,27,53,.3); color: #fff; display: flex; height: 38px; justify-content: center; transform: rotate(-45deg); width: 38px; }
+.location-map-pin span { font-size: 1.3rem; transform: rotate(45deg); }
+.location-picker-footer { align-items: center; background: #fff; display: flex; gap: 1rem; justify-content: space-between; padding: .9rem 1rem; }
+.location-picker-footer p { color: var(--muted); font-size: .68rem; margin: 0; }
+.location-picker-footer > div { display: flex; gap: .5rem; }
+.mini-button-muted { background: #eef1f4; color: var(--ink); }
+.location-picker .leaflet-control-attribution { font-size: 9px; }
+@media (max-width: 650px) { .location-map { height: 340px; } .location-picker-footer { align-items: stretch; flex-direction: column; } .location-picker-footer > div { flex-direction: column; } }

@@ -1,0 +1,23 @@
+.searchable-select-source { display: none !important; }
+.searchable-combobox { display: block; position: relative; }
+.resource-form .form-card { overflow: visible; }
+.field.select-open { position: relative; z-index: 120; }
+.searchable-combobox.is-open { z-index: 120; }
+.searchable-combobox.opens-up .searchable-options { bottom: calc(100% + .35rem); top: auto; }
+.field .searchable-combobox > input { background: #fafbf9; padding-right: 2.6rem; }
+.searchable-combobox::after { color: var(--muted); content: "search"; font-family: "Material Symbols Rounded"; font-size: 1.15rem; pointer-events: none; position: absolute; right: .9rem; top: 50%; transform: translateY(-50%); }
+.searchable-options { background: #fff; border: 1px solid #d8e0eb; border-radius: 12px; box-shadow: 0 20px 48px rgba(7,27,53,.2); left: 0; max-height: 181px; overflow-y: auto; overscroll-behavior: contain; padding: .35rem; position: absolute; right: 0; scrollbar-color: #aebed1 transparent; scrollbar-width: thin; top: calc(100% + .35rem); z-index: 130; }
+.searchable-options::-webkit-scrollbar { width: 8px; }
+.searchable-options::-webkit-scrollbar-track { background: transparent; margin: 7px 0; }
+.searchable-options::-webkit-scrollbar-thumb { background: #aebed1; border: 2px solid #fff; border-radius: 99px; }
+.searchable-options::-webkit-scrollbar-thumb:hover { background: #8298b2; }
+.searchable-options[hidden] { display: none; }
+.searchable-option, .searchable-empty { align-items: center; border-radius: 7px; display: flex; font-size: .72rem; font-weight: 600; height: 42px; overflow: hidden; padding: 0 .75rem; text-overflow: ellipsis; white-space: nowrap; }
+.searchable-option { color: var(--ink); cursor: pointer; }
+.searchable-option:hover, .searchable-option.active { background: #e9eff8; color: #24598f; }
+.searchable-empty { color: var(--muted); font-weight: 500; }
+
+@media (max-width: 800px) {
+    .searchable-options { max-height: 205px; }
+    .searchable-option, .searchable-empty { font-size: .8rem; height: 48px; }
+}

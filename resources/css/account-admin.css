@@ -1,0 +1,10 @@
+.account-grid { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+.account-grid .form-card { margin: 0; max-width: none; }
+.account-grid .field { display: block; margin-bottom: 1rem; }
+.account-grid .button { width: 100%; }
+.account-note { background: #edf3fa; border-radius: 10px; color: var(--muted); font-size: .68rem; line-height: 1.55; margin: 0 0 1rem; padding: .8rem; }
+
+@media (max-width: 800px) {
+    .account-grid { grid-template-columns: 1fr; }
+    .account-grid .form-card { padding: 1rem; }
+}

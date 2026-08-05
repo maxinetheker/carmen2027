@@ -1,0 +1,45 @@
+:root {
+    --ink: #081f3d;
+    --ink-2: #123e73;
+    --paper: #f5f7fb;
+    --white: #fff;
+    --sand: #e9eff8;
+    --sage: #5e83b4;
+    --accent: #e23d4f;
+    --accent-dark: #b82439;
+    --muted: #66758a;
+    --line: #dbe3ef;
+    --admin-bg: #f1f5fa;
+    --shadow: 0 24px 60px rgba(8, 31, 61, .16);
+    --radius: 20px;
+    --font-display: "Manrope", sans-serif;
+    --font-body: "DM Sans", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: var(--ink); font-family: var(--font-body); }
+a { color: inherit; text-decoration: none; }
+img { display: block; width: 100%; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.04em; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.eyebrow { color: var(--accent-dark); font-size: .73rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.eyebrow-light { color: #d9cbb9; }
+.button { align-items: center; border: 0; border-radius: 99px; display: inline-flex; font-size: .9rem; font-weight: 700; gap: .7rem; justify-content: center; padding: .9rem 1.35rem; transition: .2s; }
+.button:hover { transform: translateY(-2px); }
+.button-accent { background: var(--accent); color: #fff; box-shadow: 0 10px 25px rgba(223, 108, 79, .22); }
+.button-accent:hover { background: var(--accent-dark); }
+.button-dark { background: var(--ink); color: #fff; }
+.button-ghost { border: 1px solid rgba(255,255,255,.55); color: #fff; }
+.button-ghost-dark { border: 1px solid var(--line); color: var(--ink); }
+.text-link { align-items: center; display: inline-flex; font-weight: 700; gap: .7rem; }
+.text-link span { color: var(--accent); font-size: 1.2rem; }
+.empty-state { color: var(--muted); padding: 3rem; text-align: center; width: 100%; }
+.empty-state.compact { padding: 1.5rem; }
+.flash { border-radius: 12px; left: 50%; padding: .9rem 1.2rem; position: fixed; top: 85px; transform: translateX(-50%); z-index: 50; }
+.flash-success { background: var(--ink); color: #fff; }
+.flash-admin { background: #e4f3e8; color: #276239; left: auto; position: relative; top: auto; transform: none; margin: 0 2rem; }
+.form-error { background: #fff0ed; border-radius: 10px; color: #a33c27; padding: .8rem 1rem; }

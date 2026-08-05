@@ -1,0 +1,47 @@
+.brand, .admin-brand { align-items: center; display: flex; gap: .75rem; }
+.brand strong, .admin-brand strong { display: block; font-family: var(--font-display); font-size: .92rem; }
+.brand small, .admin-brand small { display: block; font-size: .58rem; letter-spacing: .2em; margin-top: .12rem; text-transform: uppercase; }
+.brand-mark { align-items: center; background: var(--ink); border-radius: 50%; color: #fff; display: flex; font-family: var(--font-display); font-size: .7rem; font-weight: 700; height: 38px; justify-content: center; letter-spacing: -.06em; width: 38px; }
+.brand-mark-light { background: #fff; color: var(--ink); }
+.brand-logo-frame, .avatar-logo { align-items: center; background: #fff; border: 1px solid rgba(7,27,53,.1); border-radius: 12px; display: inline-flex; flex: 0 0 auto; height: 48px; justify-content: center; overflow: hidden; padding: 3px; width: 48px; }
+.brand-logo-frame img, .avatar-logo img { height: 100%; object-fit: contain; width: 100%; }
+.brand-logo-frame-light { box-shadow: 0 6px 18px rgba(0,0,0,.15); }
+.public-body { background: var(--paper); }
+.site-header { align-items: center; display: flex; height: 82px; justify-content: space-between; margin: auto; max-width: 1320px; padding: 0 2rem; }
+.main-nav { align-items: center; display: flex; gap: 2rem; }
+.main-nav > a:not(.button) { font-size: .88rem; font-weight: 600; }
+.menu-toggle { background: none; border: 0; display: none; }
+.section { margin: auto; max-width: 1320px; padding: 7rem 2rem; }
+.section-heading { align-items: end; display: flex; justify-content: space-between; margin-bottom: 2.5rem; }
+.section-heading h2 { font-size: clamp(2rem, 4vw, 3.7rem); line-height: 1.08; margin: .8rem 0 0; max-width: 760px; }
+.site-footer { background: #040f24; color: rgba(255,255,255,.72); display: grid; gap: 2rem; grid-template-columns: 2fr 1fr 1fr; padding: 4rem max(2rem, calc((100vw - 1260px)/2)); }
+.site-footer strong { color: #fff; }
+.site-footer p { margin: .4rem 0; }
+.footer-brand { align-items: center; display: flex; gap: 1rem; }
+.footer-label { color: #9db3cf; display: block; font-size: .68rem; letter-spacing: .15em; margin-bottom: .8rem; text-transform: uppercase; }
+.footer-copy { border-top: 1px solid rgba(255,255,255,.12); grid-column: 1/-1; margin-top: 1rem !important; padding-top: 1.5rem; }
+.footer-copy small { float: right; font-size: .6rem; font-weight: 500; }
+.footer-copy small a { color: inherit; text-decoration: underline; }
+.whatsapp-float { align-items: center; animation: whatsapp-pulse 2.2s infinite; background: #25d366; border: 4px solid var(--paper); border-radius: 50%; bottom: 1.4rem; box-shadow: 0 0 0 0 rgba(37,211,102,.45); color: #fff; display: flex; font-size: 1.7rem; height: 58px; justify-content: center; position: fixed; right: 1.4rem; width: 58px; z-index: 20; }
+.whatsapp-float:hover { animation-play-state: paused; transform: scale(1.06); }
+@keyframes whatsapp-pulse {
+    0%, 45%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,.42); }
+    65% { box-shadow: 0 0 0 13px rgba(37,211,102,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .whatsapp-float { animation: none; }
+}
+.property-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(3, 1fr); }
+.property-card { background: #fff; border-radius: var(--radius); overflow: hidden; transition: .25s; }
+.property-card:hover { box-shadow: var(--shadow); transform: translateY(-5px); }
+.property-image { display: block; height: 280px; overflow: hidden; position: relative; }
+.property-image img { height: 100%; object-fit: cover; transition: .5s; }
+.property-card:hover img { transform: scale(1.04); }
+.property-tag { background: rgba(255,255,255,.9); border-radius: 99px; left: 1rem; padding: .45rem .75rem; position: absolute; top: 1rem; font-size: .7rem; font-weight: 700; text-transform: uppercase; }
+.favorite-button { align-items: center; background: rgba(8,31,61,.76); border: 0; border-radius: 50%; color: #fff; display: flex; font-size: 1.1rem; height: 38px; justify-content: center; position: absolute; right: 1rem; top: 1rem; width: 38px; }
+.property-content { padding: 1.35rem; }
+.property-location { color: var(--accent-dark); font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.property-content h3 { font-size: 1.25rem; margin: .55rem 0 .8rem; }
+.property-meta { color: var(--muted); display: flex; font-size: .82rem; gap: 1.2rem; }
+.property-price { align-items: center; border-top: 1px solid var(--line); display: flex; justify-content: space-between; margin-top: 1.2rem; padding-top: 1.1rem; }
+.property-price a { color: var(--accent); font-size: 1.3rem; }

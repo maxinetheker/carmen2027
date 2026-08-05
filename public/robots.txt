@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /acceso
+
+Sitemap: https://carmenmestanza.com/sitemap.xml

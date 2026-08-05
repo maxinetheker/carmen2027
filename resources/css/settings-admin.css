@@ -1,0 +1,19 @@
+.seo-settings-card { margin-top: 1rem; }
+.seo-image-drop { align-items: center; background: #f5f7f4; border: 1px dashed #aebbc8; border-radius: 14px; cursor: pointer; display: grid; gap: 1rem; grid-template-columns: 180px 1fr; margin-top: 1rem; overflow: hidden; padding: .8rem; transition: border-color .2s, background .2s; }
+.seo-image-drop.drag-active { background: #edf4fb; border-color: var(--sage); }
+.seo-image-drop > img { aspect-ratio: 1.91 / 1; border-radius: 10px; height: auto; object-fit: cover; width: 100%; }
+.seo-image-drop > span { color: var(--muted); display: grid; gap: .2rem; }
+.seo-image-drop i { color: var(--ink); font-size: 1.7rem; }
+.seo-image-drop strong { color: var(--ink); font-size: .76rem; }
+.seo-image-drop small { font-size: .62rem; }
+.seo-image-drop input { height: 1px; opacity: 0; position: absolute; width: 1px; }
+.settings-preview { overflow: hidden; padding: 1rem; }
+.settings-preview-heading { align-items: center; display: flex; justify-content: space-between; margin-bottom: .8rem; }
+.settings-preview-heading strong { display: block; font-size: .8rem; margin-top: .25rem; }
+.settings-preview-heading small { background: rgba(255,255,255,.1); border-radius: 99px; color: rgba(255,255,255,.7); font-size: .58rem; padding: .35rem .55rem; }
+.site-preview-frame { aspect-ratio: 16 / 10; background: #fff; border-radius: 10px; max-width: 640px; overflow: hidden; pointer-events: none; position: relative; width: 100%; }
+.site-preview-frame iframe { border: 0; height: 900px; left: 0; pointer-events: none; position: absolute; top: 0; transform: scale(.205); transform-origin: left top; width: 1280px; }
+.settings-preview > p { margin: .8rem .2rem 0; }
+@media (max-width: 1050px) { .settings-preview { position: static; } .site-preview-frame iframe { transform: scale(.5); } }
+@media (max-width: 800px) { .seo-image-drop { grid-template-columns: 1fr; } .site-preview-frame iframe { transform: scale(.36); } }
+@media (max-width: 500px) { .site-preview-frame iframe { transform: scale(.2); } }

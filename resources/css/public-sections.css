@@ -1,0 +1,38 @@
+.services-section { background: linear-gradient(135deg, #071a35, #0e3769); color: #fff; display: grid; gap: 7rem; grid-template-columns: 1fr 1.2fr; max-width: none; padding-left: max(2rem, calc((100vw - 1260px)/2)); padding-right: max(2rem, calc((100vw - 1260px)/2)); }
+.services-intro h2 { font-size: clamp(2.3rem, 4vw, 4rem); line-height: 1.05; margin: 1.2rem 0; }
+.services-intro p { color: rgba(255,255,255,.62); line-height: 1.7; max-width: 500px; }
+.service-list article { align-items: start; border-top: 1px solid rgba(255,255,255,.15); display: grid; gap: 1.2rem; grid-template-columns: 40px 1fr; padding: 1.5rem 0; }
+.service-list article:last-child { border-bottom: 1px solid rgba(255,255,255,.15); }
+.service-list > article > span { color: var(--accent); font-size: .75rem; }
+.service-list h3 { font-size: 1.25rem; margin: 0 0 .45rem; }
+.service-list p { color: rgba(255,255,255,.56); margin: 0; }
+.ceo-section { align-items: center; display: grid; gap: 7rem; grid-template-columns: .9fr 1.1fr; }
+.ceo-portrait { background: linear-gradient(145deg, #416d9f, #071d3c 72%); border-radius: 200px 200px 24px 24px; height: 620px; isolation: isolate; overflow: hidden; position: relative; }
+.ceo-portrait::before { background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.18), transparent 42%); content: ""; inset: 0; position: absolute; }
+.ceo-photo { bottom: 0; filter: drop-shadow(0 24px 32px rgba(0,0,0,.24)); height: 96%; left: 50%; object-fit: contain; object-position: center bottom; position: absolute; transform: translateX(-50%); width: 100%; z-index: 1; }
+.ceo-caption { background: rgba(255,255,255,.94); bottom: 1.5rem; left: 1.5rem; padding: 1rem 1.2rem; position: absolute; right: 1.5rem; z-index: 2; }
+.ceo-caption span, .ceo-caption strong { display: block; }
+.ceo-caption span { color: var(--muted); font-size: .7rem; text-transform: uppercase; }
+.ceo-copy h2 { font-size: clamp(2.5rem, 4vw, 4.3rem); line-height: 1.05; margin: 1.2rem 0 1.5rem; }
+.ceo-lead { color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
+.ceo-copy blockquote { border-left: 2px solid var(--accent); font-family: var(--font-display); font-size: 1.2rem; line-height: 1.6; margin: 2rem 0; padding-left: 1.5rem; }
+.ceo-signature { margin-bottom: 1.8rem; }
+.ceo-signature strong, .ceo-signature span { display: block; }
+.ceo-signature span { color: var(--muted); font-size: .78rem; margin-top: .25rem; }
+.remax-badge { align-items: center; background: #06182f; border-radius: 14px; display: flex; gap: .8rem; margin: -1rem 0 1.7rem; padding: .35rem .85rem; width: fit-content; }
+.remax-badge > span { color: rgba(255,255,255,.62); font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; }
+.remax-badge img { height: 54px; object-fit: contain; width: 150px; }
+.contact-section { background: linear-gradient(120deg, #06172f, #0e3567); color: #fff; display: grid; gap: 6rem; grid-template-columns: .9fr 1.1fr; max-width: none; padding-left: max(2rem, calc((100vw - 1260px)/2)); padding-right: max(2rem, calc((100vw - 1260px)/2)); }
+.contact-copy h2 { font-size: clamp(2.7rem, 5vw, 5rem); line-height: 1; margin: 1.2rem 0; }
+.contact-copy > p { color: rgba(255,255,255,.6); line-height: 1.7; max-width: 520px; }
+.contact-details { border-top: 1px solid rgba(255,255,255,.14); margin-top: 3rem; padding-top: 1.5rem; }
+.contact-details p span, .contact-details p strong { display: block; }
+.contact-details p span { color: rgba(255,255,255,.45); font-size: .7rem; text-transform: uppercase; }
+.contact-details p strong { margin-top: .3rem; }
+.contact-form { background: #fff; border-radius: var(--radius); color: var(--ink); padding: 2rem; }
+.contact-form label { display: block; font-size: .75rem; font-weight: 700; margin-bottom: 1.1rem; }
+.contact-form input, .contact-form select, .contact-form textarea { background: #f2f5fa; border: 1px solid transparent; border-radius: 10px; display: block; margin-top: .45rem; outline: 0; padding: .85rem 1rem; width: 100%; }
+.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--sage); }
+.form-row { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+.contact-form .button { width: 100%; }
+.contact-form > small { color: var(--muted); display: block; margin-top: .9rem; text-align: center; }

@@ -1,0 +1,10 @@
+.property-map-section { margin: 0 auto 4rem; max-width: 1260px; padding: 0 2rem; }
+.property-map-heading { align-items: end; display: flex; gap: 2rem; justify-content: space-between; margin-bottom: 1.3rem; }
+.property-map-heading h2 { font-size: clamp(2rem, 4vw, 3.6rem); margin: .45rem 0; }
+.property-map-heading p { color: var(--muted); margin: 0; }
+.property-map-heading > a { align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 99px; color: var(--ink); display: inline-flex; flex: 0 0 auto; font-size: .75rem; font-weight: 700; gap: .4rem; padding: .75rem 1rem; }
+.property-map-heading > a:hover { border-color: #5e83b4; }
+.property-map-frame { background: #dfe7ef; border-radius: 24px; box-shadow: 0 18px 48px rgba(7,27,53,.1); height: 520px; overflow: hidden; position: relative; }
+.property-map-frame iframe { border: 0; height: 100%; width: 100%; }
+.map-provider-note { background: rgba(7,27,53,.88); border-radius: 99px; bottom: 1rem; color: #fff; font-size: .62rem; left: 1rem; padding: .55rem .75rem; pointer-events: none; position: absolute; }
+@media (max-width: 700px) { .property-map-section { padding: 0 1rem; } .property-map-heading { align-items: start; flex-direction: column; } .property-map-frame { border-radius: 18px; height: 390px; } }
