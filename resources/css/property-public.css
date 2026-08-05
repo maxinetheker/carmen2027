@@ -46,7 +46,9 @@
 .property-feature-grid small { color: var(--muted); margin-top: .2rem; }
 .property-story { max-width: 760px; }
 .property-story h2 { margin: .8rem 0 1.5rem; }
-.rich-description { color: var(--muted); line-height: 1.85; }
+.detail-main { min-width: 0; }
+.rich-description { color: var(--muted); line-height: 1.85; max-width: 100%; min-width: 0; overflow-wrap: anywhere; word-break: normal; }
+.rich-description * { max-width: 100%; overflow-wrap: anywhere; }
 .rich-description h2, .rich-description h3, .rich-description h4 { color: var(--ink); margin: 1.6rem 0 .7rem; }
 .rich-description blockquote { border-left: 3px solid var(--accent); color: var(--ink); margin: 1.5rem 0; padding: .5rem 0 .5rem 1.2rem; }
 .rich-description a { color: var(--accent-dark); text-decoration: underline; }

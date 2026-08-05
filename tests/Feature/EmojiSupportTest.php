@@ -36,4 +36,17 @@ class EmojiSupportTest extends TestCase
             ->assertSee('data-emoji-render', false)
             ->assertSee($emoji);
     }
+
+    public function test_facebook_non_breaking_spaces_cannot_expand_the_mobile_page(): void
+    {
+        $html = '<p>OPORTUNIDAD&nbsp;ÚNICA&#8239;EN&nbsp;ZONA&nbsp;ESTRATÉGICA&nbsp;DE&nbsp;LIMA&nbsp;NORTE</p>';
+        $clean = app(RichTextSanitizer::class)->clean($html);
+
+        $this->assertStringNotContainsString("\u{00A0}", $clean);
+        $this->assertStringNotContainsString("\u{202F}", $clean);
+        $this->assertStringContainsString(
+            'OPORTUNIDAD ÚNICA EN ZONA ESTRATÉGICA DE LIMA NORTE',
+            $clean
+        );
+    }
 }

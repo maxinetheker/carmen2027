@@ -49,6 +49,14 @@ final class RichTextSanitizer
                 $parent->removeChild($node);
                 continue;
             }
+            if ($node->nodeType === XML_TEXT_NODE) {
+                $node->nodeValue = str_replace(
+                    ["\u{00A0}", "\u{202F}", "\u{2060}", "\u{FEFF}"],
+                    [' ', ' ', '', ''],
+                    (string) $node->nodeValue
+                );
+                continue;
+            }
             if (! $node instanceof DOMElement) {
                 continue;
             }
