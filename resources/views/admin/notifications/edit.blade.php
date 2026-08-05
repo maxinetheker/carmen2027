@@ -15,10 +15,16 @@
 @section('content')
 <div class="notification-intro">
     <div><strong>Avisos claros, cuando corresponden</strong><p>El scheduler respeta la frecuencia global y el estado Activo, Pausado o No contactar de cada persona.</p></div>
-    <form method="post" action="{{ route('admin.notifications.run') }}">
-        @csrf
-        <button class="button button-ghost-dark" type="submit">Procesar ahora</button>
-    </form>
+    <div class="notification-actions">
+        <form method="post" action="{{ route('admin.notifications.test') }}">
+            @csrf
+            <button class="button button-ghost-dark" type="submit">Enviar notificación de prueba</button>
+        </form>
+        <form method="post" action="{{ route('admin.notifications.run') }}">
+            @csrf
+            <button class="button button-ghost-dark" type="submit">Procesar ahora</button>
+        </form>
+    </div>
 </div>
 
 <form class="notification-form" method="post" data-dirty-form

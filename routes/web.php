@@ -52,6 +52,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/notificaciones', [NotificationSettingController::class, 'edit'])->name('notifications.edit');
     Route::put('/notificaciones', [NotificationSettingController::class, 'update'])->name('notifications.update');
     Route::post('/notificaciones/procesar', [NotificationSettingController::class, 'run'])->name('notifications.run');
+    Route::post('/notificaciones/prueba', [NotificationSettingController::class, 'sendTest'])->name('notifications.test');
     Route::post('/leads/{record}/convertir', [LeadController::class, 'convert'])
         ->name('leads.convert');
 

@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeviceToken;
 use App\Models\NotificationSetting;
+use App\Notifications\CrmReminderDigest;
 use App\Services\CrmReminderDispatcher;
+use App\Services\FcmSender;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
 
 class NotificationSettingController extends Controller
@@ -44,6 +48,39 @@ class NotificationSettingController extends Controller
         $message = $sent
             ? 'Se procesaron los avisos activos. Revisa el correo configurado.'
             : 'No hay registros que requieran un aviso en este momento.';
+
+        return back()->with('success', $message);
+    }
+
+    public function sendTest(FcmSender $fcm)
+    {
+        $setting = NotificationSetting::current();
+        $recipients = $setting->recipients();
+
+        $notification = new CrmReminderDigest(
+            'Notificación de prueba',
+            'Este es un mensaje de prueba enviado desde el panel de notificaciones del CRM.',
+            [[
+                'title' => 'Prueba de entrega',
+                'meta' => 'Enviada el '.now($setting->timezone)->format('d/m/Y H:i'),
+                'url' => route('admin.dashboard'),
+            ]],
+        );
+        foreach ($recipients as $email) {
+            Notification::route('mail', $email)->notify(clone $notification);
+        }
+
+        $tokens = DeviceToken::query()->pluck('token')->all();
+        $message = 'Correo de prueba enviado a '.count($recipients).' destinatario(s).';
+
+        if (! $fcm->isConfigured()) {
+            $message .= ' Push no enviado: faltan las credenciales de Firebase en el servidor.';
+        } elseif (! $tokens) {
+            $message .= ' Push no enviado: todavía no hay dispositivos Android registrados.';
+        } else {
+            $fcm->send($tokens, 'Notificación de prueba', 'Este es un mensaje de prueba enviado desde el panel del CRM.');
+            $message .= ' Push enviado a '.count($tokens).' dispositivo(s) registrado(s).';
+        }
 
         return back()->with('success', $message);
     }
