@@ -8,16 +8,13 @@
 .brand-logo-frame-light { box-shadow: 0 6px 18px rgba(0,0,0,.15); }
 .public-body { background: var(--paper); }
 .site-header { align-items: center; display: flex; height: 82px; justify-content: space-between; margin: auto; max-width: 1320px; padding: 0 2rem; }
-.header-remax { align-items: center; background: var(--ink); border-radius: 12px; display: flex; gap: .55rem; margin-left: auto; margin-right: 2rem; padding: .15rem .7rem; }
-.header-remax span { color: rgba(255,255,255,.64); font-size: .55rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-.header-remax img { height: 46px; object-fit: contain; width: 92px; }
 .main-nav { align-items: center; display: flex; gap: 2rem; }
 .main-nav > a:not(.button) { font-size: .88rem; font-weight: 600; }
 .menu-toggle { background: none; border: 0; display: none; }
 .section { margin: auto; max-width: 1320px; padding: 7rem 2rem; }
 .section-heading { align-items: end; display: flex; justify-content: space-between; margin-bottom: 2.5rem; }
 .section-heading h2 { font-size: clamp(2rem, 4vw, 3.7rem); line-height: 1.08; margin: .8rem 0 0; max-width: 760px; }
-.site-footer { background: #040f24; color: rgba(255,255,255,.72); display: grid; gap: 2rem; grid-template-columns: 2fr 1fr 1fr; padding: 4rem max(2rem, calc((100vw - 1260px)/2)); }
+.site-footer { background: #040f24; color: rgba(255,255,255,.72); display: grid; gap: 2.4rem; grid-template-columns: 1.5fr 1fr 1fr 1.35fr; padding: 4rem max(2rem, calc((100vw - 1260px)/2)); }
 .site-footer strong { color: #fff; }
 .site-footer p { margin: .4rem 0; }
 .footer-brand { align-items: center; display: flex; gap: 1rem; }
@@ -25,6 +22,15 @@
 .footer-copy { border-top: 1px solid rgba(255,255,255,.12); grid-column: 1/-1; margin-top: 1rem !important; padding-top: 1.5rem; }
 .footer-copy small { float: right; font-size: .6rem; font-weight: 500; }
 .footer-copy small a { color: inherit; text-decoration: underline; }
+.footer-remax-profile { border-left: 1px solid rgba(255,255,255,.12); padding-left: 2rem; }
+.footer-remax-profile > a:first-of-type { display: block; margin: -.55rem 0 .35rem; width: 132px; }
+.footer-remax-profile img { height: 66px; object-fit: contain; width: 132px; }
+.footer-remax-profile strong { display: block; font-size: .9rem; }
+.footer-remax-profile p { font-size: .76rem; }
+.footer-profile-link, .footer-agent-email { display: block; font-size: .72rem; margin-top: .65rem; }
+.footer-profile-link { color: #fff; font-weight: 700; }
+.footer-profile-link span { color: var(--accent); }
+.footer-agent-email { color: #9db3cf; overflow-wrap: anywhere; }
 .whatsapp-float { align-items: center; animation: whatsapp-pulse 2.2s infinite; background: #25d366; border: 4px solid var(--paper); border-radius: 50%; bottom: 1.4rem; box-shadow: 0 0 0 0 rgba(37,211,102,.45); color: #fff; display: flex; font-size: 1.7rem; height: 58px; justify-content: center; position: fixed; right: 1.4rem; width: 58px; z-index: 20; }
 .whatsapp-float:hover { animation-play-state: paused; transform: scale(1.06); }
 @keyframes whatsapp-pulse {

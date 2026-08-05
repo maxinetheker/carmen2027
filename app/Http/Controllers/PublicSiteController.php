@@ -34,7 +34,7 @@ class PublicSiteController extends Controller
             'stats' => [
                 'properties' => Property::published()->count(),
                 'clients' => Lead::where('status', 'won')->count() + 48,
-                'years' => 12,
+                'years' => 6,
             ],
         ]);
     }

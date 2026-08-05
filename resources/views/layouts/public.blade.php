@@ -82,11 +82,6 @@
             <span class="brand-logo-frame"><img src="{{ $logoUrl }}" alt="" width="46" height="47"></span>
             <span><strong>Carmen Mestanza</strong><small>Asesoría inmobiliaria</small></span>
         </a>
-        <a class="header-remax" href="https://www.remax.pe/" target="_blank" rel="noopener noreferrer"
-            aria-label="Carmen Mestanza, agente asociada a RE/MAX Perú">
-            <span>Agente asociada</span>
-            <img src="{{ asset('images/remax-logo-light.svg') }}" alt="RE/MAX Perú" width="92" height="46">
-        </a>
         <button class="menu-toggle" data-menu-toggle aria-label="Abrir menú" aria-expanded="false">Menú</button>
         <nav class="main-nav" data-menu aria-label="Navegación principal">
             <a href="{{ route('home') }}#servicios">Servicios</a>
@@ -109,6 +104,18 @@
         </div>
         <div><span class="footer-label">Atención</span><p>{{ $settings['service_area'] ?? 'Lima, Perú' }}</p><p>{{ $settings['phone'] ?? '+51 987 654 321' }}</p></div>
         <div><span class="footer-label">Contacto</span><p>{{ $settings['email'] ?? 'carmen@example.com' }}</p><a href="{{ route('login') }}">Acceso CRM</a></div>
+        <div class="footer-remax-profile">
+            <span class="footer-label">Representación inmobiliaria</span>
+            <a href="https://www.remax.pe/web/agents/cmestanza@remaxintegrity.pe/remax-integrity/"
+                target="_blank" rel="noopener noreferrer" aria-label="Perfil oficial de Carmen Mestanza en RE/MAX Perú">
+                <img src="{{ asset('images/remax-logo-light.svg') }}" alt="RE/MAX Perú" width="132" height="66">
+            </a>
+            <strong>Carmen Mestanza</strong>
+            <p>Agente asociada · RE/MAX Integrity</p>
+            <a class="footer-profile-link" href="https://www.remax.pe/web/agents/cmestanza@remaxintegrity.pe/remax-integrity/"
+                target="_blank" rel="noopener noreferrer">Ver perfil oficial y propiedades <span>↗</span></a>
+            <a class="footer-agent-email" href="mailto:cmestanza@remaxintegrity.pe">cmestanza@remaxintegrity.pe</a>
+        </div>
         <p class="footer-copy">© {{ date('Y') }} Carmen Mestanza. Todos los derechos reservados.
             <small>Gráficos emoji por <a href="https://github.com/jdecked/twemoji" rel="noopener" target="_blank">Twemoji</a>.</small>
         </p>

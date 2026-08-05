@@ -54,7 +54,7 @@
                 <button type="button" data-hero-next aria-label="Propiedad siguiente">→</button>
             </div>
         @endif
-        <div class="hero-seal"><strong>12+</strong><span>años de<br>experiencia</span></div>
+        <div class="hero-seal"><strong>{{ $stats['years'] }}+</strong><span>años de<br>experiencia</span></div>
     </div>
 </section>
 
