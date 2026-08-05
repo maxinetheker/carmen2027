@@ -15,7 +15,7 @@
 /auth.json
 /node_modules
 /node_modules.zip
-/public/build
+# Los assets compilados se versionan porque producción no dispone de Node/npm.
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
