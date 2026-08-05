@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lead;
+use App\Models\NotificationSetting;
 use App\Models\Property;
 use App\Models\SiteSetting;
+use App\Notifications\NewLeadReceived;
 use App\Services\PropertyCatalogSearch;
 use App\Services\PropertySharePreview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class PublicSiteController extends Controller
 {
@@ -80,9 +83,30 @@ class PublicSiteController extends Controller
         ]);
         $data['source'] = 'web';
         $data['status'] = 'new';
-        Lead::create($data);
+        $lead = Lead::create($data);
+        $this->notifyNewLead($lead);
 
         return back()->with('success',
             '¡Gracias! Carmen se comunicará contigo muy pronto.');
+    }
+
+    private function notifyNewLead(Lead $lead): void
+    {
+        try {
+            $recipients = NotificationSetting::current()->recipients();
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return;
+        }
+
+        foreach ($recipients as $email) {
+            try {
+                Notification::route('mail', $email)
+                    ->notify(new NewLeadReceived($lead));
+            } catch (\Throwable $exception) {
+                report($exception);
+            }
+        }
     }
 }

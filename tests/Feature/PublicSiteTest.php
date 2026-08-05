@@ -3,8 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Lead;
+use App\Models\NotificationSetting;
 use App\Models\Property;
+use App\Notifications\NewLeadReceived;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class PublicSiteTest extends TestCase
@@ -75,6 +78,12 @@ class PublicSiteTest extends TestCase
 
     public function test_contact_form_creates_a_lead(): void
     {
+        Notification::fake();
+        NotificationSetting::create([
+            'recipient_email' => 'carmen@example.com',
+            'recipient_emails' => ['carmen@example.com', 'equipo@example.com'],
+        ]);
+
         $this->post(route('lead.capture'), [
             'first_name' => 'Ana',
             'last_name' => 'Torres',
@@ -89,5 +98,6 @@ class PublicSiteTest extends TestCase
             'status' => 'new',
         ]);
         $this->assertSame(1, Lead::count());
+        Notification::assertSentOnDemandTimes(NewLeadReceived::class, 2);
     }
 }
