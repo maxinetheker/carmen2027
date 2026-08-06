@@ -42,7 +42,4 @@
     </div>
 </form>
 
-@if($record->exists)
-    @include('admin.properties.form-documents')
-@endif
 @endsection

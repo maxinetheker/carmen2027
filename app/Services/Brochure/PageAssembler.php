@@ -5,31 +5,34 @@ namespace App\Services\Brochure;
 use App\Models\Property;
 
 /**
- * Builds the ordered list of Blade page views + data for a presentation: cover is
- * always first, then the highlights and details pages only when there's actual
- * content for them and the chosen max-pages allows it.
+ * Builds only pages that have enough material to earn their place. Every page has
+ * a fixed A4 box and footer; PagePlanner supplies the upper bound for this run.
  */
 class PageAssembler
 {
     public function __construct(
         private BrochureImageFitter $fitter,
         private PropertyFacts $facts,
+        private PageContentLimiter $content,
     ) {}
 
     public function assemble(Property $property, array $options, array $generated, array $theme): array
     {
         $agent = $this->facts->agent();
-        $maxPages = max(1, min((int) ($options['max_pages'] ?? 3), 3));
-
+        $maxPages = min(
+            (int) config('brochure_templates.max_pages.max'),
+            max(1, (int) ($options['max_pages'] ?? config('brochure_templates.max_pages.default')))
+        );
+        $plannedPages = min($maxPages, max(1, (int) ($generated['page_count'] ?? $maxPages)));
         $media = $property->media->where('type', 'image')->keyBy('id');
         $mediaIds = array_values(array_filter($generated['media_ids'] ?? [], fn ($id) => $media->has($id)));
         $coverId = $generated['cover_media_id'] ?? ($mediaIds[0] ?? null);
         $galleryIds = array_values(array_diff($mediaIds, [$coverId]));
-
-        $title = $generated['title'] ?? $property->title;
-        $interest = $generated['interest'] ?? null;
+        $galleryItems = collect($galleryIds)->map(fn ($id) => $media->get($id))->filter()->values();
+        $interest = $generated['interest'] ?? [];
         $templateKey = $options['template_key'];
         $logo = $this->logoImage($generated['logo_key'] ?? null);
+        $title = $this->content->shortText($generated['title'] ?? $property->title, 80) ?: $property->title;
 
         $pages = [[
             'view' => "brochures.templates.{$templateKey}.cover",
@@ -44,42 +47,35 @@ class PageAssembler
                     : asset('images/property-1.jpg'),
                 'priceMain' => $this->facts->priceMain($property),
                 'priceSub' => $this->facts->priceSub($property),
-                'hook' => $interest['hook'] ?? null,
-                'cards' => $interest['cards'] ?? [],
-                'quote' => $interest['quote'] ?? null,
+                'hook' => $this->content->shortText($interest['hook'] ?? null, 180),
+                'cards' => $this->content->cards($interest['cards'] ?? []),
+                'quote' => $this->content->shortText($interest['quote'] ?? null, 180),
             ],
         ]];
 
-        // Gallery figures (in selection order), split evenly across the ~182mm content width.
-        $galleryItems = collect($galleryIds)->map(fn ($id) => $media->get($id))->filter()->take(4)->values()->all();
-        $galleryWidth = 182 / max(1, count($galleryItems));
-        $galleryFigures = array_map(fn ($item) => [
-            'src' => $this->fitter->fitMm($item->disk, $item->path, $galleryWidth, 45),
-        ], $galleryItems);
-
-        // Real property features/attributes always fill this page with grounded content,
-        // even when every AI toggle is off — pages never look empty.
-        $specs = $this->facts->specs($property);
-        if ($maxPages >= 2) {
-            $pages[] = [
+        $contentPages = [];
+        $highlightItems = $galleryItems->take(4)->values()->all();
+        if ($highlightItems || ! empty($interest)) {
+            $contentPages[] = [
                 'view' => 'brochures.pages.highlights',
                 'data' => [
                     'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
                     'heading' => 'Conozca <span>'.e($property->district).'</span> más de cerca',
-                    'gallery' => $galleryFigures,
-                    'specs' => $specs,
+                    'gallery' => $this->galleryFigures($highlightItems, 45),
+                    'specs' => array_slice($this->facts->specs($property), 0, 4),
                     'trustParagraph' => $interest['trust_paragraph'] ?? null,
-                    'stats' => $interest['stats'] ?? [],
+                    'stats' => array_slice($interest['stats'] ?? [], 0, 4),
                     'steps' => $this->facts->steps(),
                 ],
             ];
         }
 
-        $faqs = $generated['faqs'] ?? [];
         $croquisSvg = $generated['croquis_svg'] ?? null;
-        $planoItem = $galleryItems[0] ?? null;
-        if ($maxPages >= 3) {
-            $pages[] = [
+        $faqs = $this->content->faqs($generated['faqs'] ?? [], $croquisSvg ? 3 : 7);
+        $description = $this->content->shortText(strip_tags((string) $property->description), $croquisSvg ? 360 : 650);
+        if ($croquisSvg || $faqs || $description) {
+            $planoItem = $galleryItems->get(4) ?? $galleryItems->first();
+            $contentPages[] = [
                 'view' => 'brochures.pages.details',
                 'data' => [
                     'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
@@ -89,18 +85,33 @@ class PageAssembler
                         ? $this->fitter->fitMm($planoItem->disk, $planoItem->path, 67, 62)
                         : null,
                     'faqs' => $faqs,
-                    'ficha' => $this->facts->fichaTecnica($property),
+                    'ficha' => $croquisSvg
+                        ? array_slice($this->facts->fichaTecnica($property), 0, 4)
+                        : $this->facts->fichaTecnica($property),
+                    'description' => $description,
                 ],
             ];
         }
 
-        return ['title' => $title, 'pages' => $pages];
+        foreach (array_chunk($galleryItems->slice(4)->all(), 6) as $photos) {
+            if (count($photos) < 3) {
+                continue;
+            }
+            $imageHeight = count($photos) > 4 ? 58 : 83;
+            $contentPages[] = [
+                'view' => 'brochures.pages.gallery',
+                'data' => [
+                    'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
+                    'heading' => 'Recorra cada <span>detalle</span>',
+                    'rows' => $this->galleryRows($photos, $imageHeight),
+                    'imageHeight' => $imageHeight,
+                ],
+            ];
+        }
+
+        return ['title' => $title, 'pages' => array_slice(array_merge($pages, $contentPages), 0, $plannedPages)];
     }
 
-    /**
-     * Renders an already-resolved logo key (chosen upstream by LogoSelector — either
-     * the AI's pick, the admin's manual pick, or null for "off") to a fitted image.
-     */
     public function logoImage(?string $key): ?string
     {
         $logos = config('brochure_templates.logos');
@@ -109,10 +120,22 @@ class PageAssembler
         }
 
         $path = storage_path(config('brochure_templates.logos_path').'/'.$logos[$key]['file']);
-        if (! is_file($path)) {
-            return null;
-        }
 
-        return $this->fitter->fitContainMm(file_get_contents($path), 34, 18);
+        return is_file($path) ? $this->fitter->fitContainMm(file_get_contents($path), 34, 18) : null;
     }
+
+    private function galleryFigures(array $items, int $height): array
+    {
+        $width = 182 / max(1, count($items));
+
+        return array_map(fn ($item) => [
+            'src' => $this->fitter->fitMm($item->disk, $item->path, $width, $height),
+        ], $items);
+    }
+
+    private function galleryRows(array $items, int $height): array
+    {
+        return array_map(fn ($row) => $this->galleryFigures($row, $height), array_chunk($items, 2));
+    }
+
 }

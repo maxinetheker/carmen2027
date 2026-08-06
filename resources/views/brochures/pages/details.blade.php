@@ -1,17 +1,8 @@
-{{-- expects: $heading, $croquisSvg (nullable sanitized <svg>), $planoImage (nullable data uri), $faqs, $ficha, $agent --}}
+{{-- expects: $heading, $croquisSvg (nullable sanitized <svg>), $planoImage, $faqs, $ficha, $description, $agent --}}
 <div class="page">
   <div class="content-head">
     <h2>{!! $heading !!}</h2>
   </div>
-
-  {{-- Grounded property facts, shown when there's no croquis/FAQ content to fill the page. --}}
-  @if(! $croquisSvg && ! count($faqs) && count($ficha))
-    <table class="ficha">
-      @foreach($ficha as $row)
-        <tr><td>{{ $row['label'] }}</td><td>{{ $row['value'] }}</td></tr>
-      @endforeach
-    </table>
-  @endif
 
   @if($croquisSvg)
     <div class="croquis">
@@ -28,6 +19,18 @@
     </div>
   @endif
 
+  @if($description)
+    <div class="property-summary"><strong>La propiedad</strong><p>{{ $description }}</p></div>
+  @endif
+
+  @if(count($ficha))
+    <table class="ficha">
+      @foreach($ficha as $row)
+        <tr><td>{{ $row['label'] }}</td><td>{{ $row['value'] }}</td></tr>
+      @endforeach
+    </table>
+  @endif
+
   @if(count($faqs))
     <div class="faq">
       <h3>Preguntas frecuentes</h3>
@@ -37,5 +40,5 @@
     </div>
   @endif
 
-  @include('brochures.partials.cta-footer', ['agent' => $agent])
+  @include('brochures.partials.cta-footer', ['agent' => $agent, 'logo' => $logo, 'ref' => $ref])
 </div>

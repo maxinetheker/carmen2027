@@ -11,25 +11,25 @@
     </div>
 
     <form method="post" enctype="multipart/form-data"
-        action="{{ route('admin.properties.documents.store', $record) }}" data-document-upload-form>
+        action="{{ route('admin.properties.documents.store', $record) }}" data-presentation-document-upload>
         @csrf
         <label class="upload-drop media-drop">
             <span class="material-symbols-rounded">description</span>
             <strong>Agregar documentos</strong>
             <small>PDF o TXT · hasta 15 MB cada uno</small>
-            <input type="file" name="documents[]" multiple accept="application/pdf,text/plain" data-auto-submit>
+            <input type="file" name="documents[]" multiple accept="application/pdf,text/plain" data-presentation-document-input>
         </label>
     </form>
 
     <div class="document-list">
         @forelse($record->documents as $document)
-            <article class="document-row">
+            <article class="document-row" data-presentation-document-row>
                 <span class="material-symbols-rounded">draft</span>
                 <div class="document-row-info">
                     <strong>{{ $document->original_name }}</strong>
                     <small>{{ number_format($document->size_bytes / 1024, 0) }} KB · {{ $extractionLabels[$document->extraction_status] ?? $document->extraction_status }}</small>
                 </div>
-                <form method="post" data-confirm="¿Eliminar este documento?"
+                <form method="post" data-presentation-document-delete
                     action="{{ route('admin.properties.documents.destroy', [$record, $document]) }}">
                     @csrf @method('delete')
                     <button class="mini-button mini-button-danger" type="submit">Eliminar</button>

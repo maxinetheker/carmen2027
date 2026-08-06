@@ -1,6 +1,6 @@
 <fieldset class="modal-fieldset">
     <legend>Información actual para generar interés</legend>
-    <p class="field-hint">La IA busca en internet argumentos reales (con fuente) de por qué conviene comprar ahora.</p>
+    <p class="field-hint">La IA busca en internet argumentos reales y puede usar HTML simple y seguro para resaltar el contenido.</p>
     <select name="interest_mode" data-mode-select data-reveals="interest_manual">
         <option value="auto">Automático (la IA investiga)</option>
         <option value="manual">Manual (lo escribo yo)</option>
@@ -39,20 +39,15 @@
 
 <fieldset class="modal-fieldset">
     <legend>Croquis de ubicación</legend>
-    @if($hasLocation)
-        <select name="croquis_mode" data-mode-select data-reveals="croquis_manual">
-            <option value="auto" selected>Automático (PHP obtiene el mapa por GPS, sin subir nada)</option>
-            <option value="manual">Manual (subo una captura)</option>
-            <option value="off">Desactivado</option>
-        </select>
-        <label class="field" data-reveal-target="croquis_manual" hidden>
-            <span>Captura de Google Maps</span>
-            <input type="file" name="croquis_reference" accept="image/jpeg,image/png,image/webp">
-        </label>
-    @else
-        <input type="hidden" name="croquis_mode" value="off">
-        <p class="field-hint">Registra una ubicación válida en la ficha de la propiedad (sección Ubicación) para poder usar el croquis.</p>
-    @endif
+    <select name="croquis_mode" data-croquis-mode>
+        <option value="auto" selected>Automático (la IA genera el croquis)</option>
+        <option value="off">Desactivado</option>
+    </select>
+    <label class="field" data-croquis-reference>
+        <span>Captura de mapa opcional</span>
+        <input type="file" name="croquis_reference" accept="image/jpeg,image/png,image/webp">
+    </label>
+    <p class="field-hint">Puedes subir una captura; la IA la combinará con el GPS registrado cuando esté disponible y generará un croquis HTML seguro.</p>
 </fieldset>
 
 <fieldset class="modal-fieldset">
@@ -66,9 +61,10 @@
 
 <fieldset class="modal-fieldset">
     <label class="field">
-        <span>Cantidad de hojas máxima</span>
+        <span>Límite máximo de hojas</span>
         <input type="number" name="max_pages" min="{{ $pagesCfg['min'] }}" max="{{ $pagesCfg['max'] }}" value="{{ $pagesCfg['default'] }}">
     </label>
+    <p class="field-hint">La IA decide cuántas hojas usar, sin superar este límite y sin crear hojas vacías.</p>
     <label class="field">
         <span>Instrucciones adicionales para la IA (opcional)</span>
         <textarea name="extra_prompt" rows="2" placeholder="Ej: enfatizar que acepta financiamiento bancario…"></textarea>

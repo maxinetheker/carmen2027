@@ -106,9 +106,12 @@ return [
 
     'default_template' => 'plantilla-1',
 
-    'max_pages' => ['min' => 1, 'max' => 3, 'default' => 3],
+    // The advisor sets a ceiling; PagePlanner decides the useful number of sheets
+    // below that ceiling. More than six pages tends to dilute a property brochure.
+    'max_pages' => ['min' => 1, 'max' => 6, 'default' => 4],
 
-    'max_images' => ['min' => 1, 'max' => 8, 'default' => 4],
+    // A cover photo plus gallery pages can now use a fuller visual selection.
+    'max_images' => ['min' => 1, 'max' => 24, 'default' => 8],
 
     /*
     |--------------------------------------------------------------------------

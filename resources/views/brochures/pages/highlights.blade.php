@@ -55,5 +55,5 @@
     @endforeach
   </div>
 
-  @include('brochures.partials.cta-footer', ['agent' => $agent])
+  @include('brochures.partials.cta-footer', ['agent' => $agent, 'logo' => $logo, 'ref' => $ref])
 </div>

@@ -3,7 +3,6 @@
     $hasLocation = (bool) ($record->latitude && $record->longitude);
     $templates = config('brochure_templates.templates');
     $logos = config('brochure_templates.logos');
-    $imagesCfg = config('brochure_templates.max_images');
     $pagesCfg = config('brochure_templates.max_pages');
     $renderer = app(\App\Services\Brochure\PresentationRenderer::class);
 @endphp
@@ -34,17 +33,15 @@
             <label><input type="radio" name="images_mode" value="auto" data-images-mode checked> Automático (la IA elige)</label>
             <label><input type="radio" name="images_mode" value="manual" data-images-mode> Manual (yo elijo)</label>
         </div>
-        <label class="field field-inline">
-            <span>Cantidad de imágenes a mostrar</span>
-            <input type="number" name="image_count" min="{{ $imagesCfg['min'] }}" max="{{ $imagesCfg['max'] }}" value="{{ $imagesCfg['default'] }}">
-        </label>
+        <p class="field-hint">En automático, la IA decide cuántas imágenes usar y cuál será la principal.</p>
         <div class="image-picker" data-manual-images hidden>
+            <p class="field-hint image-picker-count" data-manual-image-count>Selecciona las imágenes y una principal.</p>
             @forelse($images as $media)
                 <label class="image-option">
-                    <input type="checkbox" name="selected_image_ids[]" value="{{ $media->id }}">
+                    <input type="checkbox" name="selected_image_ids[]" value="{{ $media->id }}" data-manual-image>
                     <img src="{{ $media->url }}" alt="">
                     <span class="image-option-cover">
-                        <input type="radio" name="cover_media_id" value="{{ $media->id }}" @checked($media->is_cover)> Portada
+                        <input type="radio" name="cover_media_id" value="{{ $media->id }}" data-cover-image @checked($media->is_cover)> Imagen principal
                     </span>
                 </label>
             @empty

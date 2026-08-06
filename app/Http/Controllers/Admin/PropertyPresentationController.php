@@ -14,7 +14,7 @@ class PropertyPresentationController extends Controller
 {
     public function panel(Property $property)
     {
-        $property->load(['media', 'presentations']);
+        $property->load(['media', 'documents', 'presentations']);
 
         return view('admin.properties.presentation-panel', ['record' => $property]);
     }
@@ -31,10 +31,9 @@ class PropertyPresentationController extends Controller
             'logo_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
             'logo_key' => ['required_if:logo_mode,manual', 'nullable', Rule::in($logoKeys)],
             'images_mode' => ['required', Rule::in(['auto', 'manual'])],
-            'image_count' => ['nullable', 'integer', "between:{$images['min']},{$images['max']}"],
-            'selected_image_ids' => ['required_if:images_mode,manual', 'array'],
-            'selected_image_ids.*' => ['integer'],
-            'cover_media_id' => ['nullable', 'integer'],
+            'selected_image_ids' => ['required_if:images_mode,manual', 'array', "max:{$images['max']}"],
+            'selected_image_ids.*' => ['integer', 'distinct'],
+            'cover_media_id' => ['required_if:images_mode,manual', 'nullable', 'integer'],
             'interest_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
             'interest_manual' => ['required_if:interest_mode,manual', 'nullable', 'string', 'max:4000'],
             'faq_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
@@ -45,8 +44,8 @@ class PropertyPresentationController extends Controller
             'title_manual' => ['required_if:title_mode,manual', 'nullable', 'string', 'max:160'],
             'max_pages' => ['required', 'integer', "between:{$pages['min']},{$pages['max']}"],
             'audience' => ['required', Rule::in(['personas', 'empresas'])],
-            'croquis_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
-            'croquis_reference' => ['required_if:croquis_mode,manual', 'nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
+            'croquis_mode' => ['required', Rule::in(['auto', 'off'])],
+            'croquis_reference' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
             'extra_prompt' => ['nullable', 'string', 'max:2000'],
         ]);
 
@@ -59,7 +58,14 @@ class PropertyPresentationController extends Controller
             ? (int) $data['cover_media_id']
             : null;
 
-        $croquisReferencePath = $data['croquis_mode'] === 'manual' && $request->hasFile('croquis_reference')
+        if ($data['images_mode'] === 'manual' && ! in_array($coverId, $selectedIds, true)) {
+            return response()->json([
+                'message' => 'Selecciona exactamente una imagen principal entre las imágenes elegidas.',
+                'errors' => ['cover_media_id' => ['La imagen principal debe formar parte de la selección.']],
+            ], 422);
+        }
+
+        $croquisReferencePath = $data['croquis_mode'] === 'auto' && $request->hasFile('croquis_reference')
             ? $request->file('croquis_reference')->store("properties/{$property->id}/tmp", 'local')
             : null;
 
@@ -68,7 +74,7 @@ class PropertyPresentationController extends Controller
             'logo_mode' => $data['logo_mode'],
             'logo_key' => $data['logo_key'] ?? null,
             'images_mode' => $data['images_mode'],
-            'image_count' => $data['image_count'] ?? $images['default'],
+            'image_count' => $data['images_mode'] === 'manual' ? count($selectedIds) : null,
             'selected_image_ids' => $selectedIds,
             'cover_media_id' => $coverId,
             'interest_mode' => $data['interest_mode'],

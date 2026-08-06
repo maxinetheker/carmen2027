@@ -26,30 +26,27 @@ class ImageSelector
             return ['media_ids' => [], 'cover_media_id' => null, 'usage' => $emptyUsage];
         }
 
-        $count = max(1, min((int) ($options['image_count'] ?? 6), $images->count()));
-
         if (($options['images_mode'] ?? 'manual') === 'manual') {
-            $validIds = $images->pluck('id')->all();
-            $ids = array_values(array_intersect(
-                array_map('intval', $options['selected_image_ids'] ?? []),
-                $validIds
-            ));
-            if (! $ids) {
-                $ids = $images->take($count)->pluck('id')->all();
-            }
-            $cover = in_array((int) ($options['cover_media_id'] ?? 0), $ids, true)
-                ? (int) $options['cover_media_id']
-                : $ids[0];
-
-            return ['media_ids' => $ids, 'cover_media_id' => $cover, 'usage' => $emptyUsage];
+            return $this->manualSelection($images, $options, $emptyUsage);
         }
 
-        return $this->selectAutomatically($images, $count, $emptyUsage);
+        return $this->selectAutomatically($images, $emptyUsage);
     }
 
-    private function selectAutomatically($images, int $count, array $emptyUsage): array
+    private function manualSelection($images, array $options, array $usage): array
+    {
+        $validIds = $images->pluck('id')->all();
+        $ids = array_values(array_intersect(array_map('intval', $options['selected_image_ids'] ?? []), $validIds));
+        $cover = in_array((int) ($options['cover_media_id'] ?? 0), $ids, true)
+            ? (int) $options['cover_media_id'] : ($ids[0] ?? null);
+
+        return ['media_ids' => $ids, 'cover_media_id' => $cover, 'usage' => $usage];
+    }
+
+    private function selectAutomatically($images, array $emptyUsage): array
     {
         $candidates = $images->take(self::MAX_CANDIDATES);
+        $maxCount = min((int) config('brochure_templates.max_images.max'), $candidates->count());
         $urls = [];
         $ids = [];
         foreach ($candidates as $media) {
@@ -57,11 +54,11 @@ class ImageSelector
             $ids[] = $media->id;
         }
 
-        $prompt = 'Estas son fotos de una propiedad inmobiliaria en venta/alquiler, en este orden de ids: '
-            .implode(', ', $ids).". Elige exactamente {$count} para un brochure de ventas (prioriza buena luz, "
-            .'encuadre y que muestren ambientes/ángulos distintos; evita fotos borrosas, oscuras o repetidas) '
-            .'y decide cuál es la mejor portada (imagen de mayor impacto).';
-
+        $prompt = 'Estas son fotos de una propiedad inmobiliaria en venta o alquiler, en este orden de ids: '
+            .implode(', ', $ids).". Decide cuántas fotos usar (de 1 a {$maxCount}) para el brochure. "
+            .'Elige solo las necesarias para mostrar ambientes y ángulos distintos; prioriza buena luz y encuadre '
+            .'y evita fotos borrosas, oscuras o repetidas. Elige exactamente una portada, incluida entre las fotos '
+            .'seleccionadas.';
         $schema = [
             'name' => 'image_selection',
             'schema' => [
@@ -74,22 +71,16 @@ class ImageSelector
                 'additionalProperties' => false,
             ],
         ];
-
         $result = $this->ai->vision($prompt, $urls, $schema);
-        $data = $result['data'] ?? [];
-
-        $selected = array_values(array_intersect(
-            array_map('intval', $data['selected_media_ids'] ?? []),
-            $ids
-        ));
+        $selected = array_values(array_unique(array_intersect(
+            array_map('intval', $result['data']['selected_media_ids'] ?? []), $ids
+        )));
         if (! $selected) {
-            $selected = array_slice($ids, 0, $count);
+            $selected = array_slice($ids, 0, min((int) config('brochure_templates.max_images.default'), $maxCount));
         }
-        $selected = array_slice($selected, 0, $count);
-
-        $cover = in_array((int) ($data['cover_media_id'] ?? 0), $selected, true)
-            ? (int) $data['cover_media_id']
-            : $selected[0];
+        $selected = array_slice($selected, 0, $maxCount);
+        $cover = in_array((int) ($result['data']['cover_media_id'] ?? 0), $selected, true)
+            ? (int) $result['data']['cover_media_id'] : $selected[0];
 
         return ['media_ids' => $selected, 'cover_media_id' => $cover, 'usage' => $result['usage'] ?? $emptyUsage];
     }

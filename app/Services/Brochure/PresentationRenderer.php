@@ -39,9 +39,18 @@ class PresentationRenderer
             return ['pdf' => null, 'html' => $html, 'page_count' => count($assembled['pages'])];
         }
 
+        $expectedPages = count($assembled['pages']);
         $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait');
+        $output = $pdf->output();
+        $actualPages = $pdf->getDomPDF()->getCanvas()->get_page_count();
 
-        return ['pdf' => $pdf->output(), 'page_count' => count($assembled['pages'])];
+        if ($actualPages !== $expectedPages) {
+            throw new \RuntimeException(
+                "La plantilla produjo {$actualPages} hoja(s) para {$expectedPages} página(s) planificada(s)."
+            );
+        }
+
+        return ['pdf' => $output, 'page_count' => $actualPages];
     }
 
     /**

@@ -56,5 +56,5 @@
     <div class="quote">«{{ $quote }}»</div>
   @endif
 
-  @include('brochures.partials.cover-footer', ['agent' => $agent])
+  @include('brochures.partials.cover-footer', ['agent' => $agent, 'logo' => $logo])
 </div>

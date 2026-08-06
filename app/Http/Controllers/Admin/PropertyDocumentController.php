@@ -23,6 +23,10 @@ class PropertyDocumentController extends Controller
             $this->documents->store($property, $file);
         }
 
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Documento(s) añadido(s). La IA los usará como referencia.'], 201);
+        }
+
         return back()->with('success', 'Documento(s) añadido(s). La IA los usará como referencia.');
     }
 
@@ -31,6 +35,10 @@ class PropertyDocumentController extends Controller
         abort_unless($document->property_id === $property->id, 404);
 
         $this->documents->destroy($document);
+
+        if (request()->expectsJson()) {
+            return response()->json(['message' => 'Documento eliminado.']);
+        }
 
         return back()->with('success', 'Documento eliminado.');
     }

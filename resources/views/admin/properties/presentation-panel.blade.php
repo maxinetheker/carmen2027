@@ -54,5 +54,6 @@
 
 <div data-panel-view="form" hidden>
     <button class="text-link" type="button" data-show-list-view>← Volver a la lista</button>
+    @include('admin.properties.form-documents')
     @include('admin.properties.form-presentation-modal')
 </div>

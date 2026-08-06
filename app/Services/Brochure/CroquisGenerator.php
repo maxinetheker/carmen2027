@@ -36,11 +36,7 @@ class CroquisGenerator
             return ['svg' => null, 'usage' => $emptyUsage];
         }
 
-        if (! $property->latitude || ! $property->longitude) {
-            return ['svg' => null, 'usage' => $emptyUsage];
-        }
-
-        $references = $this->collectReferenceImages($property, $options, $mode);
+        $references = $this->collectReferenceImages($property, $options);
         if (! $references) {
             return ['svg' => null, 'usage' => $emptyUsage];
         }
@@ -56,6 +52,10 @@ class CroquisGenerator
             .'con claridad, omítelo en vez de inventarlo. Responde solo con el bloque <svg>...</svg>, sin texto '
             .'adicional.';
 
+        if (! $property->latitude || ! $property->longitude) {
+            $prompt .= ' No hay coordenadas GPS registradas: usa únicamente la captura de mapa adjunta como referencia.';
+        }
+        $prompt .= ' El SVG se incrustará como HTML seguro en el PDF; conserva únicamente elementos SVG compatibles.';
         $instructions = PromptContext::instructions($this->aiSettings->basePrompt(), $options['extra_prompt'] ?? null);
         $result = $this->ai->vision($prompt, $references, null, $instructions);
         $svg = $this->sanitizer->sanitize($result['text'] ?? null);
@@ -66,11 +66,11 @@ class CroquisGenerator
     /**
      * @return string[] data: URIs
      */
-    private function collectReferenceImages(Property $property, array $options, string $mode): array
+    private function collectReferenceImages(Property $property, array $options): array
     {
         $references = [];
 
-        if ($mode === 'manual' && ! empty($options['croquis_reference_path'])) {
+        if (! empty($options['croquis_reference_path'])) {
             try {
                 $references[] = $this->encoder->fromDisk('local', $options['croquis_reference_path'], 512);
             } catch (\Throwable $e) {
@@ -87,6 +87,10 @@ class CroquisGenerator
 
     private function fetchStaticMap(Property $property): ?string
     {
+        if (! $property->latitude || ! $property->longitude) {
+            return null;
+        }
+
         $key = config('services.google_maps.key');
         if (! $key) {
             return null;

@@ -8,6 +8,7 @@ use App\Services\Brochure\FaqGenerator;
 use App\Services\Brochure\ImageSelector;
 use App\Services\Brochure\InterestResearcher;
 use App\Services\Brochure\LogoSelector;
+use App\Services\Brochure\PagePlanner;
 use App\Services\Brochure\PresentationRenderer;
 use App\Services\Brochure\TitleGenerator;
 use App\Services\PropertyDocumentManager;
@@ -43,6 +44,7 @@ class GeneratePropertyPresentationJob implements ShouldQueue
         FaqGenerator $faqs,
         InterestResearcher $interest,
         CroquisGenerator $croquis,
+        PagePlanner $pagePlanner,
         PresentationRenderer $renderer,
     ): void {
         $presentation = PropertyPresentation::findOrFail($this->presentationId);
@@ -90,6 +92,10 @@ class GeneratePropertyPresentationJob implements ShouldQueue
                 'logo_key' => $logoResult['key'],
             ];
 
+            $pagePlan = $pagePlanner->decide($property, $options, $generated);
+            $addUsage($pagePlan['usage']);
+            $generated['page_count'] = $pagePlan['page_count'];
+
             $rendered = $renderer->render($property, $options, $generated);
 
             $path = "properties/{$property->id}/presentations/".Str::uuid().'.pdf';
@@ -114,6 +120,10 @@ class GeneratePropertyPresentationJob implements ShouldQueue
                 'status' => 'failed',
                 'error_message' => $e->getMessage(),
             ]);
+        } finally {
+            if (! empty($presentation->options['croquis_reference_path'])) {
+                Storage::disk('local')->delete($presentation->options['croquis_reference_path']);
+            }
         }
     }
 }

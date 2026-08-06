@@ -5,6 +5,7 @@ namespace App\Services\Brochure;
 use App\Models\Property;
 use App\Services\Ai\AiSettings;
 use App\Services\Ai\OpenAiClient;
+use App\Support\RichTextSanitizer;
 
 /**
  * Produces the "why buy now" persuasion content (hook stat, benefit cards, quote,
@@ -14,7 +15,11 @@ use App\Services\Ai\OpenAiClient;
  */
 class InterestResearcher
 {
-    public function __construct(private OpenAiClient $ai, private AiSettings $aiSettings) {}
+    public function __construct(
+        private OpenAiClient $ai,
+        private AiSettings $aiSettings,
+        private RichTextSanitizer $html,
+    ) {}
 
     /**
      * @return array{content:?array,usage:array}
@@ -32,7 +37,7 @@ class InterestResearcher
             $text = trim((string) ($options['interest_manual'] ?? ''));
 
             return [
-                'content' => $text !== '' ? ['trust_paragraph' => $text, 'trust_sources' => [], 'cards' => [], 'stats' => [], 'hook' => null, 'quote' => null] : null,
+                'content' => $text !== '' ? ['trust_paragraph' => $this->html->clean($text), 'trust_sources' => [], 'cards' => [], 'stats' => [], 'hook' => null, 'quote' => null] : null,
                 'usage' => $emptyUsage,
             ];
         }
@@ -53,6 +58,8 @@ class InterestResearcher
             .'etiqueta + fuente). Toda cifra de mercado debe tener una fuente real de tu búsqueda web; si no '
             .'encuentras una, no la incluyas. Prefiere completar la cantidad máxima de tarjetas y estadísticas '
             .'pedidas en vez de devolver pocas, siempre que encuentres respaldo real para cada una.';
+        $prompt .= "\nEl campo trust_paragraph puede incluir HTML simple para dar énfasis (p, strong, em, ul, li y br), "
+            .'sin CSS, scripts ni enlaces. Mantén ese bloque en un máximo de 700 caracteres visibles.';
 
         $schema = [
             'name' => 'brochure_interest',
@@ -104,14 +111,15 @@ class InterestResearcher
             'hook' => $this->sourced($data['hook'] ?? null, $data['hook_source'] ?? null, $sources),
             'cards' => array_slice(array_values($data['cards'] ?? []), 0, $cardCount),
             'quote' => $data['quote'] ?? null,
-            'trust_paragraph' => $this->groundedParagraph($data['trust_paragraph'] ?? null, $data['trust_sources'] ?? [], $sources),
+            'trust_paragraph' => $this->html->clean(
+                $this->groundedParagraph($data['trust_paragraph'] ?? null, $data['trust_sources'] ?? [], $sources)
+            ),
             'stats' => $this->groundedStats($data['stats'] ?? [], $sources),
             'sources' => $sources,
         ];
 
         return ['content' => $content, 'usage' => $result['usage'] ?? $emptyUsage];
     }
-
     private function sourced(?string $value, ?string $source, array $sources): ?string
     {
         if (! $value || ! $source || ! in_array($source, $sources, true)) {
