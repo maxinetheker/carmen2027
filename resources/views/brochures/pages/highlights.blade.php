@@ -1,5 +1,5 @@
 {{-- expects: $heading, $gallery (array of [src, caption]), $specs, $trustParagraph, $stats, $steps, $agent --}}
-<div class="page">
+<div class="page {{ $layoutClass }}">
   <div class="content-head">
     <h2>{!! $heading !!}</h2>
   </div>
@@ -34,6 +34,13 @@
     <div class="trust">{!! $trustParagraph !!}</div>
   @endif
 
+  @if(!empty($propertySummary))
+    <div class="property-summary">
+      <strong>Una oportunidad para conocer</strong>
+      <p>{{ $propertySummary }}</p>
+    </div>
+  @endif
+
   @if(count($stats))
     <div class="stats">
       @foreach($stats as $stat)
@@ -48,7 +55,7 @@
   <div class="steps">
     @foreach($steps as $i => $step)
       <div class="step">
-        <div class="num">{{ $i + 1 }}</div>
+        <div class="num"><span>{{ $i + 1 }}</span></div>
         <div class="t">{{ $step['t'] }}</div>
         <div class="d">{{ $step['d'] }}</div>
       </div>

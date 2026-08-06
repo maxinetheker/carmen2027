@@ -49,6 +49,9 @@ class PageContentLimiter
     public function shortText(?string $value, int $limit): ?string
     {
         $text = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $value)));
+        // The bundled PDF fonts do not contain emoji glyphs; remove them before
+        // rendering so a brochure never shows missing-character squares.
+        $text = preg_replace('/[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}]/u', '', $text);
 
         return $text === '' ? null : Str::limit($text, $limit, '');
     }

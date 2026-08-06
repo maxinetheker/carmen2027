@@ -55,24 +55,30 @@ class PageAssembler
 
         $contentPages = [];
         $highlightItems = $galleryItems->take(4)->values()->all();
+        $hasRichHighlights = ! empty($interest['trust_paragraph']) || ! empty($interest['stats']);
+        $propertySummary = $hasRichHighlights ? null : $this->content->shortText(
+            strip_tags((string) $property->description), 220
+        );
         if ($highlightItems || ! empty($interest)) {
             $contentPages[] = [
                 'view' => 'brochures.pages.highlights',
                 'data' => [
                     'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
                     'heading' => 'Conozca <span>'.e($property->district).'</span> más de cerca',
-                    'gallery' => $this->galleryFigures($highlightItems, 45),
+                    'gallery' => $this->galleryFigures($highlightItems, $hasRichHighlights ? 45 : 60),
                     'specs' => array_slice($this->facts->specs($property), 0, 4),
                     'trustParagraph' => $this->content->htmlExcerpt($interest['trust_paragraph'] ?? null, 320),
                     'stats' => $this->content->stats(array_slice($interest['stats'] ?? [], 0, 4)),
                     'steps' => $this->facts->steps(),
+                    'propertySummary' => $propertySummary,
+                    'layoutClass' => $hasRichHighlights ? 'highlights-rich' : 'highlights-balanced',
                 ],
             ];
         }
 
         $croquisSvg = $generated['croquis_svg'] ?? null;
         $faqs = $this->content->faqs($generated['faqs'] ?? [], $croquisSvg ? 3 : 5, $croquisSvg ? 110 : 125);
-        $description = $this->content->shortText(strip_tags((string) $property->description), $croquisSvg ? 220 : 300);
+        $description = $this->content->shortText(strip_tags((string) $property->description), 220);
         if ($croquisSvg || $faqs || $description) {
             $planoItem = $galleryItems->get(4) ?? $galleryItems->first();
             $contentPages[] = [
@@ -87,7 +93,7 @@ class PageAssembler
                     'faqs' => $faqs,
                     'ficha' => $this->content->facts(
                         $croquisSvg ? array_slice($this->facts->fichaTecnica($property), 0, 4) : $this->facts->fichaTecnica($property),
-                        $croquisSvg ? 95 : 125
+                        95
                     ),
                     'description' => $description,
                 ],

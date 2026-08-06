@@ -29,6 +29,12 @@
   .gal figure { display: table-cell; vertical-align: top; }
   .gal img { width: 100%; height: 45mm; display: block; }
   .gal figcaption { font-size: 7.5pt; color: {{ $theme['muted'] }}; margin-top: 1.5mm; text-align: center; }
+  {{-- A light highlights page receives a deliberately roomier composition. The
+       additional space is allocated to bounded blocks, never free-flow text. --}}
+  .highlights-balanced .gal img { height: 70mm; }
+  .highlights-balanced .stat { height: 27mm; padding: 4.5mm 3mm; }
+  .highlights-balanced .property-summary { height: 35mm; }
+  .highlights-balanced .steps { height: 36mm; margin-top: 35mm; }
 
   .trust { height: 33mm; overflow: hidden; margin: 5mm 14mm 0; background: {{ $theme['panel'] }}; border-left: 4px solid {{ $theme['accent'] }}; padding: 3.5mm 5mm; font-size: 8.6pt; line-height: 1.35; color: {{ $theme['text'] }}; }
   .trust b { color: {{ $theme['heading'] }}; }
@@ -40,7 +46,8 @@
 
   .steps { display: table; table-layout: fixed; width: 182mm; height: 31mm; overflow: hidden; margin: 5mm 14mm 0; border-collapse: separate; border-spacing: 4mm 0; }
   .step { display: table-cell; vertical-align: top; text-align: center; }
-  .step .num { width: 9mm; height: 9mm; line-height: 9mm; border-radius: 50%; background: {{ $theme['accent'] }}; color: {{ $theme['on_accent'] }}; font-weight: 800; font-size: 11pt; margin: 0 auto 1.5mm; text-align: center; }
+  .step .num { display: table; width: 9mm; height: 9mm; border-radius: 50%; background: {{ $theme['accent'] }}; color: {{ $theme['on_accent'] }}; font-weight: 800; font-size: 11pt; margin: 0 auto 1.5mm; text-align: center; }
+  .step .num span { display: table-cell; height: 9mm; vertical-align: middle; }
   .step .t { font-size: 8.8pt; font-weight: 800; color: {{ $theme['heading'] }}; }
   .step .d { font-size: 7.4pt; color: {{ $theme['muted'] }}; line-height: 1.25; margin-top: 1mm; }
 
@@ -63,6 +70,13 @@
   .faq h3 { font-size: 10pt; color: {{ $theme['heading'] }}; text-transform: uppercase; letter-spacing: 1.2px; border-bottom: 2px solid {{ $theme['accent'] }}; padding-bottom: 1.5mm; margin-bottom: 2mm; }
   .faq p { font-size: 8pt; line-height: 1.3; margin-bottom: 1.5mm; color: {{ $theme['text'] }}; }
   .details-compact .faq { max-height: 39mm; }
+  {{-- Without a croquis the details page has more room. Reserve it inside a
+       bounded information panel so the page stays balanced and cannot flow
+       into the footer. --}}
+  .details-spacious .property-summary { height: 35mm; padding: 4mm 5mm; }
+  .details-spacious .ficha { margin-top: 5mm; table-layout: fixed; }
+  .details-spacious .ficha td { padding: 2.2mm 3mm; line-height: 1.3; overflow: hidden; }
+  .details-spacious .faq { height: 100mm; overflow: hidden; margin: 7mm 14mm 0; padding: 5mm; background: {{ $theme['panel'] }}; border-left: 4px solid {{ $theme['accent'] }}; }
   .faq b { color: {{ $theme['heading'] }}; }
 
   .photo-sheet { margin: 6mm 14mm 0; }
@@ -70,7 +84,7 @@
   .photo-sheet-row figure { display: table-cell; vertical-align: top; width: 50%; }
   .photo-sheet-row img { display: block; width: 100%; }
 
-  .cta { position: absolute; bottom: 0; left: 0; width: 210mm; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; padding: 6mm 14mm; display: table; }
+  .cta { position: absolute; top: 260mm; left: 0; width: 210mm; height: 37mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; padding: 6mm 14mm; display: table; }
   .cta .ctaleft { display: table-cell; vertical-align: middle; }
   .cta-logo { display: inline-block; vertical-align: middle; height: 15mm; margin-right: 5mm; }
   .cta-logo-text { display: inline-block; vertical-align: middle; }
@@ -83,7 +97,7 @@
   {{-- Slim one-line footer for the cover page, which is already tightly packed
        (hero image + hook + cards + quote): the full .cta panel is reserved for
        the content pages below, where there is room to spare. --}}
-  .foot1 { position: absolute; bottom: 0; left: 0; width: 210mm; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; font-size: 8.5pt; padding: 3.5mm 14mm; display: table; }
+  .foot1 { position: absolute; top: 270mm; left: 0; width: 210mm; height: 27mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; font-size: 8.5pt; padding: 8mm 14mm; display: table; }
   .foot1 span { display: table-cell; vertical-align: middle; }
   .foot1 span:last-child { text-align: right; }
   .foot1 b { color: {{ $theme['accent'] }}; }

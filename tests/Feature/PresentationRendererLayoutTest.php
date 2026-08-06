@@ -48,6 +48,37 @@ class PresentationRendererLayoutTest extends TestCase
         $this->assertSame(3, $result['page_count']);
     }
 
+    public function test_balanced_pages_keep_the_footer_without_creating_a_blank_page(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('tests/home.jpg', $this->imageBytes());
+        $property = Property::create([
+            'title' => 'Casa compacta para una visita privada', 'code' => 'CM-BALANCED',
+            'district' => 'Ventanilla', 'type' => 'casa', 'operation' => 'venta',
+            'status' => 'available', 'price' => 180000, 'currency' => 'USD', 'area' => 120,
+            'bedrooms' => 3, 'bathrooms' => 2, 'priority' => 0, 'slug' => 'casa-balanced',
+            'description' => 'Casa con ambientes funcionales y acceso a servicios cercanos.',
+        ]);
+        foreach (range(0, 4) as $position) {
+            $property->media()->create([
+                'type' => 'image', 'disk' => 'public', 'path' => 'tests/home.jpg', 'sort_order' => $position,
+            ]);
+        }
+        $property->load(['media', 'features']);
+        $ids = $property->media->pluck('id')->all();
+
+        $result = app(PresentationRenderer::class)->render($property, [
+            'template_key' => 'plantilla-1', 'max_pages' => 3,
+        ], [
+            'title' => $property->title, 'media_ids' => $ids, 'cover_media_id' => $ids[0],
+            'interest' => ['hook' => 'Lista para conocer.', 'cards' => []],
+            'faqs' => [['question' => '¿Cómo coordino una visita?', 'answer' => 'La asesora puede confirmar una fecha disponible.']],
+            'croquis_svg' => null, 'logo_key' => null, 'page_count' => 3,
+        ]);
+
+        $this->assertSame(3, $result['page_count']);
+    }
+
     private function imageBytes(): string
     {
         $image = imagecreatetruecolor(1200, 800);
