@@ -33,6 +33,8 @@ class PropertyPresentationTest extends TestCase
         $this->postJson(route('admin.properties.presentations.store', $property), [
             'template_key' => 'no-existe',
             'logo_mode' => 'off',
+            'audience' => 'personas',
+            'croquis_mode' => 'off',
             'images_mode' => 'auto',
             'interest_mode' => 'off',
             'faq_mode' => 'off',
@@ -45,6 +47,8 @@ class PropertyPresentationTest extends TestCase
         $this->postJson(route('admin.properties.presentations.store', $property), [
             'template_key' => 'plantilla-1',
             'logo_mode' => 'off',
+            'audience' => 'personas',
+            'croquis_mode' => 'off',
             'images_mode' => 'auto',
             'interest_mode' => 'off',
             'faq_mode' => 'off',
@@ -67,6 +71,8 @@ class PropertyPresentationTest extends TestCase
         $this->postJson(route('admin.properties.presentations.store', $property), [
             'template_key' => 'plantilla-1',
             'logo_mode' => 'off',
+            'audience' => 'personas',
+            'croquis_mode' => 'off',
             'images_mode' => 'manual',
             'interest_mode' => 'off',
             'faq_mode' => 'off',
@@ -84,6 +90,8 @@ class PropertyPresentationTest extends TestCase
         $this->postJson(route('admin.properties.presentations.store', $property), [
             'template_key' => 'plantilla-1',
             'logo_mode' => 'manual',
+            'audience' => 'personas',
+            'croquis_mode' => 'off',
             'images_mode' => 'auto',
             'interest_mode' => 'off',
             'faq_mode' => 'off',
@@ -94,6 +102,8 @@ class PropertyPresentationTest extends TestCase
         $this->postJson(route('admin.properties.presentations.store', $property), [
             'template_key' => 'plantilla-1',
             'logo_mode' => 'manual',
+            'audience' => 'personas',
+            'croquis_mode' => 'off',
             'logo_key' => 'symbol',
             'images_mode' => 'auto',
             'interest_mode' => 'off',

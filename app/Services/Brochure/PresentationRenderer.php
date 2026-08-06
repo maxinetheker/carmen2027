@@ -59,7 +59,7 @@ class PresentationRenderer
             'data' => [
                 'theme' => $theme,
                 'agent' => $this->facts->agent(),
-                'logo' => $this->assembler->logoImage(['logo_mode' => 'auto']),
+                'logo' => $this->assembler->logoImage(config('brochure_templates.default_logo')),
                 'ref' => 'CM-000',
                 'title' => e($title),
                 'titleSize' => TextFit::size($title, $this->facts->titleTiers($theme['title_size'])),

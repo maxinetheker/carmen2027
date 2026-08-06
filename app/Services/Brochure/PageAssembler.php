@@ -29,7 +29,7 @@ class PageAssembler
         $title = $generated['title'] ?? $property->title;
         $interest = $generated['interest'] ?? null;
         $templateKey = $options['template_key'];
-        $logo = $this->logoImage($options);
+        $logo = $this->logoImage($generated['logo_key'] ?? null);
 
         $pages = [[
             'view' => "brochures.templates.{$templateKey}.cover",
@@ -57,14 +57,17 @@ class PageAssembler
             'src' => $this->fitter->fitMm($item->disk, $item->path, $galleryWidth, 45),
         ], $galleryItems);
 
-        $hasHighlights = $galleryFigures || ($interest['trust_paragraph'] ?? null) || ($interest['stats'] ?? []);
-        if ($maxPages >= 2 && $hasHighlights) {
+        // Real property features/attributes always fill this page with grounded content,
+        // even when every AI toggle is off — pages never look empty.
+        $specs = $this->facts->specs($property);
+        if ($maxPages >= 2) {
             $pages[] = [
                 'view' => 'brochures.pages.highlights',
                 'data' => [
-                    'theme' => $theme, 'agent' => $agent, 'logo' => $logo,
+                    'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
                     'heading' => 'Conozca <span>'.e($property->district).'</span> más de cerca',
                     'gallery' => $galleryFigures,
+                    'specs' => $specs,
                     'trustParagraph' => $interest['trust_paragraph'] ?? null,
                     'stats' => $interest['stats'] ?? [],
                     'steps' => $this->facts->steps(),
@@ -75,17 +78,18 @@ class PageAssembler
         $faqs = $generated['faqs'] ?? [];
         $croquisSvg = $generated['croquis_svg'] ?? null;
         $planoItem = $galleryItems[0] ?? null;
-        if ($maxPages >= 3 && ($croquisSvg || $faqs)) {
+        if ($maxPages >= 3) {
             $pages[] = [
                 'view' => 'brochures.pages.details',
                 'data' => [
-                    'theme' => $theme, 'agent' => $agent, 'logo' => $logo,
+                    'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
                     'heading' => 'Lo que necesita saber <span>antes de decidir</span>',
                     'croquisSvg' => $croquisSvg,
                     'planoImage' => $croquisSvg && $planoItem
                         ? $this->fitter->fitMm($planoItem->disk, $planoItem->path, 67, 62)
                         : null,
                     'faqs' => $faqs,
+                    'ficha' => $this->facts->fichaTecnica($property),
                 ],
             ];
         }
@@ -94,20 +98,15 @@ class PageAssembler
     }
 
     /**
-     * "Automático" always resolves to the plain symbol (no letters) — it already
-     * reads fine on both light and dark themes, so no per-template logic is needed.
+     * Renders an already-resolved logo key (chosen upstream by LogoSelector — either
+     * the AI's pick, the admin's manual pick, or null for "off") to a fitted image.
      */
-    public function logoImage(array $options): ?string
+    public function logoImage(?string $key): ?string
     {
-        $mode = $options['logo_mode'] ?? 'auto';
-        if ($mode === 'off') {
+        $logos = config('brochure_templates.logos');
+        if (! $key || ! isset($logos[$key])) {
             return null;
         }
-
-        $logos = config('brochure_templates.logos');
-        $key = $mode === 'manual' && isset($logos[$options['logo_key'] ?? null])
-            ? $options['logo_key']
-            : config('brochure_templates.default_logo');
 
         $path = storage_path(config('brochure_templates.logos_path').'/'.$logos[$key]['file']);
         if (! is_file($path)) {

@@ -1,11 +1,12 @@
-<section class="form-card" data-presentations-panel
-    data-status-url="{{ route('admin.properties.presentations.status', [$record, '__ID__']) }}">
-    <div class="form-card-heading">
-        <div><h2>Presentaciones PDF</h2><p>Brochures generados con IA a partir de esta ficha.</p></div>
-        <button class="mini-button" type="button" data-open-presentation-modal>+ Generar presentación PDF</button>
-    </div>
+{{-- Fetched via AJAX and injected into the shared dialog on the properties list —
+     see resources/js/property-presentations.js. Two views toggled by JS: the saved
+     presentations list, and the generation form (form-presentation-modal partial). --}}
+<button class="modal-close" type="button" data-close-presentation-modal aria-label="Cerrar">×</button>
+<h2>{{ $record->title }}</h2>
 
-    <div class="presentation-list" data-presentation-list>
+<div data-panel-view="list">
+    <div class="presentation-list" data-presentation-list
+        data-status-url="{{ route('admin.properties.presentations.status', [$record, '__ID__']) }}">
         @forelse($record->presentations as $presentation)
             <article class="presentation-row" data-presentation-row data-presentation-id="{{ $presentation->id }}"
                 @unless(in_array($presentation->status, ['queued', 'processing'])) data-poll-done @endunless>
@@ -45,6 +46,13 @@
             </div>
         </article>
     </template>
-</section>
 
-@include('admin.properties.form-presentation-modal')
+    <div class="modal-actions">
+        <button class="button button-accent" type="button" data-show-generate-form>+ Generar presentación PDF</button>
+    </div>
+</div>
+
+<div data-panel-view="form" hidden>
+    <button class="text-link" type="button" data-show-list-view>← Volver a la lista</button>
+    @include('admin.properties.form-presentation-modal')
+</div>

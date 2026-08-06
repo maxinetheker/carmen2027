@@ -37,16 +37,22 @@ class InterestResearcher
             ];
         }
 
+        $maxPages = (int) ($options['max_pages'] ?? 3);
+        $cardCount = $maxPages >= 3 ? 4 : 3;
+        $statCount = $maxPages >= 3 ? 6 : 4;
+
         $prompt = PromptContext::withDocuments(PromptContext::propertySummary($property), $documentContext)
+            ."\n\n".PromptContext::audienceFraming($options['audience'] ?? 'personas')
             ."\n\nBusca en internet información real y actual sobre el mercado inmobiliario de esta zona/tipo "
             .'de propiedad (precios de referencia, demanda, crecimiento, comparativas) para construir '
             .'argumentos de venta convincentes. Devuelve: un "hook" (una frase corta con una cifra comparativa '
-            .'llamativa y su fuente), hasta 3 tarjetas de beneficio (título + descripción corta, pueden basarse '
-            .'en los datos de la propiedad sin necesitar fuente externa), una frase motivacional breve (quote, '
-            .'no es un dato factual sino una frase inspiradora), un párrafo de confianza sobre por qué esta '
-            .'zona (trust_paragraph) con sus fuentes, y hasta 4 estadísticas cortas (valor + etiqueta + fuente). '
-            .'Toda cifra de mercado debe tener una fuente real de tu búsqueda web; si no encuentras una, no la '
-            .'incluyas.';
+            ."llamativa y su fuente), hasta {$cardCount} tarjetas de beneficio (título + descripción corta, pueden "
+            .'basarse en los datos de la propiedad sin necesitar fuente externa), una frase motivacional breve '
+            .'(quote, no es un dato factual sino una frase inspiradora), un párrafo de confianza sobre por qué '
+            ."esta zona (trust_paragraph) con sus fuentes, y hasta {$statCount} estadísticas cortas (valor + "
+            .'etiqueta + fuente). Toda cifra de mercado debe tener una fuente real de tu búsqueda web; si no '
+            .'encuentras una, no la incluyas. Prefiere completar la cantidad máxima de tarjetas y estadísticas '
+            .'pedidas en vez de devolver pocas, siempre que encuentres respaldo real para cada una.';
 
         $schema = [
             'name' => 'brochure_interest',
@@ -96,7 +102,7 @@ class InterestResearcher
 
         $content = [
             'hook' => $this->sourced($data['hook'] ?? null, $data['hook_source'] ?? null, $sources),
-            'cards' => array_slice(array_values($data['cards'] ?? []), 0, 3),
+            'cards' => array_slice(array_values($data['cards'] ?? []), 0, $cardCount),
             'quote' => $data['quote'] ?? null,
             'trust_paragraph' => $this->groundedParagraph($data['trust_paragraph'] ?? null, $data['trust_sources'] ?? [], $sources),
             'stats' => $this->groundedStats($data['stats'] ?? [], $sources),

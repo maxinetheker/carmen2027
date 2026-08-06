@@ -78,6 +78,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::delete('/documentos/{document}', [PropertyDocumentController::class, 'destroy'])
             ->name('properties.documents.destroy');
 
+        Route::get('/presentaciones/panel', [PropertyPresentationController::class, 'panel'])
+            ->name('properties.presentations.panel');
         Route::post('/presentaciones', [PropertyPresentationController::class, 'store'])
             ->name('properties.presentations.store');
         Route::get('/presentaciones/{presentation}/estado', [PropertyPresentationController::class, 'status'])

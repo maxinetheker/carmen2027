@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Draws a simplified inline-SVG location sketch. Requires a real visual reference
- * (an uploaded screenshot and/or a Google Static Maps fetch of the property's own
- * registered coordinates) — with no reference image at all we skip the section
- * entirely rather than let the model invent a street layout it can't verify.
+ * Draws a simplified inline-SVG location sketch. "Automático" fetches a Google
+ * Static Maps image of the property's own registered coordinates via PHP (no
+ * upload needed); "Manual" uses an uploaded screenshot instead (still combined
+ * with the auto-fetched map when available, for extra context). With no reference
+ * image at all we skip the section rather than let the model invent a street layout.
  */
 class CroquisGenerator
 {
@@ -29,8 +30,9 @@ class CroquisGenerator
     public function generate(Property $property, array $options, string $accentColor): array
     {
         $emptyUsage = ['input_tokens' => 0, 'output_tokens' => 0, 'cached_tokens' => 0];
+        $mode = $options['croquis_mode'] ?? 'off';
 
-        if (! ($options['croquis_enabled'] ?? false)) {
+        if ($mode === 'off') {
             return ['svg' => null, 'usage' => $emptyUsage];
         }
 
@@ -38,7 +40,7 @@ class CroquisGenerator
             return ['svg' => null, 'usage' => $emptyUsage];
         }
 
-        $references = $this->collectReferenceImages($property, $options);
+        $references = $this->collectReferenceImages($property, $options, $mode);
         if (! $references) {
             return ['svg' => null, 'usage' => $emptyUsage];
         }
@@ -64,11 +66,11 @@ class CroquisGenerator
     /**
      * @return string[] data: URIs
      */
-    private function collectReferenceImages(Property $property, array $options): array
+    private function collectReferenceImages(Property $property, array $options, string $mode): array
     {
         $references = [];
 
-        if (! empty($options['croquis_reference_path'])) {
+        if ($mode === 'manual' && ! empty($options['croquis_reference_path'])) {
             try {
                 $references[] = $this->encoder->fromDisk('local', $options['croquis_reference_path'], 512);
             } catch (\Throwable $e) {

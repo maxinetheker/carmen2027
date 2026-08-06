@@ -27,6 +27,8 @@ return [
             'text' => '#3d4c60',
             'muted' => '#5a6b80',
             'on_primary' => '#ffffff',
+            'heading' => '#071b35',
+            'on_accent' => '#071b35',
             'font' => "'DejaVu Sans', sans-serif",
         ],
         'plantilla-2' => [
@@ -42,6 +44,8 @@ return [
             'text' => '#48566a',
             'muted' => '#6b7686',
             'on_primary' => '#ffffff',
+            'heading' => '#003da5',
+            'on_accent' => '#ffffff',
             'font' => "'DejaVu Sans', sans-serif",
         ],
         'plantilla-3' => [
@@ -53,10 +57,15 @@ return [
             'panel' => '#f4f5f6',
             'primary' => '#202020',
             'secondary' => '#3a3a3a',
-            'accent' => '#202020',
+            // accent is deliberately a light gray, not black: this theme is monochrome
+            // by design (no separate hue), and reusing `primary` as the accent would make
+            // accent-background elements (hook bar, step numbers) show invisible dark-on-dark text.
+            'accent' => '#e3e6ea',
             'text' => '#4a5058',
             'muted' => '#9aa0a8',
             'on_primary' => '#ffffff',
+            'heading' => '#202020',
+            'on_accent' => '#202020',
             'font' => "'DejaVu Sans', sans-serif",
         ],
         'plantilla-4' => [
@@ -72,6 +81,8 @@ return [
             'text' => '#dbe4ee',
             'muted' => '#a9b6c6',
             'on_primary' => '#ffffff',
+            'heading' => '#ffffff',
+            'on_accent' => '#0a0f16',
             'font' => "'DejaVu Sans', sans-serif",
         ],
         'plantilla-5' => [
@@ -87,6 +98,8 @@ return [
             'text' => '#5d5344',
             'muted' => '#8a7a5f',
             'on_primary' => '#ffffff',
+            'heading' => '#2b2620',
+            'on_accent' => '#ffffff',
             'font' => "'DejaVu Serif', serif",
         ],
     ],

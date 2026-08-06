@@ -1,54 +1,13 @@
-const panel = document.querySelector('[data-presentations-panel]');
-const modal = document.querySelector('[data-presentation-modal]');
-if (panel && modal) {
+const dialog = document.querySelector('[data-presentation-dialog]');
+if (dialog) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-    const list = panel.querySelector('[data-presentation-list]');
-    const empty = panel.querySelector('[data-presentation-empty]');
-    const rowTemplate = panel.querySelector('[data-presentation-row-template]');
-    const statusUrlBase = panel.dataset.statusUrl;
-    const form = modal.querySelector('[data-presentation-form]');
-    const submitButton = form.querySelector('[data-presentation-submit]');
-    const formError = form.querySelector('[data-presentation-form-error]');
-
-    document.querySelector('[data-open-presentation-modal]')?.addEventListener('click', () => modal.showModal());
-    modal.querySelector('[data-close-presentation-modal]')?.addEventListener('click', () => modal.close());
-
-    // Modo de imágenes: mostrar la grilla manual solo si corresponde.
-    const manualImages = form.querySelector('[data-manual-images]');
-    form.querySelectorAll('[data-images-mode]').forEach((radio) => {
-        radio.addEventListener('change', () => {
-            manualImages.hidden = form.querySelector('[data-images-mode]:checked').value !== 'manual';
-        });
-    });
-
-    // Selects de 3 vías (Automático/Manual/Desactivado) que revelan un campo cuando es "manual".
-    form.querySelectorAll('[data-mode-select]').forEach((select) => {
-        const key = select.dataset.reveals;
-        const targets = form.querySelectorAll(`[data-reveal-target="${key}"]`);
-        const sync = () => targets.forEach((target) => { target.hidden = select.value !== 'manual'; });
-        select.addEventListener('change', sync);
-        sync();
-    });
-
-    // Repetidor de preguntas frecuentes manuales (mismo patrón que youtube-videos.js).
-    const faqList = form.querySelector('[data-faq-list]');
-    const faqTemplate = form.querySelector('[data-faq-template]');
-    const faqAdd = form.querySelector('[data-faq-add]');
-    const syncFaqIndexes = () => [...faqList.children].forEach((row, index) => row.querySelectorAll('[name]')
-        .forEach((input) => input.name = input.name.replace(/faq_manual\[(?:\d+|__INDEX__)\]/, `faq_manual[${index}]`)));
-    faqAdd?.addEventListener('click', () => {
-        faqList.insertAdjacentHTML('beforeend', faqTemplate.innerHTML.replaceAll('__INDEX__', faqList.children.length));
-        faqList.lastElementChild.querySelector('input').focus();
-        syncFaqIndexes();
-    });
-    faqList?.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-faq-remove]');
-        if (! button) return;
-        button.closest('.youtube-editor-row').remove();
-        syncFaqIndexes();
-    });
-
+    const body = dialog.querySelector('[data-dialog-body]');
     const statusLabels = { queued: 'En cola', processing: 'Generando…', done: 'Lista', failed: 'Error' };
+
+    // Todo lo de adentro se reemplaza en cada fetch, así que los listeners van
+    // delegados en el <dialog> (estable) en vez de sobre nodos específicos.
+    const showView = (name) => body.querySelectorAll('[data-panel-view]')
+        .forEach((view) => { view.hidden = view.dataset.panelView !== name; });
 
     const applyStatus = (row, data) => {
         row.dataset.presentationId = data.id ?? row.dataset.presentationId;
@@ -65,33 +24,86 @@ if (panel && modal) {
             errorEl.textContent = data.error_message;
             errorEl.hidden = false;
         }
-        if (data.status === 'done' || data.status === 'failed') {
-            row.dataset.pollDone = '1';
-        }
+        if (data.status === 'done' || data.status === 'failed') row.dataset.pollDone = '1';
     };
 
-    const poll = (row, id) => {
-        const url = statusUrlBase.replace('__ID__', id);
+    const poll = (list, row, id) => {
+        const url = list.dataset.statusUrl.replace('__ID__', id);
         const tick = () => {
-            if (row.dataset.pollDone) return;
+            if (! body.contains(row) || row.dataset.pollDone) return;
             fetch(url, { headers: { Accept: 'application/json' } })
                 .then((response) => response.json())
-                .then((data) => {
-                    applyStatus(row, data);
-                    if (! row.dataset.pollDone) window.setTimeout(tick, 3000);
-                })
+                .then((data) => { applyStatus(row, data); if (! row.dataset.pollDone) window.setTimeout(tick, 3000); })
                 .catch(() => window.setTimeout(tick, 5000));
         };
         tick();
     };
 
-    // Reanudar el sondeo de presentaciones que quedaron "en cola"/"generando" al recargar la página.
-    list.querySelectorAll('[data-presentation-row]:not([data-poll-done])').forEach((row) => {
-        if (row.dataset.presentationId) poll(row, row.dataset.presentationId);
+    const syncFaqIndexes = (list) => [...list.children].forEach((row, index) => row.querySelectorAll('[name]')
+        .forEach((input) => input.name = input.name.replace(/faq_manual\[(?:\d+|__INDEX__)\]/, `faq_manual[${index}]`)));
+
+    const syncReveals = (select) => {
+        const key = select.dataset.reveals;
+        body.querySelectorAll(`[data-reveal-target="${key}"]`).forEach((target) => { target.hidden = select.value !== 'manual'; });
+    };
+
+    const loadPanel = (url) => {
+        showView(null);
+        body.innerHTML = '<p class="document-empty">Cargando…</p>';
+        dialog.showModal();
+        fetch(url, { headers: { Accept: 'text/html' } })
+            .then((response) => response.text())
+            .then((html) => {
+                body.innerHTML = html;
+                body.querySelectorAll('[data-mode-select]').forEach(syncReveals);
+                body.querySelectorAll('[data-presentation-list] [data-presentation-row]:not([data-poll-done])').forEach((row) => {
+                    if (row.dataset.presentationId) poll(body.querySelector('[data-presentation-list]'), row, row.dataset.presentationId);
+                });
+            })
+            .catch(() => { body.innerHTML = '<p class="document-empty">No se pudo cargar. Intenta de nuevo.</p>'; });
+    };
+
+    document.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[data-open-presentation-dialog]');
+        if (trigger) loadPanel(trigger.dataset.panelUrl);
     });
 
-    form.addEventListener('submit', (event) => {
+    dialog.addEventListener('click', (event) => {
+        if (event.target === dialog || event.target.closest('[data-close-presentation-modal]')) dialog.close();
+        if (event.target.closest('[data-show-generate-form]')) showView('form');
+        if (event.target.closest('[data-show-list-view]')) showView('list');
+
+        const faqAdd = event.target.closest('[data-faq-add]');
+        if (faqAdd) {
+            const list = body.querySelector('[data-faq-list]');
+            const template = body.querySelector('[data-faq-template]');
+            list.insertAdjacentHTML('beforeend', template.innerHTML.replaceAll('__INDEX__', list.children.length));
+            list.lastElementChild.querySelector('input').focus();
+            syncFaqIndexes(list);
+        }
+        const faqRemove = event.target.closest('[data-faq-remove]');
+        if (faqRemove) {
+            const list = body.querySelector('[data-faq-list]');
+            faqRemove.closest('.youtube-editor-row').remove();
+            syncFaqIndexes(list);
+        }
+    });
+
+    dialog.addEventListener('change', (event) => {
+        if (event.target.matches('[data-images-mode]')) {
+            body.querySelector('[data-manual-images]').hidden = event.target.form
+                .querySelector('[data-images-mode]:checked').value !== 'manual';
+        }
+        if (event.target.matches('[data-mode-select]')) syncReveals(event.target);
+    });
+
+    dialog.addEventListener('submit', (event) => {
+        const form = event.target.closest('[data-presentation-form]');
+        if (! form) return;
         event.preventDefault();
+
+        const submitButton = form.querySelector('[data-presentation-submit]');
+        const formError = form.querySelector('[data-presentation-form-error]');
         submitButton.disabled = true;
         formError.hidden = true;
 
@@ -104,15 +116,17 @@ if (panel && modal) {
                 const data = await response.json();
                 if (! response.ok) throw data;
 
-                empty?.setAttribute('hidden', '');
+                const list = body.querySelector('[data-presentation-list]');
+                const rowTemplate = body.querySelector('[data-presentation-row-template]');
                 const row = rowTemplate.content.firstElementChild.cloneNode(true);
                 row.dataset.presentationId = data.id;
                 row.querySelector('strong').textContent = form.querySelector('input[name=template_key]:checked')
                     ?.closest('.template-option').querySelector('strong').textContent ?? 'Presentación';
+                body.querySelector('[data-presentation-empty]')?.setAttribute('hidden', '');
                 list.prepend(row);
-                poll(row, data.id);
+                poll(list, row, data.id);
 
-                modal.close();
+                showView('list');
                 form.reset();
             })
             .catch((error) => {

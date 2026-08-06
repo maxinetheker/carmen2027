@@ -12,6 +12,13 @@ use Illuminate\Validation\Rule;
 
 class PropertyPresentationController extends Controller
 {
+    public function panel(Property $property)
+    {
+        $property->load(['media', 'presentations']);
+
+        return view('admin.properties.presentation-panel', ['record' => $property]);
+    }
+
     public function store(Property $property, Request $request)
     {
         $templateKeys = array_keys(config('brochure_templates.templates'));
@@ -37,8 +44,9 @@ class PropertyPresentationController extends Controller
             'title_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
             'title_manual' => ['required_if:title_mode,manual', 'nullable', 'string', 'max:160'],
             'max_pages' => ['required', 'integer', "between:{$pages['min']},{$pages['max']}"],
-            'croquis_enabled' => ['nullable', 'boolean'],
-            'croquis_reference' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
+            'audience' => ['required', Rule::in(['personas', 'empresas'])],
+            'croquis_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
+            'croquis_reference' => ['required_if:croquis_mode,manual', 'nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
             'extra_prompt' => ['nullable', 'string', 'max:2000'],
         ]);
 
@@ -51,7 +59,7 @@ class PropertyPresentationController extends Controller
             ? (int) $data['cover_media_id']
             : null;
 
-        $croquisReferencePath = $request->hasFile('croquis_reference')
+        $croquisReferencePath = $data['croquis_mode'] === 'manual' && $request->hasFile('croquis_reference')
             ? $request->file('croquis_reference')->store("properties/{$property->id}/tmp", 'local')
             : null;
 
@@ -70,7 +78,8 @@ class PropertyPresentationController extends Controller
             'title_mode' => $data['title_mode'],
             'title_manual' => $data['title_manual'] ?? null,
             'max_pages' => $data['max_pages'],
-            'croquis_enabled' => $request->boolean('croquis_enabled'),
+            'audience' => $data['audience'],
+            'croquis_mode' => $data['croquis_mode'],
             'croquis_reference_path' => $croquisReferencePath,
             'extra_prompt' => $data['extra_prompt'] ?? null,
         ];

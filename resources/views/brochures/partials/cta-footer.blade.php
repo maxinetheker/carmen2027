@@ -1,4 +1,4 @@
-{{-- expects $agent: name, role, address, phone, email; $logo: nullable data URI --}}
+{{-- expects $agent: name, role, address, phone, email, website; $logo: nullable data URI; $ref: nullable property code --}}
 <div class="cta">
   <div class="ctaleft">
     @if(!empty($logo))
@@ -17,7 +17,13 @@
       <b>{{ $agent['phone'] }}</b><br>
     @endif
     @if(!empty($agent['email']))
-      {{ $agent['email'] }}
+      {{ $agent['email'] }}<br>
+    @endif
+    @if(!empty($agent['website']))
+      {{ $agent['website'] }}
+    @endif
+    @if(!empty($ref))
+      · Ref. {{ $ref }}
     @endif
   </div>
 </div>

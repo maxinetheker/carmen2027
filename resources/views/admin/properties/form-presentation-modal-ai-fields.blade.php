@@ -40,14 +40,28 @@
 <fieldset class="modal-fieldset">
     <legend>Croquis de ubicación</legend>
     @if($hasLocation)
-        <label><input type="checkbox" name="croquis_enabled" value="1"> Incluir croquis (la IA lo dibuja a partir del mapa)</label>
-        <label class="field">
-            <span>Imagen de referencia opcional (ej. captura de Google Maps)</span>
+        <select name="croquis_mode" data-mode-select data-reveals="croquis_manual">
+            <option value="auto" selected>Automático (PHP obtiene el mapa por GPS, sin subir nada)</option>
+            <option value="manual">Manual (subo una captura)</option>
+            <option value="off">Desactivado</option>
+        </select>
+        <label class="field" data-reveal-target="croquis_manual" hidden>
+            <span>Captura de Google Maps</span>
             <input type="file" name="croquis_reference" accept="image/jpeg,image/png,image/webp">
         </label>
     @else
+        <input type="hidden" name="croquis_mode" value="off">
         <p class="field-hint">Registra una ubicación válida en la ficha de la propiedad (sección Ubicación) para poder usar el croquis.</p>
     @endif
+</fieldset>
+
+<fieldset class="modal-fieldset">
+    <legend>Dirigido a</legend>
+    <select name="audience">
+        <option value="personas" selected>Personas / familias</option>
+        <option value="empresas">Empresas / inversionistas</option>
+    </select>
+    <p class="field-hint">Cambia el enfoque del contenido generado (hogar vs. retorno de inversión).</p>
 </fieldset>
 
 <fieldset class="modal-fieldset">

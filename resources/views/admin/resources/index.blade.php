@@ -20,6 +20,7 @@
         <table class="data-table">
             <thead><tr>
                 @foreach($columns as $heading)<th>{{ $heading }}</th>@endforeach
+                @if($route === 'properties')<th>Brochure</th>@endif
                 <th><span class="sr-only">Acciones</span></th>
             </tr></thead>
             <tbody>
@@ -41,6 +42,15 @@
                             @endif
                         </td>
                     @endforeach
+                    @if($route === 'properties')
+                        <td data-label="Brochure">
+                            <button class="icon-button" type="button" data-open-presentation-dialog
+                                data-panel-url="{{ route('admin.properties.presentations.panel', $record) }}"
+                                title="Generar/ver presentación PDF">
+                                <span class="material-symbols-rounded">description</span>
+                            </button>
+                        </td>
+                    @endif
                     <td class="row-actions">
                         @if($route === 'leads' && $record->status !== 'qualified')
                             <form method="post" action="{{ route('admin.leads.convert', $record) }}">@csrf<button title="Convertir prospecto">◎</button></form>
@@ -52,7 +62,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="{{ count($columns) + 1 }}"><div class="empty-state">Aún no hay registros. Crea el primero.</div></td></tr>
+                <tr><td colspan="{{ count($columns) + ($route === 'properties' ? 2 : 1) }}"><div class="empty-state">Aún no hay registros. Crea el primero.</div></td></tr>
             @endforelse
             </tbody>
         </table>
@@ -62,4 +72,10 @@
         {{ $records->links('vendor.pagination.admin') }}
     </div>
 </section>
+
+@if($route === 'properties')
+    <dialog class="presentation-modal" data-presentation-dialog>
+        <div data-dialog-body><p class="document-empty">Cargando…</p></div>
+    </dialog>
+@endif
 @endsection

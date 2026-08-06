@@ -16,7 +16,7 @@ if (document.querySelector('[data-location-picker]')) {
 if (document.querySelector('[data-catalog-filters]')) {
     import('./catalog-filters');
 }
-if (document.querySelector('[data-presentation-modal]')) {
+if (document.querySelector('[data-presentation-dialog]')) {
     import('./property-presentations');
 }
 

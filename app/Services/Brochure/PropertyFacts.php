@@ -51,6 +51,37 @@ class PropertyFacts
         ];
     }
 
+    /**
+     * Property features (already curated by the advisor), or basic attributes as a
+     * fallback — always something real to show, regardless of what the AI returns.
+     */
+    public function specs(Property $property): array
+    {
+        $features = $property->features->take(6)
+            ->map(fn ($f) => ['value' => $f->value, 'label' => $f->label])
+            ->all();
+
+        return $features ?: array_values(array_filter([
+            ['value' => "{$property->area} m²", 'label' => 'Área total'],
+            $property->bedrooms ? ['value' => (string) $property->bedrooms, 'label' => 'Dormitorios'] : null,
+            ['value' => $property->bathrooms_label, 'label' => 'Baños'],
+            ['value' => $property->type_label, 'label' => 'Tipo de propiedad'],
+        ]));
+    }
+
+    public function fichaTecnica(Property $property): array
+    {
+        return array_values(array_filter([
+            ['label' => 'Inmueble', 'value' => $property->title],
+            ['label' => 'Código', 'value' => $property->code],
+            $property->address ? ['label' => 'Dirección', 'value' => $property->address] : null,
+            ['label' => 'Distrito', 'value' => $property->district],
+            ['label' => 'Área', 'value' => "{$property->area} m²"],
+            ['label' => 'Tipo', 'value' => "{$property->type_label} en {$property->operation_label}"],
+            ['label' => 'Precio', 'value' => $this->priceMain($property).' ('.$this->priceSub($property).')'],
+        ]));
+    }
+
     public function agent(): array
     {
         $settings = SiteSetting::values();
@@ -61,6 +92,7 @@ class PropertyFacts
             'address' => $settings['service_area'] ?? null,
             'phone' => $settings['phone'] ?? $settings['whatsapp'] ?? null,
             'email' => $settings['email'] ?? null,
+            'website' => preg_replace('#^https?://(www\.)?#', '', (string) config('app.url')),
         ];
     }
 }

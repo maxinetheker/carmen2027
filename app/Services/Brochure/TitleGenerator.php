@@ -29,6 +29,7 @@ class TitleGenerator
         }
 
         $prompt = PromptContext::withDocuments(PromptContext::propertySummary($property), $documentContext)
+            ."\n\n".PromptContext::audienceFraming($options['audience'] ?? 'personas')
             ."\n\nEscribe un título llamativo de máximo 80 caracteres para la portada del brochure de esta "
             .'propiedad, en español, que resuma su atractivo principal (tipo, ubicación o cifra clave real). '
             .'Sin comillas, sin emojis, sin signos de exclamación excesivos.';

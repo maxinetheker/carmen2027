@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Sans', sans-serif; color: #1a2332; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; }
+
+  /* ---------- PAGE 1 ---------- */
+  .hero { background: #071b35; color: #fff; padding: 10mm 14mm 8mm; }
+  .brand { display: flex; justify-content: space-between; align-items: center; font-size: 8.5pt; letter-spacing: 2px; color: #c9a227; text-transform: uppercase; }
+  .hero h1 { font-size: 26pt; font-weight: 800; line-height: 1.1; margin-top: 5mm; }
+  .hero h1 span { color: #c9a227; }
+  .hero .sub { font-size: 11pt; color: #b8c4d4; margin-top: 2.5mm; }
+  .heroimg { width: 100%; height: 108mm; object-fit: cover; display: block; }
+  .croquis { display: flex; gap: 5mm; padding: 4mm 14mm 0; align-items: stretch; }
+  .croquis .map { flex: 1.7; background: #f2f5f9; border-top: 3px solid #c9a227; padding: 3mm; }
+  .croquis .map svg { width: 100%; height: auto; display: block; }
+  .croquis .plano { flex: 1; }
+  .croquis .plano img { width: 100%; height: 49mm; object-fit: cover; display: block; }
+  .croquis figcaption { font-size: 7.5pt; color: #5a6b80; margin-top: 1.5mm; text-align: center; }
+  .pricebar { background: #c9a227; color: #071b35; display: flex; justify-content: space-between; align-items: center; padding: 5mm 14mm; }
+  .pricebar .big { font-size: 20pt; font-weight: 800; }
+  .pricebar .per { font-size: 11pt; font-weight: 700; text-align: right; line-height: 1.3; }
+  .specs { display: flex; flex-wrap: wrap; padding: 6mm 14mm 0; gap: 4mm; }
+  .spec { flex: 1 1 30%; border-left: 3px solid #c9a227; padding: 1mm 0 1mm 4mm; }
+  .spec .v { font-size: 13pt; font-weight: 800; color: #071b35; }
+  .spec .k { font-size: 8pt; color: #5a6b80; text-transform: uppercase; letter-spacing: 1px; margin-top: 1mm; }
+  .infra { padding: 6mm 14mm 0; }
+  .infra h2, .why h2 { font-size: 13pt; color: #071b35; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #c9a227; padding-bottom: 2mm; margin-bottom: 4mm; }
+  .cols2 { columns: 2; column-gap: 8mm; font-size: 9.5pt; line-height: 1.55; }
+  .cols2 li { margin-bottom: 2mm; list-style: none; padding-left: 5mm; text-indent: -5mm; }
+  .cols2 li::before { content: "■ "; color: #c9a227; font-size: 7pt; }
+  .foot1 { position: absolute; bottom: 0; left: 0; right: 0; background: #071b35; color: #b8c4d4; font-size: 8.5pt; padding: 3.5mm 14mm; display: flex; justify-content: space-between; }
+  .foot1 b { color: #fff; }
+
+  /* ---------- PAGE 2 ---------- */
+  .p2head { background: #071b35; color: #fff; padding: 8mm 14mm; }
+  .p2head h2 { font-size: 17pt; font-weight: 800; }
+  .p2head h2 span { color: #c9a227; }
+  .stats { display: flex; gap: 4mm; padding: 6mm 14mm 0; }
+  .stat { flex: 1; background: #f2f5f9; border-top: 3px solid #c9a227; padding: 4mm; text-align: center; }
+  .stat .n { font-size: 17pt; font-weight: 800; color: #071b35; }
+  .stat .d { font-size: 8pt; color: #5a6b80; margin-top: 1.5mm; line-height: 1.35; }
+  .why { padding: 6mm 14mm 0; }
+  .why p { font-size: 9.5pt; line-height: 1.55; margin-bottom: 2.5mm; }
+  .why p b { color: #071b35; }
+  .gal { display: flex; gap: 3mm; padding: 5mm 14mm 0; }
+  .gal figure { flex: 1; }
+  .gal img { width: 100%; height: 42mm; object-fit: cover; display: block; }
+  .gal figcaption { font-size: 7.5pt; color: #5a6b80; margin-top: 1.5mm; text-align: center; }
+  .legal { margin: 5mm 14mm 0; background: #f2f5f9; border-left: 4px solid #071b35; padding: 4mm 5mm; font-size: 9pt; line-height: 1.5; }
+  .legal b { color: #071b35; }
+  .cta { position: absolute; bottom: 0; left: 0; right: 0; background: #071b35; color: #fff; padding: 7mm 12mm; display: flex; justify-content: space-between; align-items: center; gap: 8mm; }
+  .cta .name { font-size: 11.5pt; font-weight: 800; white-space: nowrap; }
+  .cta .role { font-size: 8pt; color: #c9a227; text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2mm; white-space: nowrap; }
+  .cta .contact { text-align: right; font-size: 8.5pt; line-height: 1.6; flex-shrink: 0; white-space: nowrap; }
+  .cta .contact b { color: #c9a227; font-size: 13pt; }
+  .cta .addr { font-size: 7.5pt; color: #b8c4d4; margin-top: 2.2mm; white-space: nowrap; }
+  .rlogo { height: 11mm; margin-right: 7mm; flex-shrink: 0; }
+  .ctaleft { display: flex; align-items: center; }
+
+  /* ---------- PAGE 3 ---------- */
+  .ficha { margin: 4.5mm 14mm 0; width: calc(100% - 28mm); border-collapse: collapse; font-size: 9pt; }
+  .ficha td { border: 0.3mm solid #d7dee8; padding: 2mm 3.5mm; }
+  .ficha td:first-child { background: #f2f5f9; font-weight: 700; color: #071b35; width: 38%; }
+  .loc { display: flex; gap: 5mm; padding: 6mm 14mm 0; align-items: stretch; }
+  .loc .box { flex: 1; background: #f2f5f9; border-top: 3px solid #c9a227; padding: 4mm 5mm; font-size: 9pt; line-height: 1.55; }
+  .loc .box b { color: #071b35; }
+  .faq { padding: 4.5mm 14mm 0; }
+  .faq h3 { font-size: 12pt; color: #071b35; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #c9a227; padding-bottom: 2mm; margin-bottom: 3mm; }
+  .faq p { font-size: 8.8pt; line-height: 1.45; margin-bottom: 2mm; }
+  .faq b { color: #071b35; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page">
+  <div class="hero">
+    <div class="brand"><span>Carmen Mestanza · Asesoría Inmobiliaria</span><span>Ref. CM-008</span></div>
+    <h1>TERRENO INDUSTRIAL <span>30,000 m²</span> — ZONIFICACIÓN I4</h1>
+    <div class="sub">Centro Industrial La Chutana · Km 60 Panamericana Sur · Chilca, Lima</div>
+  </div>
+  <img class="heroimg" src="img/hero_empresas.jpg" alt="Vista aérea del lote completo junto a PRECOR Chilca y PROMET">
+  <div class="pricebar">
+    <div class="big">US$ 2,400,000</div>
+    <div class="per">US$ 80 por m²<br>Posibilidad de venta en áreas menores</div>
+  </div>
+  <div class="specs">
+    <div class="spec"><div class="v">30,000 m²</div><div class="k">Área total · Lote 03, Mz. H</div></div>
+    <div class="spec"><div class="v">I4</div><div class="k">Gran industria pesada</div></div>
+    <div class="spec"><div class="v">100 m × 300 m</div><div class="k">Frente a Av. El Valle × fondo</div></div>
+    <div class="spec"><div class="v">Km 60</div><div class="k">Acceso directo Panamericana Sur</div></div>
+    <div class="spec"><div class="v">Esquina</div><div class="k">Doble frente: Av. El Valle y Calle 02</div></div>
+    <div class="spec"><div class="v">Saneado</div><div class="k">Inscrito en SUNARP · Sin cargas</div></div>
+  </div>
+  <div class="infra">
+    <h2>Infraestructura operativa desde el día uno</h2>
+    <ul class="cols2">
+      <li>Seguridad privada 24/7 y videovigilancia perimetral</li>
+      <li>Energía eléctrica, agua e internet por fibra óptica instalada</li>
+      <li>Planta de tratamiento de aguas residuales (PTAR)</li>
+      <li>Vías internas pavimentadas para carga pesada</li>
+      <li>Habilitación urbana con recepción de obras inscrita</li>
+      <li>Alejado de centros poblados: opere sin conflictos urbanos</li>
+    </ul>
+  </div>
+  <div class="foot1">
+    <span><b>RE/MAX Integrity</b> · Carmen Rosa Mestanza Ordoñez · carmenmestanza.com</span>
+    <span>☎ <b>925 081 702</b> · cmestanzaremaxintegrity@gmail.com</span>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+  <div class="p2head">
+    <h2>Chilca es hoy el <span>eje industrial del Perú</span>. Su empresa debería estar aquí.</h2>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">60%</div><div class="d">de la oferta de suelo industrial de Lima se concentra en Chilca</div></div>
+    <div class="stat"><div class="n">3–6×</div><div class="d">más caro el m² industrial en Lima urbana (US$ 200–500) vs. US$ 80 aquí</div></div>
+    <div class="stat"><div class="n">~50%</div><div class="d">de la energía eléctrica del país se genera en Chilca, primer polo energético</div></div>
+    <div class="stat"><div class="n">525 ha</div><div class="d">y 153 lotes: La Chutana, clúster industrial en plena consolidación</div></div>
+  </div>
+  <div class="why">
+    <p><b>El suelo industrial dentro de Lima se agotó.</b> Las fábricas migran al sur y Chilca concentra la nueva industria: energía abundante del gas de Camisea, terreno plano y logística directa por la Panamericana Sur.</p>
+    <p><b>Comprar a US$ 80/m² en un parque ya operativo</b> —no en un proyecto en papel— significa instalarse de inmediato y capturar la plusvalía de un corredor donde la venta de lotes industriales supera los 350,000 m² anuales.</p>
+  </div>
+  <div class="gal">
+    <figure><img src="img/masterplan.jpg"><figcaption>Plan maestro del Centro Industrial La Chutana</figcaption></figure>
+    <figure><img src="img/u5.jpg"><figcaption>Vías pavimentadas y lotes al interior del parque</figcaption></figure>
+    <figure><img src="img/u4.jpg"><figcaption>Acceso directo: Km 60–61 de la Panamericana Sur</figcaption></figure>
+  </div>
+  <div class="legal">
+    <b>Seguridad jurídica verificada:</b> propiedad totalmente saneada e inscrita en Registros Públicos (SUNARP). Certificado Registral Inmobiliario: <b>sin gravámenes ni cargas vigentes</b>, sin títulos pendientes. Habilitación urbana industrial-comercial con recepción de obras inscrita y reglamento interno bajo Ley N° 27157. Listo para escriturar. El expediente registral completo se entrega en la visita con la asesora.
+  </div>
+  <div class="cta">
+    <div class="ctaleft">
+      <img class="rlogo" src="img/remax_lockup_dark.png">
+      <div>
+        <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+        <div class="role">Agente Inmobiliario · RE/MAX Integrity</div>
+        <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar, Lima</div>
+      </div>
+    </div>
+    <div class="contact">
+      <b>☎ 925 081 702</b><br>
+      cmestanzaremaxintegrity@gmail.com<br>
+      www.remax.pe · Ref. CM-008
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+  <div class="p2head">
+    <h2>Ficha técnica y <span>ubicación estratégica</span></h2>
+  </div>
+
+<!--CROQUIS-START-->
+  <div class="croquis">
+    <figure class="map">
+      <svg viewBox="0 0 560 310" xmlns="http://www.w3.org/2000/svg">
+        <rect width="560" height="310" fill="#eef3f8"/>
+        <!-- Panamericana Sur -->
+        <rect x="52" y="0" width="26" height="310" fill="#8a97a8"/>
+        <line x1="65" y1="0" x2="65" y2="310" stroke="#fff" stroke-width="2" stroke-dasharray="10 8"/>
+        <text x="40" y="200" font-size="13" font-weight="bold" fill="#071b35" transform="rotate(-90 40 200)">PANAMERICANA SUR</text>
+        <circle cx="65" cy="262" r="11" fill="#071b35"/>
+        <text x="65" y="266" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">60</text>
+        <circle cx="65" cy="40" r="11" fill="#071b35"/>
+        <text x="65" y="44" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">61</text>
+        <!-- Av. El Valle -->
+        <rect x="78" y="238" width="482" height="20" fill="#aeb9c6"/>
+        <text x="300" y="252" font-size="12" font-weight="bold" fill="#071b35" text-anchor="middle">AV. EL VALLE</text>
+        <!-- Calle 02 -->
+        <rect x="448" y="30" width="16" height="208" fill="#aeb9c6"/>
+        <text x="470" y="140" font-size="11" font-weight="bold" fill="#071b35" transform="rotate(90 470 140)">CALLE 02</text>
+        <!-- Lote -->
+        <rect x="330" y="40" width="118" height="198" fill="#c9a227" fill-opacity="0.28" stroke="#d81f26" stroke-width="4"/>
+        <text x="389" y="125" font-size="15" font-weight="bold" fill="#d81f26" text-anchor="middle">LOTE 03</text>
+        <text x="389" y="145" font-size="12" font-weight="bold" fill="#071b35" text-anchor="middle">30,000 m²</text>
+        <text x="389" y="163" font-size="10" fill="#071b35" text-anchor="middle">100 m × 300 m</text>
+        <!-- Vecinos -->
+        <rect x="96" y="52" width="70" height="34" fill="#5a6b80"/>
+        <text x="131" y="72" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">PRECOR</text>
+        <text x="131" y="82" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">CHILCA</text>
+        <rect x="480" y="46" width="66" height="30" fill="#1e5fa8"/>
+        <text x="513" y="65" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">PROMET</text>
+        <!-- Ingreso -->
+        <circle cx="78" cy="248" r="6" fill="#d81f26"/>
+        <text x="95" y="278" font-size="10" fill="#071b35" font-weight="bold">Ingreso Centro Industrial La Chutana</text>
+        <!-- Norte -->
+        <polygon points="530,285 536,300 524,300" fill="#071b35"/>
+        <text x="530" y="281" font-size="10" fill="#071b35" text-anchor="middle" font-weight="bold">N</text>
+        <text x="12" y="302" font-size="8.5" fill="#5a6b80">Croquis referencial, sin escala · GPS: -12.478796, -76.713497</text>
+      </svg>
+      <figcaption>Croquis de ubicación: doble frente a Av. El Valle y Calle 02, junto a PRECOR Chilca y PROMET</figcaption>
+    </figure>
+    <figure class="plano">
+      <img src="img/u3.jpg">
+      <figcaption>Vista satelital del lote: 100 m de frente × 300 m de fondo</figcaption>
+    </figure>
+  </div>
+<!--CROQUIS-END-->
+  <table class="ficha">
+    <tr><td>Inmueble</td><td>Lote 03, Manzana H — Habilitación Urbana Industrial Comercial Lomas «La Chutana»</td></tr>
+    <tr><td>Área total</td><td>30,000.00 m² (posibilidad de venta en áreas menores)</td></tr>
+    <tr><td>Linderos</td><td>Frente: Av. El Valle (100 ml) · Derecha: Calle 02 (300 ml) · Izquierda: Lote 04 (300 ml) · Fondo: Lote 02 (100 ml)</td></tr>
+    <tr><td>Zonificación</td><td>I4 — Gran industria pesada</td></tr>
+    <tr><td>Inscripción</td><td>Propiedad saneada e inscrita en el Registro de Predios de SUNARP. El expediente registral completo se entrega directamente con la asesora</td></tr>
+    <tr><td>Cargas y gravámenes</td><td>Ninguno vigente (Certificado Registral Inmobiliario)</td></tr>
+    <tr><td>Habilitación</td><td>Recepción de obras inscrita · Reglamento interno Ley N° 27157 · Participación en áreas comunes: 1.36%</td></tr>
+    <tr><td>Precio</td><td>US$ 2,400,000 (US$ 80 por m²)</td></tr>
+  </table>
+  <div class="faq">
+    <h3>Preguntas frecuentes</h3>
+    <p><b>¿Se puede comprar un área menor a los 30,000 m²?</b> Sí, existe posibilidad de venta en áreas menores. Consulte metrajes y condiciones.</p>
+    <p><b>¿Qué tan rápido podemos escriturar?</b> La propiedad está saneada y sin cargas: verificada la documentación, el proceso pasa directo a minuta, escritura pública e inscripción en SUNARP.</p>
+    <p><b>¿El terreno cuenta con factibilidad de servicios?</b> El parque opera con agua, energía eléctrica, fibra óptica, PTAR y vías pavimentadas ya instaladas.</p>
+    <p><b>¿Podemos construir de inmediato?</b> Sí. La habilitación urbana tiene recepción de obras inscrita: el lote está apto para tramitar licencia de edificación industrial ante la Municipalidad de Chilca.</p>
+    <p><b>¿Cómo agendamos una visita técnica?</b> Llame al 925 081 702 o escriba a cmestanzaremaxintegrity@gmail.com para coordinar una visita al lote y recibir el expediente registral completo.</p>
+  </div>
+  <div class="cta">
+    <div class="ctaleft">
+      <img class="rlogo" src="img/remax_lockup_dark.png">
+      <div>
+        <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+        <div class="role">Agente Inmobiliario · RE/MAX Integrity</div>
+        <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar, Lima</div>
+      </div>
+    </div>
+    <div class="contact">
+      <b>☎ 925 081 702</b><br>
+      cmestanzaremaxintegrity@gmail.com<br>
+      www.remax.pe · Ref. CM-008
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

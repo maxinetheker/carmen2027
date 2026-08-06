@@ -35,12 +35,15 @@ class FaqGenerator
             return ['faqs' => $faqs, 'usage' => $emptyUsage];
         }
 
+        $count = (int) ($options['max_pages'] ?? 3) >= 3 ? 8 : 5;
+
         $prompt = PromptContext::withDocuments(PromptContext::propertySummary($property), $documentContext)
-            ."\n\nEscribe entre 4 y 6 preguntas frecuentes que un comprador/inquilino real haría sobre esta "
+            ."\n\n".PromptContext::audienceFraming($options['audience'] ?? 'personas')
+            ."\n\nEscribe {$count} preguntas frecuentes que un comprador/inquilino real haría sobre esta "
             .'propiedad, con sus respuestas. Basa las respuestas solo en los datos de arriba. Si una pregunta '
             .'típica (por ejemplo sobre situación registral, deudas o gastos) no tiene respaldo suficiente en '
             .'los datos, respóndela de forma genérica invitando a confirmar el detalle con la asesora, sin '
-            .'inventar el dato específico.';
+            .'inventar el dato específico. Completa las preguntas pedidas en vez de devolver menos.';
 
         $schema = [
             'name' => 'brochure_faq',
@@ -69,7 +72,7 @@ class FaqGenerator
         $result = $this->ai->text($prompt, $schema, false, $instructions);
         $faqs = collect($result['data']['faqs'] ?? [])
             ->filter(fn ($row) => trim((string) ($row['question'] ?? '')) !== '' && trim((string) ($row['answer'] ?? '')) !== '')
-            ->take(6)
+            ->take($count)
             ->values()
             ->all();
 

@@ -15,14 +15,14 @@
   .content-head h2 { font-size: 17pt; font-weight: 800; line-height: 1.25; }
   .content-head h2 span { color: {{ $theme['accent'] }}; }
 
-  .hook { background: {{ $theme['accent'] }}; color: {{ $theme['primary'] }}; text-align: center; padding: 5mm 14mm; font-size: 13pt; font-weight: 800; }
+  .hook { background: {{ $theme['accent'] }}; color: {{ $theme['on_accent'] }}; text-align: center; padding: 5mm 14mm; font-size: 13pt; font-weight: 800; }
 
   .cards { display: table; table-layout: fixed; width: 182mm; margin: 6mm 14mm 0; border-collapse: separate; border-spacing: 4mm 0; }
   .card { display: table-cell; vertical-align: top; background: {{ $theme['panel'] }}; border-top: 3px solid {{ $theme['accent'] }}; padding: 4.5mm; }
-  .card .t { font-size: 11pt; font-weight: 800; color: {{ $theme['primary'] }}; margin-bottom: 2mm; }
+  .card .t { font-size: 11pt; font-weight: 800; color: {{ $theme['heading'] }}; margin-bottom: 2mm; }
   .card .d { font-size: 9pt; line-height: 1.5; color: {{ $theme['text'] }}; }
 
-  .quote { margin: 6mm 14mm 0; text-align: center; font-size: 12pt; font-weight: 700; color: {{ $theme['primary'] }}; line-height: 1.5; padding: 0 6mm; }
+  .quote { margin: 6mm 14mm 0; text-align: center; font-size: 12pt; font-weight: 700; color: {{ $theme['heading'] }}; line-height: 1.5; padding: 0 6mm; }
   .quote span { color: {{ $theme['accent'] }}; }
 
   .gal { display: table; table-layout: fixed; width: 182mm; margin: 6mm 14mm 0; border-collapse: separate; border-spacing: 3mm 0; }
@@ -31,17 +31,17 @@
   .gal figcaption { font-size: 7.5pt; color: {{ $theme['muted'] }}; margin-top: 1.5mm; text-align: center; }
 
   .trust { margin: 6mm 14mm 0; background: {{ $theme['panel'] }}; border-left: 4px solid {{ $theme['accent'] }}; padding: 4.5mm 5mm; font-size: 9.5pt; line-height: 1.55; color: {{ $theme['text'] }}; }
-  .trust b { color: {{ $theme['primary'] }}; }
+  .trust b { color: {{ $theme['heading'] }}; }
 
   .stats { display: table; table-layout: fixed; width: 182mm; margin: 6mm 14mm 0; border-collapse: separate; border-spacing: 4mm 0; }
   .stat { display: table-cell; vertical-align: top; background: {{ $theme['panel'] }}; border-top: 3px solid {{ $theme['accent'] }}; padding: 4mm; text-align: center; }
-  .stat .n { font-size: 15pt; font-weight: 800; color: {{ $theme['primary'] }}; }
+  .stat .n { font-size: 15pt; font-weight: 800; color: {{ $theme['heading'] }}; }
   .stat .d { font-size: 7.7pt; color: {{ $theme['muted'] }}; margin-top: 1.5mm; line-height: 1.35; }
 
   .steps { display: table; table-layout: fixed; width: 182mm; margin: 6mm 14mm 0; border-collapse: separate; border-spacing: 4mm 0; }
   .step { display: table-cell; vertical-align: top; text-align: center; }
-  .step .num { width: 11mm; height: 11mm; line-height: 11mm; border-radius: 50%; background: {{ $theme['accent'] }}; color: {{ $theme['primary'] }}; font-weight: 800; font-size: 13pt; margin: 0 auto 2.5mm; text-align: center; }
-  .step .t { font-size: 10pt; font-weight: 800; color: {{ $theme['primary'] }}; }
+  .step .num { width: 11mm; height: 11mm; line-height: 11mm; border-radius: 50%; background: {{ $theme['accent'] }}; color: {{ $theme['on_accent'] }}; font-weight: 800; font-size: 13pt; margin: 0 auto 2.5mm; text-align: center; }
+  .step .t { font-size: 10pt; font-weight: 800; color: {{ $theme['heading'] }}; }
   .step .d { font-size: 8.5pt; color: {{ $theme['muted'] }}; line-height: 1.45; margin-top: 1.5mm; }
 
   .croquis { display: table; width: 182mm; margin: 6mm 14mm 0; border-collapse: separate; border-spacing: 5mm 0; }
@@ -51,10 +51,14 @@
   .croquis .plano img { width: 100%; height: 62mm; display: block; }
   .croquis figcaption { font-size: 7.5pt; color: {{ $theme['muted'] }}; margin-top: 1.5mm; text-align: center; }
 
+  .ficha { margin: 5mm 14mm 0; width: 182mm; border-collapse: collapse; font-size: 9pt; }
+  .ficha td { border: 0.3mm solid {{ $theme['muted'] }}; padding: 2mm 3.5mm; color: {{ $theme['text'] }}; }
+  .ficha td:first-child { background: {{ $theme['panel'] }}; font-weight: 700; color: {{ $theme['heading'] }}; width: 38%; }
+
   .faq { padding: 5mm 14mm 0; }
-  .faq h3 { font-size: 11pt; color: {{ $theme['primary'] }}; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid {{ $theme['accent'] }}; padding-bottom: 2mm; margin-bottom: 3mm; }
+  .faq h3 { font-size: 11pt; color: {{ $theme['heading'] }}; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid {{ $theme['accent'] }}; padding-bottom: 2mm; margin-bottom: 3mm; }
   .faq p { font-size: 9.5pt; line-height: 1.55; margin-bottom: 2.5mm; color: {{ $theme['text'] }}; }
-  .faq b { color: {{ $theme['primary'] }}; }
+  .faq b { color: {{ $theme['heading'] }}; }
 
   .cta { position: absolute; bottom: 0; left: 0; width: 210mm; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; padding: 6mm 14mm; display: table; }
   .cta .ctaleft { display: table-cell; vertical-align: middle; }

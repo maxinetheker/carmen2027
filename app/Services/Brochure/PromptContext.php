@@ -49,6 +49,15 @@ TEXT;
         return $propertySummary."\n\nDocumentos de referencia adjuntos por la asesora:\n{$documentContext}";
     }
 
+    public static function audienceFraming(string $audience): string
+    {
+        return $audience === 'empresas'
+            ? 'Audiencia objetivo: empresas e inversionistas. Enfoca el mensaje en retorno de inversión, '
+                .'plusvalía, operatividad/logística y seguridad jurídica de la compra — no en un tono de "hogar familiar".'
+            : 'Audiencia objetivo: personas y familias. Enfoca el mensaje en calidad de vida, ubicación y '
+                .'beneficios para vivir o mudarse, con un tono cercano.';
+    }
+
     /**
      * Combines the fixed no-invention rule with the admin's global base prompt
      * (Ajustes › Inteligencia artificial) and any instructions typed for this

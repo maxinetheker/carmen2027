@@ -7,6 +7,7 @@ use App\Services\Brochure\CroquisGenerator;
 use App\Services\Brochure\FaqGenerator;
 use App\Services\Brochure\ImageSelector;
 use App\Services\Brochure\InterestResearcher;
+use App\Services\Brochure\LogoSelector;
 use App\Services\Brochure\PresentationRenderer;
 use App\Services\Brochure\TitleGenerator;
 use App\Services\PropertyDocumentManager;
@@ -37,6 +38,7 @@ class GeneratePropertyPresentationJob implements ShouldQueue
     public function handle(
         PropertyDocumentManager $documents,
         ImageSelector $images,
+        LogoSelector $logos,
         TitleGenerator $titles,
         FaqGenerator $faqs,
         InterestResearcher $interest,
@@ -63,6 +65,9 @@ class GeneratePropertyPresentationJob implements ShouldQueue
             $imageResult = $images->select($property, $options);
             $addUsage($imageResult['usage']);
 
+            $logoResult = $logos->select($options, $theme);
+            $addUsage($logoResult['usage']);
+
             $titleResult = $titles->generate($property, $options, $documentContext);
             $addUsage($titleResult['usage']);
 
@@ -82,6 +87,7 @@ class GeneratePropertyPresentationJob implements ShouldQueue
                 'croquis_svg' => $croquisResult['svg'],
                 'media_ids' => $imageResult['media_ids'],
                 'cover_media_id' => $imageResult['cover_media_id'],
+                'logo_key' => $logoResult['key'],
             ];
 
             $rendered = $renderer->render($property, $options, $generated);

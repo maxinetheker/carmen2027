@@ -44,6 +44,5 @@
 
 @if($record->exists)
     @include('admin.properties.form-documents')
-    @include('admin.properties.form-presentations')
 @endif
 @endsection

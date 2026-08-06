@@ -1,4 +1,4 @@
-{{-- expects: $heading, $gallery (array of [src, caption]), $trustParagraph, $stats, $steps, $agent --}}
+{{-- expects: $heading, $gallery (array of [src, caption]), $specs, $trustParagraph, $stats, $steps, $agent --}}
 <div class="page">
   <div class="content-head">
     <h2>{!! $heading !!}</h2>
@@ -13,6 +13,19 @@
             <figcaption>{{ $item['caption'] }}</figcaption>
           @endif
         </figure>
+      @endforeach
+    </div>
+  @endif
+
+  {{-- Real property data (features already entered by the advisor) — always available
+       regardless of what the AI toggles are set to, so this page never looks empty. --}}
+  @if(count($specs))
+    <div class="stats">
+      @foreach($specs as $spec)
+        <div class="stat">
+          <div class="n">{{ $spec['value'] }}</div>
+          <div class="d">{{ $spec['label'] }}</div>
+        </div>
       @endforeach
     </div>
   @endif
