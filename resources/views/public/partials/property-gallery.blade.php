@@ -16,14 +16,20 @@
 @endphp
 
 <section class="detail-gallery" data-property-gallery>
-    <div class="gallery-stage">
+    <div class="gallery-stage" data-gallery-stage tabindex="0" role="region"
+        aria-roledescription="carrusel" aria-label="Galería de {{ $property->title }}">
         @foreach($galleryItems as $index => $item)
             <div class="gallery-panel" data-gallery-panel @if($index) hidden @endif>
                 @if($item['type'] === 'image')
                     @if($item['narrow'] ?? false)
                         <img class="gallery-image-backdrop" src="{{ $item['url'] }}" alt="" aria-hidden="true">
                     @endif
-                    <img class="gallery-image-main" src="{{ $item['url'] }}" alt="{{ $property->title }} · imagen {{ $index + 1 }}">
+                    <img class="gallery-image-main" src="{{ $item['url'] }}" alt="{{ $property->title }} · imagen {{ $index + 1 }}"
+                        draggable="false" data-gallery-open>
+                    <button type="button" class="gallery-expand" data-gallery-expand
+                        aria-label="Ver imagen {{ $index + 1 }} a pantalla completa">
+                        <span class="material-symbols-rounded" aria-hidden="true">fullscreen</span>
+                    </button>
                 @elseif($item['type'] === 'youtube')
                     <iframe src="{{ $item['url'] }}" title="{{ $item['title'] ?: 'Video de '.$property->title }}"
                         loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
@@ -34,6 +40,14 @@
                 @endif
             </div>
         @endforeach
+        @if($galleryItems->count() > 1)
+            <button type="button" class="gallery-arrow gallery-arrow-prev" data-gallery-prev aria-label="Elemento anterior">
+                <span class="material-symbols-rounded" aria-hidden="true">chevron_left</span>
+            </button>
+            <button type="button" class="gallery-arrow gallery-arrow-next" data-gallery-next aria-label="Elemento siguiente">
+                <span class="material-symbols-rounded" aria-hidden="true">chevron_right</span>
+            </button>
+        @endif
         <span class="gallery-badge">{{ $property->type_label }} seleccionado</span>
     </div>
     @if($galleryItems->count() > 1)

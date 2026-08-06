@@ -97,23 +97,3 @@ document.querySelectorAll('.property-form').forEach((form) => {
         form.dispatchEvent(new Event('input', { bubbles: true }));
     });
 });
-
-document.querySelectorAll('[data-property-gallery]').forEach((gallery) => {
-    const panels = [...gallery.querySelectorAll('[data-gallery-panel]')];
-    const buttons = [...gallery.querySelectorAll('[data-gallery-target]')];
-    buttons.forEach((button) => button.addEventListener('click', () => {
-        const target = Number(button.dataset.galleryTarget);
-        panels.forEach((panel, index) => {
-            panel.hidden = index !== target;
-            if (index !== target) {
-                panel.querySelector('video')?.pause();
-                const frame = panel.querySelector('iframe');
-                if (frame) frame.src = frame.src;
-            }
-        });
-        buttons.forEach((item, index) => {
-            item.classList.toggle('active', index === target);
-            item.setAttribute('aria-selected', String(index === target));
-        });
-    }));
-});

@@ -42,7 +42,11 @@ class PublicSiteTest extends TestCase
             ->assertSee('Miraflores (2)');
         $property = Property::first();
         $this->get(route('properties.show', $property))
-            ->assertOk()->assertSee($property->title);
+            ->assertOk()->assertSee($property->title)
+            ->assertSee('data-gallery-stage', false)
+            ->assertSee('data-gallery-open', false)
+            ->assertSee('data-gallery-expand', false)
+            ->assertSee('draggable="false"', false);
     }
 
     public function test_catalog_can_filter_by_price_zone_and_proximity(): void

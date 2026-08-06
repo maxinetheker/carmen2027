@@ -7,6 +7,9 @@ import './youtube-videos';
 import './searchable-select';
 import './emoji-render';
 
+if (document.querySelector('[data-property-gallery]')) {
+    import('./property-gallery');
+}
 if (document.querySelector('[data-location-picker]')) {
     import('./property-location');
 }
