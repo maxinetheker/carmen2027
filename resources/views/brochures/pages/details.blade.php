@@ -1,5 +1,5 @@
 {{-- expects: $heading, $croquisSvg (nullable sanitized <svg>), $planoImage, $faqs, $ficha, $description, $agent --}}
-<div class="page">
+<div class="page {{ $croquisSvg ? 'details-compact' : '' }}">
   <div class="content-head">
     <h2>{!! $heading !!}</h2>
   </div>

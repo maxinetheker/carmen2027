@@ -1,6 +1,6 @@
 {{-- Impacto con foto a página completa — adaptado de storage/planitllas/Plantilla 4.HTM --}}
 <style>
-  .p4-photoband { position: relative; height: 170mm; overflow: hidden; }
+  .p4-photoband { position: relative; height: 150mm; overflow: hidden; }
   .p4-photoband img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   {{-- Flat tinted overlay instead of a CSS gradient — dompdf (this version) does not render gradients,
        and a flat tint keeps text legible across the whole band regardless. --}}

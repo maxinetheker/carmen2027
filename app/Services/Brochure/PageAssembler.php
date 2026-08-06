@@ -47,9 +47,9 @@ class PageAssembler
                     : asset('images/property-1.jpg'),
                 'priceMain' => $this->facts->priceMain($property),
                 'priceSub' => $this->facts->priceSub($property),
-                'hook' => $this->content->shortText($interest['hook'] ?? null, 180),
+                'hook' => $this->content->shortText($interest['hook'] ?? null, 130),
                 'cards' => $this->content->cards($interest['cards'] ?? []),
-                'quote' => $this->content->shortText($interest['quote'] ?? null, 180),
+                'quote' => $this->content->shortText($interest['quote'] ?? null, 120),
             ],
         ]];
 
@@ -63,16 +63,16 @@ class PageAssembler
                     'heading' => 'Conozca <span>'.e($property->district).'</span> más de cerca',
                     'gallery' => $this->galleryFigures($highlightItems, 45),
                     'specs' => array_slice($this->facts->specs($property), 0, 4),
-                    'trustParagraph' => $interest['trust_paragraph'] ?? null,
-                    'stats' => array_slice($interest['stats'] ?? [], 0, 4),
+                    'trustParagraph' => $this->content->htmlExcerpt($interest['trust_paragraph'] ?? null, 320),
+                    'stats' => $this->content->stats(array_slice($interest['stats'] ?? [], 0, 4)),
                     'steps' => $this->facts->steps(),
                 ],
             ];
         }
 
         $croquisSvg = $generated['croquis_svg'] ?? null;
-        $faqs = $this->content->faqs($generated['faqs'] ?? [], $croquisSvg ? 3 : 7);
-        $description = $this->content->shortText(strip_tags((string) $property->description), $croquisSvg ? 360 : 650);
+        $faqs = $this->content->faqs($generated['faqs'] ?? [], $croquisSvg ? 3 : 5, $croquisSvg ? 110 : 125);
+        $description = $this->content->shortText(strip_tags((string) $property->description), $croquisSvg ? 220 : 300);
         if ($croquisSvg || $faqs || $description) {
             $planoItem = $galleryItems->get(4) ?? $galleryItems->first();
             $contentPages[] = [
@@ -85,9 +85,10 @@ class PageAssembler
                         ? $this->fitter->fitMm($planoItem->disk, $planoItem->path, 67, 62)
                         : null,
                     'faqs' => $faqs,
-                    'ficha' => $croquisSvg
-                        ? array_slice($this->facts->fichaTecnica($property), 0, 4)
-                        : $this->facts->fichaTecnica($property),
+                    'ficha' => $this->content->facts(
+                        $croquisSvg ? array_slice($this->facts->fichaTecnica($property), 0, 4) : $this->facts->fichaTecnica($property),
+                        $croquisSvg ? 95 : 125
+                    ),
                     'description' => $description,
                 ],
             ];

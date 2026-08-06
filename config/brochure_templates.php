@@ -71,7 +71,7 @@ return [
         'plantilla-4' => [
             'label' => 'Impacto con foto a página completa',
             'source' => 'storage/planitllas/Plantilla 4.HTM',
-            'hero_box' => ['w' => 210, 'h' => 170],
+            'hero_box' => ['w' => 210, 'h' => 150],
             'title_size' => 32,
             'bg' => '#0a0f16',
             'panel' => '#141b26',
