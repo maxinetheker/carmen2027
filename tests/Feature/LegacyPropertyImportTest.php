@@ -26,6 +26,12 @@ class LegacyPropertyImportTest extends TestCase
         $this->assertStringStartsWith('/storage/properties/', $property->media->first()->url);
         $this->assertSame('video', $property->media->last()->type);
         $this->assertTrue(Storage::disk('public')->exists($property->media->first()->path));
+
+        $losOlivos = Property::where('code', 'CM-009')->firstOrFail();
+        $this->assertStringContainsString('🏡', $losOlivos->description);
+        $this->assertStringContainsString('🔺', $losOlivos->description);
+        $this->assertStringContainsString('<strong>VENTA</strong>', $losOlivos->description);
+        $this->assertStringNotContainsString('𝗩𝗘𝗡𝗧𝗔', $losOlivos->description);
     }
 
     public function test_the_site_seeder_does_not_recreate_a_deleted_historical_property(): void

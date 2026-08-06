@@ -15,6 +15,9 @@ class PropertyMediaResource extends JsonResource
             'url' => $this->url,
             'is_cover' => $this->is_cover,
             'sort_order' => $this->sort_order,
+            'original_name' => $this->original_name,
+            'mime_type' => $this->mime_type,
+            'size_bytes' => $this->size_bytes,
         ];
     }
 }

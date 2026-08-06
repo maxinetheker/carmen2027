@@ -15,7 +15,7 @@ class PropertyVideoManager
         $property->youtubeVideos()->delete();
         $seen = [];
         foreach ($videos as $index => $video) {
-            $url = trim((string) ($video['url'] ?? ''));
+            $url = trim((string) ($video['url'] ?? $video['original_url'] ?? ''));
             $id = $this->parser->id($url);
             if (! $id || in_array($id, $seen, true)) continue;
             $seen[] = $id;

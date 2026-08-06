@@ -13,6 +13,10 @@ final class RichTextSanitizer
         'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'blockquote', 'a',
     ];
 
+    public function __construct(private DecorativeTextNormalizer $decorative)
+    {
+    }
+
     public function clean(?string $html): ?string
     {
         $html = trim((string) $html);
@@ -20,6 +24,8 @@ final class RichTextSanitizer
             return null;
         }
 
+        // Conserva el HTML visual y Unicode original para que web y Android muestren
+        // exactamente el mismo contenido; solo se retiran elementos ejecutables inseguros.
         $document = new DOMDocument('1.0', 'UTF-8');
         $previous = libxml_use_internal_errors(true);
         $document->loadHTML(
@@ -50,6 +56,9 @@ final class RichTextSanitizer
                 continue;
             }
             if ($node->nodeType === XML_TEXT_NODE) {
+                if ($this->decorative->normalize($node)) {
+                    continue;
+                }
                 $node->nodeValue = str_replace(
                     ["\u{00A0}", "\u{202F}", "\u{2060}", "\u{FEFF}"],
                     [' ', ' ', '', ''],

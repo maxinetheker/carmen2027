@@ -34,8 +34,11 @@ class PropertyResource extends JsonResource
             'show_in_hero' => $this->show_in_hero,
             'priority' => $this->priority,
             'description' => $this->description,
+            'image_url' => $this->image_url,
             'cover_url' => $this->cover_url,
             'media' => PropertyMediaResource::collection($this->whenLoaded('media')),
+            'features' => PropertyFeatureResource::collection($this->whenLoaded('features')),
+            'youtube_videos' => PropertyYoutubeVideoResource::collection($this->whenLoaded('youtubeVideos')),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

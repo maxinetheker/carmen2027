@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Property;
+use App\Support\RichTextSanitizer;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -18,3 +20,16 @@ Artisan::command('crm:send-reminders {--force} {--type=all}', function () {
 Schedule::command('crm:send-reminders')
     ->everyMinute()
     ->withoutOverlapping(10);
+
+Artisan::command('crm:normalize-property-text', function () {
+    $sanitizer = app(RichTextSanitizer::class);
+    $updated = 0;
+    Property::whereNotNull('description')->each(function (Property $property) use ($sanitizer, &$updated) {
+        $clean = $sanitizer->clean($property->description);
+        if ($clean !== $property->description) {
+            $property->update(['description' => $clean]);
+            $updated++;
+        }
+    });
+    $this->info("Descripciones normalizadas: {$updated}.");
+})->purpose('Normaliza texto decorativo (negrita/cursiva de redes) en descripciones ya guardadas');

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\PropertyMediaResource;
 use App\Http\Resources\PropertyResource;
 use App\Models\Property;
-use App\Services\ImageOptimizer;
+use App\Models\PropertyFeature;
+use App\Rules\YoutubeUrl;
+use App\Services\PropertyFeatureManager;
+use App\Services\PropertyVideoManager;
 use App\Support\RichTextSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,11 +20,12 @@ class PropertyController extends CrudController
     protected string $resourceClass = PropertyResource::class;
     protected string $label = 'Propiedad';
     protected array $search = ['title', 'code', 'district'];
-    protected array $with = ['media'];
+    protected array $with = ['media', 'features', 'youtubeVideos'];
 
     public function __construct(
-        private ImageOptimizer $optimizer,
         private RichTextSanitizer $sanitizer,
+        private PropertyVideoManager $videos,
+        private PropertyFeatureManager $features,
     ) {
     }
 
@@ -44,10 +47,27 @@ class PropertyController extends CrudController
             'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
             'description' => ['nullable', 'string', 'max:50000'],
+            'image_url' => [
+                'nullable', 'string', 'max:500',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (! Str::startsWith((string) $value, '/')
+                        && ! filter_var($value, FILTER_VALIDATE_URL)) {
+                        $fail('Usa una URL completa o una ruta interna que empiece con /.');
+                    }
+                },
+            ],
             'featured' => ['nullable', 'boolean'],
             'is_published' => ['nullable', 'boolean'],
             'show_in_hero' => ['nullable', 'boolean'],
             'priority' => ['nullable', 'integer', 'between:0,999'],
+            'features' => ['nullable', 'array', 'max:50'],
+            'features.*.icon' => ['nullable', Rule::in(array_keys(PropertyFeature::ICONS))],
+            'features.*.label' => ['nullable', 'string', 'max:80'],
+            'features.*.value' => ['nullable', 'string', 'max:160'],
+            'youtube_videos' => ['nullable', 'array', 'max:10'],
+            'youtube_videos.*.url' => ['nullable', 'string', 'max:500', new YoutubeUrl],
+            'youtube_videos.*.original_url' => ['nullable', 'string', 'max:500', new YoutubeUrl],
+            'youtube_videos.*.title' => ['nullable', 'string', 'max:120'],
         ];
     }
 
@@ -59,8 +79,15 @@ class PropertyController extends CrudController
         $data['show_in_hero'] = $request->boolean('show_in_hero');
         $data['priority'] = $data['priority'] ?? 0;
         $data['slug'] = Str::slug($data['title'].'-'.$data['code']);
+        unset($data['features'], $data['youtube_videos']);
 
         return $data;
+    }
+
+    protected function afterSave(\Illuminate\Database\Eloquent\Model $record, Request $request): void
+    {
+        $this->features->replace($record, $request->input('features', []));
+        $this->videos->replace($record, $request->input('youtube_videos', []));
     }
 
     protected function beforeDelete(\Illuminate\Database\Eloquent\Model $record): void
@@ -68,37 +95,4 @@ class PropertyController extends CrudController
         Storage::disk('public')->deleteDirectory("properties/{$record->id}");
     }
 
-    public function addPhoto(Request $request, int $property)
-    {
-        $property = Property::findOrFail($property);
-        $request->validate([
-            'photo' => ['required', 'image', 'mimes:jpeg,jpg,png,webp,avif', 'max:15360'],
-        ]);
-
-        $optimized = $this->optimizer->store($request->file('photo'), $property->id);
-        $media = $property->media()->create($optimized + [
-            'type' => 'image', 'disk' => 'public',
-            'original_name' => $request->file('photo')->getClientOriginalName(),
-            'sort_order' => ((int) $property->media()->max('sort_order')) + 1,
-        ]);
-
-        if (! $property->media()->where('is_cover', true)->exists()) {
-            $media->update(['is_cover' => true]);
-        }
-
-        $this->log($property, 'updated', "{$this->label} actualizado");
-
-        return new PropertyMediaResource($media);
-    }
-
-    public function removePhoto(int $property, int $media)
-    {
-        $property = Property::findOrFail($property);
-        $item = $property->media()->whereKey($media)->firstOrFail();
-        Storage::disk($item->disk)->delete($item->path);
-        $item->delete();
-        $this->log($property, 'updated', "{$this->label} actualizado");
-
-        return response()->json(['message' => 'Foto eliminada.']);
-    }
 }

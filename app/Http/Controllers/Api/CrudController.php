@@ -35,9 +35,18 @@ abstract class CrudController extends Controller
         $perPage = (int) $request->integer('per_page', 20);
         if ($perPage < 1 || $perPage > 100) $perPage = 20;
 
-        return ($this->resourceClass)::collection(
-            $query->paginate($perPage)->withQueryString()
-        );
+        $paginator = $query->paginate($perPage);
+
+        return response()->json([
+            'data' => collect($paginator->items())
+                ->map(fn ($item) => (new ($this->resourceClass)($item))->resolve())
+                ->all(),
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'total' => $paginator->total(),
+            ],
+        ]);
     }
 
     public function show(int $record)

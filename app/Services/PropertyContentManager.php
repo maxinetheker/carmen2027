@@ -48,6 +48,13 @@ class PropertyContentManager
         Storage::disk('public')->deleteDirectory("properties/{$property->id}");
     }
 
+    public function storeMedia(Property $property, UploadedFile $file)
+    {
+        return str_starts_with((string) $file->getMimeType(), 'image/')
+            ? $this->storeImage($property, $file)
+            : $this->storeVideo($property, $file);
+    }
+
     private function removeMedia(Property $property, array $ids): void
     {
         $property->media()->whereIn('id', $ids)->get()->each(function ($media) {

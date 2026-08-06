@@ -9,13 +9,15 @@ use App\Http\Controllers\Api\DeviceTokenController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\NotificationSettingController;
 use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\PropertyMediaController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Middleware\ForceUnescapedJson;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
+Route::post('/login', [AuthController::class, 'login'])->middleware(['throttle:6,1', ForceUnescapedJson::class]);
 
-Route::middleware('auth:sanctum')->name('api.')->group(function () {
+Route::middleware(['auth:sanctum', ForceUnescapedJson::class])->name('api.')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -29,8 +31,12 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
     Route::post('/leads/{record}/convert', [LeadController::class, 'convert'])->name('leads.convert');
 
     Route::apiResource('properties', PropertyController::class);
-    Route::post('/properties/{property}/photos', [PropertyController::class, 'addPhoto'])->name('properties.photos.store');
-    Route::delete('/properties/{property}/photos/{media}', [PropertyController::class, 'removePhoto'])->name('properties.photos.destroy');
+    Route::post('/properties/{property}/photos', [PropertyMediaController::class, 'storePhoto'])->name('properties.photos.store');
+    Route::delete('/properties/{property}/photos/{media}', [PropertyMediaController::class, 'destroy'])->name('properties.photos.destroy');
+    Route::put('/properties/{property}/photos/order', [PropertyMediaController::class, 'reorder'])->name('properties.photos.reorder');
+    Route::post('/properties/{property}/media', [PropertyMediaController::class, 'store'])->name('properties.media.store');
+    Route::delete('/properties/{property}/media/{media}', [PropertyMediaController::class, 'destroy'])->name('properties.media.destroy');
+    Route::put('/properties/{property}/media/order', [PropertyMediaController::class, 'reorder'])->name('properties.media.reorder');
 
     Route::apiResource('tasks', TaskController::class);
     Route::apiResource('appointments', AppointmentController::class);
