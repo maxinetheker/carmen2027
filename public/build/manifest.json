@@ -12,7 +12,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CI_4InBV.css",
+    "file": "assets/app-XwuASgwE.css",
     "name": "app",
     "names": [
       "app.css"
@@ -21,14 +21,15 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-dkj4tE7G.js",
+    "file": "assets/app-BU4U3kED.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
       "resources/js/property-gallery.js",
       "resources/js/property-location.js",
-      "resources/js/catalog-filters.js"
+      "resources/js/catalog-filters.js",
+      "resources/js/property-presentations.js"
     ]
   },
   "resources/js/catalog-filters.js": {
@@ -56,5 +57,11 @@
       "assets/layers-2x-Bpkbi35X.png",
       "assets/marker-icon-hN30_KVU.png"
     ]
+  },
+  "resources/js/property-presentations.js": {
+    "file": "assets/property-presentations-BEZ9-deG.js",
+    "name": "property-presentations",
+    "src": "resources/js/property-presentations.js",
+    "isDynamicEntry": true
   }
 }

@@ -116,7 +116,7 @@ class PropertyController extends CrudController
     protected function form(Model $record)
     {
         if ($record->exists) {
-            $record->load(['media', 'features', 'youtubeVideos']);
+            $record->load(['media', 'features', 'youtubeVideos', 'documents', 'presentations']);
         }
 
         return view('admin.properties.form', [

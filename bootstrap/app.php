@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            // api/* is always JSON; other routes (e.g. the admin presentation-generation
+            // endpoints, fetched via JS) still get JSON when they explicitly ask for it.
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();

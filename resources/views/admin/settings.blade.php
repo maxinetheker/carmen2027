@@ -16,11 +16,36 @@
             </div>
             <div class="form-grid">
                 @foreach($fields as $key => [$label, $type])
-                    @continue(str_starts_with($key, 'seo_'))
+                    @continue(str_starts_with($key, 'seo_') || str_starts_with($key, 'ai_'))
                     <label class="field @if($type === 'textarea') field-wide @endif">
                         <span>{{ $label }}</span>
                         @if($type === 'textarea')
                             <textarea name="{{ $key }}" rows="4">{{ old($key, $settings[$key] ?? '') }}</textarea>
+                        @else
+                            <input type="{{ $type }}" name="{{ $key }}" value="{{ old($key, $settings[$key] ?? '') }}">
+                        @endif
+                    </label>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="form-card-heading">
+                <div><h2>Inteligencia artificial</h2><p>Se usa para generar brochures PDF de las propiedades.</p></div>
+                <span>{{ $hasOpenAiKey ? 'Configurada' : 'Sin configurar' }}</span>
+            </div>
+            <div class="form-grid">
+                <label class="field">
+                    <span>Clave API de OpenAI</span>
+                    <input type="password" name="ai_openai_api_key" autocomplete="off"
+                        placeholder="{{ $hasOpenAiKey ? '•••••••••••••••• (dejar en blanco para no cambiarla)' : 'sk-...' }}">
+                </label>
+                @foreach($fields as $key => [$label, $type])
+                    @continue(! str_starts_with($key, 'ai_') || $key === 'ai_openai_api_key')
+                    <label class="field @if($type === 'textarea') field-wide @endif">
+                        <span>{{ $label }}</span>
+                        @if($type === 'textarea')
+                            <textarea name="{{ $key }}" rows="3">{{ old($key, $settings[$key] ?? '') }}</textarea>
                         @else
                             <input type="{{ $type }}" name="{{ $key }}" value="{{ old($key, $settings[$key] ?? '') }}">
                         @endif

@@ -21,6 +21,14 @@ Schedule::command('crm:send-reminders')
     ->everyMinute()
     ->withoutOverlapping(10);
 
+// En hosting compartido no se puede dejar un proceso `queue:listen` corriendo para
+// siempre (lo que sí hace `composer dev` en local): un worker que procesa lo pendiente
+// y se detiene cada minuto es el patrón estándar para que la cola avance igual (usada
+// por ejemplo por la generación de presentaciones PDF en GeneratePropertyPresentationJob).
+Schedule::command('queue:work --stop-when-empty --max-time=55')
+    ->everyMinute()
+    ->withoutOverlapping(5);
+
 Artisan::command('crm:normalize-property-text', function () {
     $sanitizer = app(RichTextSanitizer::class);
     $updated = 0;

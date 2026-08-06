@@ -16,6 +16,9 @@ if (document.querySelector('[data-location-picker]')) {
 if (document.querySelector('[data-catalog-filters]')) {
     import('./catalog-filters');
 }
+if (document.querySelector('[data-presentation-modal]')) {
+    import('./property-presentations');
+}
 
 const menuButton = document.querySelector('[data-menu-toggle]');
 const menu = document.querySelector('[data-menu]');

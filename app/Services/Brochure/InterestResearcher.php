@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Services\Brochure;
+
+use App\Models\Property;
+use App\Services\Ai\AiSettings;
+use App\Services\Ai\OpenAiClient;
+
+/**
+ * Produces the "why buy now" persuasion content (hook stat, benefit cards, quote,
+ * trust paragraph, stat tiles). Every market claim (hook + stats + trust paragraph)
+ * must carry a source URL that actually appears among the web_search results —
+ * anything else is dropped rather than shown, per the no-invention rule.
+ */
+class InterestResearcher
+{
+    public function __construct(private OpenAiClient $ai, private AiSettings $aiSettings) {}
+
+    /**
+     * @return array{content:?array,usage:array}
+     */
+    public function research(Property $property, array $options, string $documentContext): array
+    {
+        $emptyUsage = ['input_tokens' => 0, 'output_tokens' => 0, 'cached_tokens' => 0];
+        $mode = $options['interest_mode'] ?? 'off';
+
+        if ($mode === 'off') {
+            return ['content' => null, 'usage' => $emptyUsage];
+        }
+
+        if ($mode === 'manual') {
+            $text = trim((string) ($options['interest_manual'] ?? ''));
+
+            return [
+                'content' => $text !== '' ? ['trust_paragraph' => $text, 'trust_sources' => [], 'cards' => [], 'stats' => [], 'hook' => null, 'quote' => null] : null,
+                'usage' => $emptyUsage,
+            ];
+        }
+
+        $prompt = PromptContext::withDocuments(PromptContext::propertySummary($property), $documentContext)
+            ."\n\nBusca en internet información real y actual sobre el mercado inmobiliario de esta zona/tipo "
+            .'de propiedad (precios de referencia, demanda, crecimiento, comparativas) para construir '
+            .'argumentos de venta convincentes. Devuelve: un "hook" (una frase corta con una cifra comparativa '
+            .'llamativa y su fuente), hasta 3 tarjetas de beneficio (título + descripción corta, pueden basarse '
+            .'en los datos de la propiedad sin necesitar fuente externa), una frase motivacional breve (quote, '
+            .'no es un dato factual sino una frase inspiradora), un párrafo de confianza sobre por qué esta '
+            .'zona (trust_paragraph) con sus fuentes, y hasta 4 estadísticas cortas (valor + etiqueta + fuente). '
+            .'Toda cifra de mercado debe tener una fuente real de tu búsqueda web; si no encuentras una, no la '
+            .'incluyas.';
+
+        $schema = [
+            'name' => 'brochure_interest',
+            'schema' => [
+                'type' => 'object',
+                'properties' => [
+                    'hook' => ['type' => ['string', 'null']],
+                    'hook_source' => ['type' => ['string', 'null']],
+                    'cards' => [
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'title' => ['type' => 'string'],
+                                'description' => ['type' => 'string'],
+                            ],
+                            'required' => ['title', 'description'],
+                            'additionalProperties' => false,
+                        ],
+                    ],
+                    'quote' => ['type' => ['string', 'null']],
+                    'trust_paragraph' => ['type' => ['string', 'null']],
+                    'trust_sources' => ['type' => 'array', 'items' => ['type' => 'string']],
+                    'stats' => [
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'value' => ['type' => 'string'],
+                                'label' => ['type' => 'string'],
+                                'source' => ['type' => ['string', 'null']],
+                            ],
+                            'required' => ['value', 'label', 'source'],
+                            'additionalProperties' => false,
+                        ],
+                    ],
+                ],
+                'required' => ['hook', 'hook_source', 'cards', 'quote', 'trust_paragraph', 'trust_sources', 'stats'],
+                'additionalProperties' => false,
+            ],
+        ];
+
+        $instructions = PromptContext::instructions($this->aiSettings->basePrompt(), $options['extra_prompt'] ?? null);
+        $result = $this->ai->text($prompt, $schema, true, $instructions);
+        $data = $result['data'] ?? [];
+        $sources = $result['sources'] ?? [];
+
+        $content = [
+            'hook' => $this->sourced($data['hook'] ?? null, $data['hook_source'] ?? null, $sources),
+            'cards' => array_slice(array_values($data['cards'] ?? []), 0, 3),
+            'quote' => $data['quote'] ?? null,
+            'trust_paragraph' => $this->groundedParagraph($data['trust_paragraph'] ?? null, $data['trust_sources'] ?? [], $sources),
+            'stats' => $this->groundedStats($data['stats'] ?? [], $sources),
+            'sources' => $sources,
+        ];
+
+        return ['content' => $content, 'usage' => $result['usage'] ?? $emptyUsage];
+    }
+
+    private function sourced(?string $value, ?string $source, array $sources): ?string
+    {
+        if (! $value || ! $source || ! in_array($source, $sources, true)) {
+            return null;
+        }
+
+        return $value;
+    }
+
+    private function groundedParagraph(?string $paragraph, array $claimedSources, array $sources): ?string
+    {
+        if (! $paragraph) {
+            return null;
+        }
+        $confirmed = array_intersect($claimedSources, $sources);
+
+        return $confirmed ? $paragraph : null;
+    }
+
+    private function groundedStats(array $stats, array $sources): array
+    {
+        return array_values(array_filter($stats, function ($stat) use ($sources) {
+            $source = $stat['source'] ?? null;
+
+            return $source && in_array($source, $sources, true);
+        }));
+    }
+}

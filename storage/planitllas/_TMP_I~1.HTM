@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Sans', sans-serif; color: #1a2332; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; }
+
+  /* PAGE 1 */
+  .hero { background: linear-gradient(135deg, #0a2a4d 0%, #071b35 100%); color: #fff; padding: 12mm 14mm 10mm; }
+  .brand { font-size: 8.5pt; letter-spacing: 2px; color: #c9a227; text-transform: uppercase; }
+  .hero h1 { font-size: 24pt; font-weight: 800; line-height: 1.15; margin-top: 5mm; }
+  .hero h1 span { color: #c9a227; }
+  .hero .sub { font-size: 11.5pt; color: #b8c4d4; margin-top: 3mm; line-height: 1.4; }
+  .heroimg { width: 100%; height: 105mm; object-fit: cover; display: block; }
+  .croquis { display: flex; gap: 5mm; padding: 6mm 14mm 0; align-items: stretch; }
+  .croquis .map { flex: 1.7; background: #f2f5f9; border-top: 3px solid #c9a227; padding: 3mm; }
+  .croquis .map svg { width: 100%; height: auto; display: block; }
+  .croquis .plano { flex: 1; }
+  .croquis .plano img { width: 100%; height: 62mm; object-fit: cover; display: block; }
+  .croquis figcaption { font-size: 7.5pt; color: #5a6b80; margin-top: 1.5mm; text-align: center; }
+  .hook { background: #c9a227; color: #071b35; text-align: center; padding: 5mm 14mm; font-size: 13.5pt; font-weight: 800; }
+  .cards { display: flex; gap: 4mm; padding: 6mm 14mm 0; }
+  .card { flex: 1; background: #f2f5f9; border-top: 3px solid #c9a227; padding: 4.5mm; }
+  .card .t { font-size: 11pt; font-weight: 800; color: #071b35; margin-bottom: 2mm; }
+  .card .d { font-size: 9pt; line-height: 1.5; color: #3d4c60; }
+  .quote { margin: 6mm 14mm 0; text-align: center; font-size: 12pt; font-weight: 700; color: #071b35; line-height: 1.5; padding: 0 6mm; }
+  .quote span { color: #c9a227; }
+  .foot1 { position: absolute; bottom: 0; left: 0; right: 0; background: #071b35; color: #b8c4d4; font-size: 8.5pt; padding: 3.5mm 14mm; display: flex; justify-content: space-between; }
+  .foot1 b { color: #fff; }
+
+  /* PAGE 2 */
+  .p2head { background: #071b35; color: #fff; padding: 8mm 14mm; }
+  .p2head h2 { font-size: 17pt; font-weight: 800; }
+  .p2head h2 span { color: #c9a227; }
+  .steps { padding: 6mm 14mm 0; display: flex; gap: 4mm; }
+  .step { flex: 1; text-align: center; }
+  .step .num { width: 11mm; height: 11mm; line-height: 11mm; border-radius: 50%; background: #c9a227; color: #071b35; font-weight: 800; font-size: 13pt; margin: 0 auto 2.5mm; }
+  .step .t { font-size: 10pt; font-weight: 800; color: #071b35; }
+  .step .d { font-size: 8.5pt; color: #5a6b80; line-height: 1.45; margin-top: 1.5mm; }
+  .gal { display: flex; gap: 3mm; padding: 6mm 14mm 0; }
+  .gal figure { flex: 1; }
+  .gal img { width: 100%; height: 45mm; object-fit: cover; display: block; }
+  .gal figcaption { font-size: 7.5pt; color: #5a6b80; margin-top: 1.5mm; text-align: center; }
+  .trust { margin: 6mm 14mm 0; background: #f2f5f9; border-left: 4px solid #c9a227; padding: 4.5mm 5mm; font-size: 9.5pt; line-height: 1.55; }
+  .trust b { color: #071b35; }
+  .faq { padding: 5mm 14mm 0; }
+  .faq h3 { font-size: 11pt; color: #071b35; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #c9a227; padding-bottom: 2mm; margin-bottom: 3mm; }
+  .faq p { font-size: 9.5pt; line-height: 1.55; margin-bottom: 2.5mm; }
+  .faq b { color: #071b35; }
+  .cta { position: absolute; bottom: 0; left: 0; right: 0; background: #071b35; color: #fff; padding: 6mm 14mm; display: flex; justify-content: space-between; align-items: center; }
+  .cta .name { font-size: 13pt; font-weight: 800; }
+  .cta .role { font-size: 8.5pt; color: #c9a227; text-transform: uppercase; letter-spacing: 2px; margin-top: 1mm; }
+  .cta .contact { text-align: right; font-size: 9.5pt; line-height: 1.6; }
+  .cta .contact b { color: #c9a227; font-size: 13pt; }
+  .cta .addr { font-size: 8pt; color: #b8c4d4; margin-top: 1.5mm; }
+  .rlogo { height: 17mm; margin-right: 6mm; }
+  .ctaleft { display: flex; align-items: center; }
+  .stats { display: flex; gap: 4mm; padding: 6mm 14mm 0; }
+  .stat { flex: 1; background: #f2f5f9; border-top: 3px solid #c9a227; padding: 4mm; text-align: center; }
+  .stat .n { font-size: 16pt; font-weight: 800; color: #071b35; }
+  .stat .d { font-size: 8pt; color: #5a6b80; margin-top: 1.5mm; line-height: 1.35; }
+  .loc { display: flex; gap: 5mm; padding: 6mm 14mm 0; }
+  .loc .box { flex: 1; background: #f2f5f9; border-top: 3px solid #c9a227; padding: 4mm 5mm; font-size: 9pt; line-height: 1.55; }
+  .loc .box b { color: #071b35; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page">
+  <div class="hero">
+    <div class="brand">Carmen Mestanza · Asesoría Inmobiliaria · Ref. CM-008</div>
+    <h1>Invierta donde Lima <span>ya está creciendo</span></h1>
+    <div class="sub">Terreno de 30,000 m² en el Centro Industrial La Chutana — Km 60 de la Panamericana Sur, Chilca. La zona donde las grandes empresas están comprando hoy.</div>
+  </div>
+  <img class="heroimg" src="img/hero_personas.jpg" alt="Vista aérea del terreno completo junto a RECOR Chilca y PROMET">
+  <div class="hook">US$ 80 por m² hoy — en Lima el suelo industrial ya cuesta entre US$ 200 y US$ 500</div>
+  <div class="cards">
+    <div class="card">
+      <div class="t">Compre a su medida</div>
+      <div class="d">No necesita llevarse las 3 hectáreas: existe posibilidad de adquirir áreas menores. Una puerta de entrada real a la inversión industrial.</div>
+    </div>
+    <div class="card">
+      <div class="t">Plusvalía en marcha</div>
+      <div class="d">Lima se quedó sin suelo industrial y las fábricas migran al sur. Donde llega la industria, el valor del terreno sube.</div>
+    </div>
+    <div class="card">
+      <div class="t">Papeles en regla</div>
+      <div class="d">Inscrito en Registros Públicos (SUNARP), sin deudas ni cargas. Compra directa y segura, lista para escriturar.</div>
+    </div>
+  </div>
+  <div class="quote">«El mejor momento para comprar un terreno industrial fue hace 10 años. <span>El segundo mejor momento es ahora.</span>»</div>
+  <div class="foot1">
+    <span><b>RE/MAX Integrity</b> · Carmen Rosa Mestanza Ordoñez · carmenmestanza.com</span>
+    <span>☎ <b>925 081 702</b> · cmestanza@remaxintegrity.pe</span>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+  <div class="p2head">
+    <h2>Un parque industrial <span>ya funcionando</span>, no una promesa</h2>
+  </div>
+  <div class="gal">
+    <figure><img src="img/lote_completo.jpg"><figcaption>El terreno completo: 30,000 m² con doble frente</figcaption></figure>
+    <figure><img src="img/u5.jpg"><figcaption>Pistas pavimentadas al interior del parque</figcaption></figure>
+    <figure><img src="img/complejo.jpg"><figcaption>Empresas ya instaladas y operando</figcaption></figure>
+  </div>
+  <div class="trust">
+    <b>¿Por qué aquí y no en otro lado?</b> Chilca concentra el 60% del suelo industrial de Lima y genera cerca de la mitad de la electricidad del país. La Chutana tiene seguridad privada 24 horas, cámaras de videovigilancia, agua, luz, fibra óptica y planta de tratamiento de aguas. Todo funcionando hoy.
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">60%</div><div class="d">del suelo industrial de Lima está en Chilca: aquí se mueve el mercado</div></div>
+    <div class="stat"><div class="n">~50%</div><div class="d">de la electricidad del Perú se genera en Chilca, primer polo energético</div></div>
+    <div class="stat"><div class="n">525 ha</div><div class="d">de parque industrial en consolidación: La Chutana sigue creciendo</div></div>
+    <div class="stat"><div class="n">350,000 m²</div><div class="d">de lotes industriales se venden al año en estos corredores</div></div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div class="t">Agende su visita</div><div class="d">Conozca el terreno y el parque industrial con Carmen.</div></div>
+    <div class="step"><div class="num">2</div><div class="t">Reciba la ficha completa</div><div class="d">Documentos registrales y detalle de la propiedad en sus manos.</div></div>
+    <div class="step"><div class="num">3</div><div class="t">Cierre con seguridad</div><div class="d">Acompañamiento en todo el proceso hasta la escritura.</div></div>
+  </div>
+  <div class="cta">
+    <div class="ctaleft">
+      <img class="rlogo" src="img/remax_logo_white.png">
+      <div>
+        <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+        <div class="role">Asesor Oficina · RE/MAX Integrity</div>
+        <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar – Lima</div>
+      </div>
+    </div>
+    <div class="contact">
+      <b>☎ 925 081 702</b><br>
+      cmestanza@remaxintegrity.pe<br>
+      www.remax.pe · Ref. CM-008
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+  <div class="p2head">
+    <h2>Lo que necesita saber <span>antes de decidir</span></h2>
+  </div>
+
+<!--CROQUIS-START-->
+  <div class="croquis">
+    <figure class="map">
+      <svg viewBox="0 0 560 310" xmlns="http://www.w3.org/2000/svg">
+        <rect width="560" height="310" fill="#eef3f8"/>
+        <rect x="52" y="0" width="26" height="310" fill="#8a97a8"/>
+        <line x1="65" y1="0" x2="65" y2="310" stroke="#fff" stroke-width="2" stroke-dasharray="10 8"/>
+        <text x="40" y="200" font-size="13" font-weight="bold" fill="#071b35" transform="rotate(-90 40 200)">PANAMERICANA SUR</text>
+        <circle cx="65" cy="262" r="11" fill="#071b35"/>
+        <text x="65" y="266" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">60</text>
+        <circle cx="65" cy="40" r="11" fill="#071b35"/>
+        <text x="65" y="44" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">61</text>
+        <rect x="78" y="238" width="482" height="20" fill="#aeb9c6"/>
+        <text x="300" y="252" font-size="12" font-weight="bold" fill="#071b35" text-anchor="middle">AV. EL VALLE</text>
+        <rect x="448" y="30" width="16" height="208" fill="#aeb9c6"/>
+        <text x="470" y="140" font-size="11" font-weight="bold" fill="#071b35" transform="rotate(90 470 140)">CALLE 02</text>
+        <rect x="330" y="40" width="118" height="198" fill="#c9a227" fill-opacity="0.28" stroke="#d81f26" stroke-width="4"/>
+        <text x="389" y="125" font-size="15" font-weight="bold" fill="#d81f26" text-anchor="middle">LOTE 03</text>
+        <text x="389" y="145" font-size="12" font-weight="bold" fill="#071b35" text-anchor="middle">30,000 m²</text>
+        <text x="389" y="163" font-size="10" fill="#071b35" text-anchor="middle">100 m × 300 m</text>
+        <rect x="96" y="52" width="70" height="34" fill="#5a6b80"/>
+        <text x="131" y="72" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">RECOR</text>
+        <text x="131" y="82" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">CHILCA</text>
+        <rect x="480" y="46" width="66" height="30" fill="#1e5fa8"/>
+        <text x="513" y="65" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">PROMET</text>
+        <circle cx="78" cy="248" r="6" fill="#d81f26"/>
+        <text x="95" y="278" font-size="10" fill="#071b35" font-weight="bold">Ingreso Centro Industrial La Chutana</text>
+        <polygon points="530,285 536,300 524,300" fill="#071b35"/>
+        <text x="530" y="281" font-size="10" fill="#071b35" text-anchor="middle" font-weight="bold">N</text>
+        <text x="12" y="302" font-size="8.5" fill="#5a6b80">Croquis referencial, sin escala · GPS: -12.478796, -76.713497</text>
+      </svg>
+      <figcaption>Croquis de ubicación: esquina Av. El Valle con Calle 02, junto a RECOR Chilca y PROMET</figcaption>
+    </figure>
+    <figure class="plano">
+      <img src="img/u3.jpg">
+      <figcaption>Vista satelital del terreno: 100 m de frente × 300 m de fondo</figcaption>
+    </figure>
+  </div>
+<!--CROQUIS-END-->
+  <div class="faq">
+    <h3>Preguntas frecuentes</h3>
+    <p><b>¿Puedo comprar solo una parte del terreno?</b> Sí. Existe la posibilidad de adquirir áreas menores a los 30,000 m². Consulte metrajes disponibles y precios.</p>
+    <p><b>¿Cómo sé que la compra es segura?</b> El terreno está totalmente saneado e inscrito en Registros Públicos (SUNARP), y su certificado registral confirma que no tiene deudas, hipotecas ni cargas. La compra se hace ante notario, y Carmen le muestra el expediente registral completo en la visita.</p>
+    <p><b>¿Qué gastos adicionales debo considerar?</b> Los habituales de toda compraventa: gastos notariales, registrales e impuestos de ley. Carmen le entrega el detalle completo antes de firmar cualquier documento.</p>
+    <p><b>¿Puedo comprar entre varias personas o con mi empresa?</b> Sí. La compra puede hacerse a título personal, en copropiedad o a nombre de una empresa.</p>
+    <p><b>¿Qué hago con el terreno mientras tanto?</b> Puede mantenerlo como inversión, alquilarlo a empresas que necesiten patio industrial, o construir cuando decida. La zonificación I4 admite gran industria.</p>
+    <p><b>¿Cuál es el siguiente paso?</b> Llame o escriba por WhatsApp al <b>925 081 702</b> y agende una visita. Conocer el parque en persona cambia la conversación.</p>
+  </div>
+  <div class="cta">
+    <div class="ctaleft">
+      <img class="rlogo" src="img/remax_logo_white.png">
+      <div>
+        <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+        <div class="role">Asesor Oficina · RE/MAX Integrity</div>
+        <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar – Lima</div>
+      </div>
+    </div>
+    <div class="contact">
+      <b>☎ 925 081 702</b><br>
+      cmestanza@remaxintegrity.pe<br>
+      www.remax.pe · Ref. CM-008
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

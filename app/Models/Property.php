@@ -46,6 +46,18 @@ class Property extends Model
             ->orderBy('sort_order');
     }
 
+    public function presentations()
+    {
+        return $this->hasMany(PropertyPresentation::class)
+            ->orderByDesc('id');
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(PropertyDocument::class)
+            ->orderByDesc('id');
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);

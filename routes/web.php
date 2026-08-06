@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AppointmentController;
+use App\Http\Controllers\Admin\BrochureAssetController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DealController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\NotificationSettingController;
 use App\Http\Controllers\Admin\PropertyController;
+use App\Http\Controllers\Admin\PropertyDocumentController;
+use App\Http\Controllers\Admin\PropertyPresentationController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TaskController;
@@ -55,6 +58,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::post('/notificaciones/prueba', [NotificationSettingController::class, 'sendTest'])->name('notifications.test');
     Route::post('/leads/{record}/convertir', [LeadController::class, 'convert'])
         ->name('leads.convert');
+    Route::get('/logos-remax/{key}', [BrochureAssetController::class, 'logo'])->name('brochure.logo');
 
     Route::resources([
         'properties' => PropertyController::class,
@@ -67,6 +71,20 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         'properties' => 'record', 'leads' => 'record', 'contacts' => 'record',
         'deals' => 'record', 'tasks' => 'record', 'appointments' => 'record',
     ]]);
+
+    Route::prefix('properties/{property}')->group(function () {
+        Route::post('/documentos', [PropertyDocumentController::class, 'store'])
+            ->name('properties.documents.store');
+        Route::delete('/documentos/{document}', [PropertyDocumentController::class, 'destroy'])
+            ->name('properties.documents.destroy');
+
+        Route::post('/presentaciones', [PropertyPresentationController::class, 'store'])
+            ->name('properties.presentations.store');
+        Route::get('/presentaciones/{presentation}/estado', [PropertyPresentationController::class, 'status'])
+            ->name('properties.presentations.status');
+        Route::delete('/presentaciones/{presentation}', [PropertyPresentationController::class, 'destroy'])
+            ->name('properties.presentations.destroy');
+    });
 });
 
 Route::post('/salir', [AuthController::class, 'destroy'])
