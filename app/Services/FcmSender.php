@@ -39,7 +39,9 @@ class FcmSender
                     'message' => [
                         'token' => $token,
                         'notification' => ['title' => $title, 'body' => $body],
-                        'data' => array_map('strval', $data),
+                        // (object) fuerza {} en JSON aunque $data venga vacío; un [] ahí
+                        // hace que la API de FCM rechace la petición con 400 (espera un mapa).
+                        'data' => (object) array_map('strval', $data),
                         'android' => ['priority' => 'high'],
                     ],
                 ])->throw();
