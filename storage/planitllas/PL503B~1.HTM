@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plantilla 5 · Elegante crema y serif</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Serif', Georgia, serif; color: #2b2620; background: #f6f1e7; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #f6f1e7; padding: 14mm 16mm; }
+  .frame { position: absolute; inset: 8mm; border: 0.5mm solid #b3a184; pointer-events: none; }
+  .brand { text-align: center; font-size: 9pt; letter-spacing: 4px; text-transform: uppercase; color: #8a7a5f; }
+  .brand b { color: #2b2620; }
+  h1 { text-align: center; font-size: 27pt; font-weight: 700; line-height: 1.2; margin-top: 8mm; }
+  h1 em { font-style: italic; color: #9c1f24; }
+  .sub { text-align: center; font-size: 11pt; color: #6f6350; margin-top: 3mm; font-style: italic; }
+  .orn { text-align: center; color: #b3a184; font-size: 13pt; margin: 5mm 0; letter-spacing: 6px; }
+  .heroimg { width: 100%; height: 100mm; object-fit: cover; display: block; border: 1.5mm solid #fff; box-shadow: 0 2mm 6mm rgba(60,45,20,0.25); }
+  .meta { display: flex; justify-content: center; gap: 12mm; margin-top: 7mm; text-align: center; }
+  .meta .item .v { font-size: 14pt; font-weight: 700; }
+  .meta .item .k { font-size: 8pt; letter-spacing: 2px; text-transform: uppercase; color: #8a7a5f; margin-top: 1.5mm; }
+  .price { text-align: center; margin-top: 7mm; font-size: 22pt; font-weight: 700; color: #9c1f24; }
+  .price small { display: block; font-size: 10pt; color: #6f6350; font-weight: 400; margin-top: 1.5mm; font-style: italic; }
+  .foot { position: absolute; bottom: 10mm; left: 16mm; right: 16mm; border-top: 0.4mm solid #b3a184; padding-top: 4.5mm; display: flex; justify-content: space-between; align-items: center; }
+  .name { font-size: 12pt; font-weight: 700; }
+  .role { font-size: 8pt; letter-spacing: 2px; text-transform: uppercase; color: #9c1f24; margin-top: 1mm; }
+  .addr { font-size: 7.5pt; color: #8a7a5f; margin-top: 1mm; }
+  .contact { text-align: right; font-size: 9.5pt; line-height: 1.6; color: #5d5344; }
+  .contact b { font-size: 12.5pt; color: #2b2620; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="frame"></div>
+  <div class="brand"><b>RE/MAX INTEGRITY</b> · Carmen Mestanza · Ref. CM-008</div>
+  <h1>Terreno Industrial de <em>30,000 m²</em><br>Centro Industrial La Chutana</h1>
+  <div class="sub">Km 60 de la Panamericana Sur · Chilca, Lima · Zonificación I4</div>
+  <div class="orn">— ◆ —</div>
+  <img class="heroimg" src="img/hero_empresas.jpg">
+  <div class="meta">
+    <div class="item"><div class="v">100 × 300 m</div><div class="k">Frente × fondo</div></div>
+    <div class="item"><div class="v">Doble frente</div><div class="k">Av. El Valle · Calle 02</div></div>
+    <div class="item"><div class="v">Saneado</div><div class="k">SUNARP · sin cargas</div></div>
+  </div>
+  <div class="price">US$ 2,400,000<small>US$ 80 por m² — posibilidad de venta en áreas menores</small></div>
+  <div class="foot">
+    <div>
+      <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+      <div class="role">Asesor Oficina · RE/MAX Integrity</div>
+      <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar – Lima · www.remax.pe</div>
+    </div>
+    <div class="contact"><b>925 081 702</b><br>cmestanza@remaxintegrity.pe</div>
+  </div>
+</div>
+</body>
+</html>

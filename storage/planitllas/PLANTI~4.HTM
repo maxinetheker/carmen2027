@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plantilla 4 · Impacto con foto a página completa</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #fff; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #0a0f16; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+  .grad { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4,10,20,0.85) 0%, rgba(4,10,20,0.1) 40%, rgba(4,10,20,0.92) 78%); }
+  .content { position: absolute; inset: 0; padding: 14mm 16mm; display: flex; flex-direction: column; }
+  .brand { display: flex; justify-content: space-between; font-size: 8.5pt; letter-spacing: 3px; text-transform: uppercase; color: #ffd24a; }
+  .badge { display: inline-block; background: #d81f26; color: #fff; font-size: 11pt; font-weight: 800; letter-spacing: 3px; padding: 2.5mm 6mm; margin-top: 10mm; width: fit-content; }
+  h1 { font-size: 34pt; font-weight: 800; line-height: 1.05; margin-top: 5mm; text-shadow: 0 2px 12px rgba(0,0,0,0.6); }
+  h1 span { color: #ffd24a; }
+  .sub { font-size: 12pt; color: #dbe4ee; margin-top: 3mm; text-shadow: 0 1px 6px rgba(0,0,0,0.7); }
+  .spacer { flex: 1; }
+  .bigprice { font-size: 30pt; font-weight: 800; color: #ffd24a; text-shadow: 0 2px 10px rgba(0,0,0,0.7); }
+  .per { font-size: 12pt; color: #fff; margin-top: 1mm; }
+  .chips { display: flex; gap: 3mm; margin-top: 5mm; flex-wrap: wrap; }
+  .chip { border: 0.4mm solid rgba(255,255,255,0.55); border-radius: 10mm; padding: 1.8mm 5mm; font-size: 9pt; font-weight: 700; background: rgba(0,0,0,0.35); }
+  .foot { margin-top: 7mm; border-top: 0.4mm solid rgba(255,255,255,0.35); padding-top: 4.5mm; display: flex; justify-content: space-between; align-items: center; }
+  .ctaleft { display: flex; align-items: center; }
+  .rlogo { height: 15mm; margin-right: 5mm; }
+  .name { font-size: 12pt; font-weight: 800; }
+  .role { font-size: 8pt; color: #ffd24a; text-transform: uppercase; letter-spacing: 2px; margin-top: 1mm; }
+  .addr { font-size: 7.5pt; color: #c7d0dc; margin-top: 1mm; }
+  .contact { text-align: right; font-size: 9.5pt; line-height: 1.55; }
+  .contact b { color: #ffd24a; font-size: 13pt; }
+</style>
+</head>
+<body>
+<div class="page">
+  <img class="bg" src="img/lote_completo.jpg">
+  <div class="grad"></div>
+  <div class="content">
+    <div class="brand"><span>RE/MAX Integrity</span><span>Ref. CM-008</span></div>
+    <div class="badge">SE VENDE</div>
+    <h1>TERRENO INDUSTRIAL<br><span>30,000 m²</span> EN CHILCA</h1>
+    <div class="sub">Centro Industrial La Chutana · Km 60 Panamericana Sur · Zonificación I4</div>
+    <div class="spacer"></div>
+    <div class="bigprice">US$ 2,400,000</div>
+    <div class="per">US$ 80 por m² · posibilidad de venta en áreas menores</div>
+    <div class="chips">
+      <span class="chip">Doble frente</span>
+      <span class="chip">Saneado · SUNARP</span>
+      <span class="chip">Seguridad 24/7</span>
+      <span class="chip">Agua · Luz · Fibra</span>
+      <span class="chip">Parque operativo</span>
+    </div>
+    <div class="foot">
+      <div class="ctaleft">
+        <img class="rlogo" src="img/remax_logo_white.png">
+        <div>
+          <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+          <div class="role">Asesor Oficina · RE/MAX Integrity</div>
+          <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar – Lima</div>
+        </div>
+      </div>
+      <div class="contact"><b>☎ 925 081 702</b><br>cmestanza@remaxintegrity.pe<br>www.remax.pe</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plantilla 3 · Minimalista blanco</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #202020; background: #fff; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; padding: 16mm 18mm; }
+  .brand { display: flex; justify-content: space-between; font-size: 8.5pt; letter-spacing: 3px; text-transform: uppercase; color: #9aa0a8; border-bottom: 0.4mm solid #e3e6ea; padding-bottom: 4mm; }
+  h1 { font-size: 30pt; font-weight: 300; line-height: 1.15; margin-top: 12mm; letter-spacing: -0.5px; }
+  h1 b { font-weight: 800; }
+  .sub { font-size: 11pt; color: #7a828c; margin-top: 4mm; }
+  .rule { width: 22mm; height: 1.2mm; background: #202020; margin: 8mm 0; }
+  .heroimg { width: 100%; height: 105mm; object-fit: cover; display: block; }
+  .meta { display: flex; justify-content: space-between; margin-top: 6mm; }
+  .meta .item .v { font-size: 15pt; font-weight: 800; }
+  .meta .item .k { font-size: 8pt; letter-spacing: 2px; text-transform: uppercase; color: #9aa0a8; margin-top: 1.5mm; }
+  .price { margin-top: 9mm; font-size: 24pt; font-weight: 300; }
+  .price b { font-weight: 800; }
+  .price small { font-size: 10.5pt; color: #7a828c; }
+  .foot { position: absolute; bottom: 0; left: 0; right: 0; padding: 6mm 18mm; border-top: 0.4mm solid #e3e6ea; display: flex; justify-content: space-between; align-items: center; }
+  .foot .name { font-size: 11.5pt; font-weight: 800; }
+  .foot .role { font-size: 8pt; letter-spacing: 2px; text-transform: uppercase; color: #9aa0a8; margin-top: 1mm; }
+  .foot .addr { font-size: 7.5pt; color: #9aa0a8; margin-top: 1mm; }
+  .foot .contact { text-align: right; font-size: 9.5pt; line-height: 1.6; color: #4a5058; }
+  .foot .contact b { font-size: 12.5pt; color: #202020; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="brand"><span>RE/MAX Integrity · Carmen Mestanza</span><span>Ref. CM-008</span></div>
+  <h1>Terreno industrial<br><b>30,000 m² · I4</b></h1>
+  <div class="sub">Centro Industrial La Chutana — Km 60 Panamericana Sur, Chilca, Lima</div>
+  <div class="rule"></div>
+  <img class="heroimg" src="img/hero_empresas.jpg">
+  <div class="meta">
+    <div class="item"><div class="v">100 × 300 m</div><div class="k">Frente × fondo</div></div>
+    <div class="item"><div class="v">I4</div><div class="k">Industria pesada</div></div>
+    <div class="item"><div class="v">Km 60</div><div class="k">Panamericana Sur</div></div>
+    <div class="item"><div class="v">Saneado</div><div class="k">SUNARP · Sin cargas</div></div>
+  </div>
+  <div class="price"><b>US$ 2,400,000</b> <small>· US$ 80/m² · posibilidad de venta en áreas menores</small></div>
+  <div class="foot">
+    <div>
+      <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+      <div class="role">Asesor Oficina · RE/MAX Integrity</div>
+      <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar – Lima · www.remax.pe</div>
+    </div>
+    <div class="contact"><b>925 081 702</b><br>cmestanza@remaxintegrity.pe</div>
+  </div>
+</div>
+</body>
+</html>

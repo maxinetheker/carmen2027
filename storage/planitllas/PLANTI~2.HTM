@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plantilla 2 · Marca RE/MAX (azul y rojo sobre blanco)</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #1c2430; background: #fff; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; }
+  .topstripe { height: 4mm; background: linear-gradient(90deg, #003da5 50%, #dc1c2e 50%); }
+  .hero { padding: 10mm 14mm 7mm; border-bottom: 1mm solid #dc1c2e; }
+  .brand { display: flex; justify-content: space-between; align-items: center; }
+  .brand .agency { font-size: 13pt; font-weight: 800; color: #003da5; }
+  .brand .agency span { color: #dc1c2e; }
+  .brand .ref { font-size: 9pt; color: #6b7686; }
+  .hero h1 { font-size: 25pt; font-weight: 800; color: #003da5; line-height: 1.12; margin-top: 5mm; }
+  .hero h1 em { font-style: normal; color: #dc1c2e; }
+  .hero .sub { font-size: 11pt; color: #48566a; margin-top: 2.5mm; }
+  .heroimg { width: 100%; height: 108mm; object-fit: cover; display: block; }
+  .pricebar { display: flex; }
+  .pricebar .price { flex: 1.2; background: #003da5; color: #fff; padding: 5mm 14mm; font-size: 20pt; font-weight: 800; }
+  .pricebar .per { flex: 1; background: #dc1c2e; color: #fff; padding: 5mm 10mm; font-size: 10.5pt; font-weight: 700; display: flex; flex-direction: column; justify-content: center; }
+  .body { padding: 8mm 14mm; font-size: 10.5pt; line-height: 1.6; color: #48566a; }
+  .cta { position: absolute; bottom: 0; left: 0; right: 0; border-top: 1mm solid #003da5; padding: 5mm 14mm; display: flex; justify-content: space-between; align-items: center; background: #f5f8fc; }
+  .ctaleft { display: flex; align-items: center; }
+  .rlogo { height: 16mm; margin-right: 6mm; background: #003da5; padding: 2mm; border-radius: 2mm; }
+  .cta .name { font-size: 12.5pt; font-weight: 800; color: #003da5; }
+  .cta .role { font-size: 8.5pt; color: #dc1c2e; text-transform: uppercase; letter-spacing: 2px; margin-top: 1mm; font-weight: 700; }
+  .cta .addr { font-size: 8pt; color: #6b7686; margin-top: 1.5mm; }
+  .cta .contact { text-align: right; font-size: 9.5pt; line-height: 1.6; color: #48566a; }
+  .cta .contact b { color: #dc1c2e; font-size: 13pt; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topstripe"></div>
+  <div class="hero">
+    <div class="brand">
+      <div class="agency">RE<span>/</span>MAX INTEGRITY</div>
+      <div class="ref">Ref. CM-008 · Chilca, Lima</div>
+    </div>
+    <h1>TERRENO INDUSTRIAL DE <em>30,000 m²</em> EN LA CHUTANA</h1>
+    <div class="sub">Zonificación I4 · Km 60 Panamericana Sur · Doble frente a avenida</div>
+  </div>
+  <img class="heroimg" src="img/hero_empresas.jpg">
+  <div class="pricebar">
+    <div class="price">US$ 2,400,000</div>
+    <div class="per"><span>US$ 80 por m²</span><span>Posibilidad de venta en áreas menores</span></div>
+  </div>
+  <div class="body">[ Texto de presentación de la propiedad aquí ]</div>
+  <div class="cta">
+    <div class="ctaleft">
+      <img class="rlogo" src="img/remax_logo_white.png">
+      <div>
+        <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+        <div class="role">Asesor Oficina</div>
+        <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar – Lima</div>
+      </div>
+    </div>
+    <div class="contact"><b>☎ 925 081 702</b><br>cmestanza@remaxintegrity.pe · www.remax.pe</div>
+  </div>
+</div>
+</body>
+</html>

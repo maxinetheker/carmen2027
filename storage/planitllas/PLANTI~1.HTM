@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plantilla 1 · Clásico Azul y Oro</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #1a2332; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; }
+  .hero { background: #071b35; color: #fff; padding: 10mm 14mm 8mm; }
+  .brand { display: flex; justify-content: space-between; font-size: 8.5pt; letter-spacing: 2px; color: #c9a227; text-transform: uppercase; }
+  .hero h1 { font-size: 26pt; font-weight: 800; line-height: 1.1; margin-top: 5mm; }
+  .hero h1 span { color: #c9a227; }
+  .hero .sub { font-size: 11pt; color: #b8c4d4; margin-top: 2.5mm; }
+  .heroimg { width: 100%; height: 108mm; object-fit: cover; display: block; }
+  .pricebar { background: #c9a227; color: #071b35; display: flex; justify-content: space-between; align-items: center; padding: 5mm 14mm; }
+  .pricebar .big { font-size: 20pt; font-weight: 800; }
+  .pricebar .per { font-size: 11pt; font-weight: 700; text-align: right; }
+  .body { padding: 8mm 14mm; font-size: 10.5pt; line-height: 1.6; color: #3d4c60; }
+  .cta { position: absolute; bottom: 0; left: 0; right: 0; background: #071b35; color: #fff; padding: 6mm 14mm; display: flex; justify-content: space-between; align-items: center; }
+  .ctaleft { display: flex; align-items: center; }
+  .rlogo { height: 17mm; margin-right: 6mm; }
+  .cta .name { font-size: 13pt; font-weight: 800; }
+  .cta .role { font-size: 8.5pt; color: #c9a227; text-transform: uppercase; letter-spacing: 2px; margin-top: 1mm; }
+  .cta .addr { font-size: 8pt; color: #b8c4d4; margin-top: 1.5mm; }
+  .cta .contact { text-align: right; font-size: 9.5pt; line-height: 1.6; }
+  .cta .contact b { color: #c9a227; font-size: 13pt; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hero">
+    <div class="brand"><span>Carmen Mestanza · RE/MAX Integrity</span><span>Ref. CM-008</span></div>
+    <h1>TERRENO INDUSTRIAL <span>30,000 m²</span> — ZONIFICACIÓN I4</h1>
+    <div class="sub">Centro Industrial La Chutana · Km 60 Panamericana Sur · Chilca, Lima</div>
+  </div>
+  <img class="heroimg" src="img/hero_empresas.jpg">
+  <div class="pricebar">
+    <div class="big">US$ 2,400,000</div>
+    <div class="per">US$ 80 por m²<br>Posibilidad de venta en áreas menores</div>
+  </div>
+  <div class="body">[ Texto de presentación de la propiedad aquí ]</div>
+  <div class="cta">
+    <div class="ctaleft">
+      <img class="rlogo" src="img/remax_logo_white.png">
+      <div>
+        <div class="name">Carmen Rosa Mestanza Ordoñez</div>
+        <div class="role">Asesor Oficina · RE/MAX Integrity</div>
+        <div class="addr">Av. Alberto Del Campo 570, Of. 202, Magdalena del Mar – Lima</div>
+      </div>
+    </div>
+    <div class="contact"><b>☎ 925 081 702</b><br>cmestanza@remaxintegrity.pe<br>www.remax.pe</div>
+  </div>
+</div>
+</body>
+</html>
