@@ -17,8 +17,13 @@
 
 .social-gallery { display: grid; gap: .85rem; }
 .social-card { align-items: center; background: #f7f9f6; border-radius: 12px; display: grid; gap: .85rem; grid-template-columns: 84px 1fr auto; padding: .8rem; }
+/* A failed image has no thumbnail. Removing it from the flow shifted every remaining
+   cell one column left, squeezing the error text under the buttons — so the grid drops
+   its first column instead. */
+.social-card:has(.social-thumb[hidden]) { grid-template-columns: 1fr auto; }
 .social-thumb { display: block; }
 .social-thumb[hidden] { display: none; }
+.social-card-info { overflow-wrap: anywhere; }
 .social-thumb img { border-radius: 8px; display: block; height: 84px; object-fit: cover; width: 84px; }
 .social-card-info { display: grid; gap: .2rem; min-width: 0; }
 .social-card-info strong { font-size: .8rem; }

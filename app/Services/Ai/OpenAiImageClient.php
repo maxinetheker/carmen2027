@@ -50,8 +50,9 @@ class OpenAiImageClient
             ]);
 
         if ($response->failed()) {
-            $message = $response->json('error.message') ?? $response->body();
-            throw new \RuntimeException("OpenAI ({$model}) respondió con error: {$message}");
+            throw new \RuntimeException(
+                $this->explain($response->json('error.message') ?? $response->body(), $model)
+            );
         }
 
         $encoded = $response->json('data.0.b64_json');
@@ -82,6 +83,36 @@ class OpenAiImageClient
             'quality' => $fields['quality'],
             'n' => 1,
         ]);
+    }
+
+    /**
+     * OpenAI's own wording for the image models is opaque to whoever is running the CRM:
+     * "Project proj_xxx does not have access to model gpt-image-2" says nothing about
+     * where to click. These translate the two cases that actually happen into steps.
+     */
+    private function explain(string $message, string $model): string
+    {
+        if (str_contains($message, 'does not have access to model')) {
+            preg_match('/proj_[A-Za-z0-9]+/', $message, $project);
+
+            return "Tu clave de OpenAI no tiene acceso al modelo «{$model}»."
+                .($project ? " La clave pertenece al proyecto {$project[0]}." : '')
+                .' Revisa dos cosas en platform.openai.com: (1) que ese proyecto —y no otro— tenga '
+                ."«{$model}» en su lista de modelos permitidos, y (2) que la organización esté "
+                .'verificada, requisito de OpenAI para los modelos de imagen '
+                .'(Settings → Organization → General → Verify Organization).';
+        }
+
+        if (str_contains($message, 'must be verified')) {
+            return 'OpenAI exige verificar la organización antes de usar modelos de imagen. '
+                .'Hazlo en Settings → Organization → General → Verify Organization y vuelve a intentarlo.';
+        }
+
+        if (str_contains($message, 'billing') || str_contains($message, 'quota')) {
+            return "No se pudo generar la imagen: la cuenta de OpenAI no tiene saldo o superó su límite. Detalle: {$message}";
+        }
+
+        return "OpenAI ({$model}) respondió con error: {$message}";
     }
 
     private function usage(array $json): array
