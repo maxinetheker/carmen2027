@@ -35,12 +35,19 @@
     <label class="upload-drop media-drop" data-media-drop>
         <span class="material-symbols-rounded">perm_media</span>
         <strong>Agregar fotos o videos</strong>
-        <small>Fotos hasta 15 MB · MP4, WebM o MOV hasta 200 MB</small>
+        <small>Sin límite de cantidad · Fotos hasta 15 MB · MP4, WebM o MOV hasta 200 MB</small>
         <input type="file" name="media_files[]" multiple data-media-input
             accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm,video/quicktime">
     </label>
+    <p class="media-notice" data-media-notice hidden></p>
+    @unless($record->exists)
+        <p class="field-hint">Guarda la propiedad para subir archivos sin límite de cantidad y ver el avance de cada uno.</p>
+    @endunless
     <input type="hidden" name="media_manifest" value="{{ $manifest->toJson() }}" data-media-manifest>
-    <div class="admin-media-grid sortable-media" data-media-list>
+    {{-- The endpoint is what switches the gallery to one-request-per-file uploads;
+         it only exists once the property has an id. --}}
+    <div class="admin-media-grid sortable-media" data-media-list
+        @if($record->exists) data-media-endpoint="{{ route('admin.properties.media.store', $record) }}" @endif>
         @if($record->exists)
             @foreach($record->media as $media)
                 <article draggable="true" data-media-card data-media-token="existing:{{ $media->id }}">

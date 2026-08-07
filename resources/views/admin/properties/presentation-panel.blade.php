@@ -18,6 +18,7 @@
                         <span class="status-pill status-{{ $presentation->status }}" data-presentation-status-label>{{ $presentation->status_label }}</span>
                     </small>
                     <small class="presentation-error" data-presentation-error @unless($presentation->status === 'failed') hidden @endif>{{ $presentation->error_message }}</small>
+                    <small class="presentation-warning" data-presentation-warning @unless($presentation->warnings) hidden @endunless>{{ implode(' ', $presentation->warnings) }}</small>
                 </div>
                 <div class="presentation-row-actions">
                     <a class="mini-button" data-presentation-preview href="{{ $presentation->pdf_url }}" target="_blank" rel="noopener" @unless($presentation->status === 'done') hidden @endif>Vista previa</a>
@@ -40,6 +41,7 @@
                 <strong></strong>
                 <small>Generando… · <span class="status-pill status-queued" data-presentation-status-label>En cola</span></small>
                 <small class="presentation-error" data-presentation-error hidden></small>
+                <small class="presentation-warning" data-presentation-warning hidden></small>
             </div>
             <div class="presentation-row-actions">
                 <a class="mini-button" data-presentation-preview href="#" target="_blank" rel="noopener" hidden>Vista previa</a>

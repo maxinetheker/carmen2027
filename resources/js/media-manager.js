@@ -1,8 +1,11 @@
+import { createMediaUploader } from './media-uploader';
+
 document.querySelectorAll('.property-form').forEach((form) => {
     const input = form.querySelector('[data-media-input]');
     const list = form.querySelector('[data-media-list]');
     const manifest = form.querySelector('[data-media-manifest]');
     const drop = form.querySelector('[data-media-drop]');
+    const notice = form.querySelector('[data-media-notice]');
     let dragged;
     if (! input || ! list) return;
 
@@ -42,7 +45,32 @@ document.querySelectorAll('.property-form').forEach((form) => {
         card.querySelector('strong').textContent = file.name;
         list.append(card);
     };
+    const showNotice = (message, tone = 'info') => {
+        if (! notice) return;
+        notice.textContent = message ?? '';
+        notice.hidden = ! message;
+        notice.dataset.tone = tone;
+    };
+
+    // Saved properties upload each file on its own request (no PHP batch limit, and a
+    // failure is reported per file). A property being created has no id yet, so it keeps
+    // the classic batch input until the first save.
+    const uploader = list.dataset.mediaEndpoint
+        ? createMediaUploader({
+            endpoint: list.dataset.mediaEndpoint,
+            csrf: document.querySelector('meta[name="csrf-token"]')?.content,
+            list,
+            onChange: () => sync(),
+            onNotice: showNotice,
+        })
+        : null;
+
     const addFiles = (files) => {
+        if (uploader) {
+            uploader.add(files);
+            input.value = '';
+            return;
+        }
         [...files].filter((file) => file.type.startsWith('image/')
             || file.type.startsWith('video/')).forEach(preview);
         sync();

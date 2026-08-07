@@ -54,7 +54,6 @@ class PublicSiteController extends Controller
         return view('public.property', [
             'property' => $property,
             'settings' => SiteSetting::values(),
-            'googleMapsKey' => config('services.google_maps.key'),
             'related' => Property::with('media')->published()
                 ->where('status', 'available')->where('district', $property->district)
                 ->whereKeyNot($property->id)->ranked()->take(3)->get(),

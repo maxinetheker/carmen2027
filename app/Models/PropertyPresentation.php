@@ -46,4 +46,15 @@ class PropertyPresentation extends Model
     {
         return config("brochure_templates.templates.{$this->template_key}.label", $this->template_key);
     }
+
+    /**
+     * Problems that did not stop the PDF but that the advisor still needs to see —
+     * a croquis that could not be drawn, for instance.
+     *
+     * @return string[]
+     */
+    public function getWarningsAttribute(): array
+    {
+        return array_values(array_filter((array) ($this->ai_content['warnings'] ?? [])));
+    }
 }

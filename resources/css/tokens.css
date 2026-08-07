@@ -43,3 +43,4 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.04em; }
 .flash-success { background: var(--ink); color: #fff; }
 .flash-admin { background: #e4f3e8; color: #276239; left: auto; position: relative; top: auto; transform: none; margin: 0 2rem; }
 .form-error { background: #fff0ed; border-radius: 10px; color: #a33c27; padding: .8rem 1rem; }
+.form-error-list { font-size: .72rem; line-height: 1.6; margin: .4rem 0 0; padding-left: 1.1rem; }

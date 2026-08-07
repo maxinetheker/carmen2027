@@ -6,11 +6,15 @@ use Illuminate\Support\Str;
 
 class PageContentLimiter
 {
+    public function __construct(private GlyphNormalizer $glyphs) {}
+
     public function cards(array $cards): array
     {
         return collect($cards)->map(fn ($card) => [
             'title' => $this->shortText($card['title'] ?? null, 44),
-            'description' => $this->shortText($card['description'] ?? null, 120),
+            // 110, not 120: with a two-line title the card box only has room for
+            // three-and-a-bit description lines before .card clips the last one.
+            'description' => $this->shortText($card['description'] ?? null, 110),
         ])->filter(fn ($card) => $card['title'] && $card['description'])->take(3)->values()->all();
     }
 
@@ -43,16 +47,22 @@ class PageContentLimiter
         $plain = $this->shortText($html, $limit);
         if (! $plain) return null;
 
-        return mb_strlen(trim(strip_tags((string) $html))) <= $limit ? $html : e($plain);
+        // Tags are ASCII, so normalising the markup only touches its text nodes —
+        // the short-enough branch must be cleaned too or it keeps its tofu glyphs.
+        return mb_strlen($this->glyphs->clean(strip_tags((string) $html))) <= $limit
+            ? $this->glyphs->clean((string) $html)
+            : e($plain);
     }
 
     public function shortText(?string $value, int $limit): ?string
     {
-        $text = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $value)));
-        // The bundled PDF fonts do not contain emoji glyphs; remove them before
-        // rendering so a brochure never shows missing-character squares.
-        $text = preg_replace('/[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}]/u', '', $text);
+        // Folds styled Unicode and drops anything the PDF font cannot draw, so a
+        // brochure never shows missing-character squares.
+        $text = $this->glyphs->clean(strip_tags((string) $value));
 
-        return $text === '' ? null : Str::limit($text, $limit, '');
+        // preserveWords + an ellipsis: cutting at an exact character count left
+        // paragraphs ending mid-word ("… distribución, manufac") with no sign that
+        // anything had been removed.
+        return $text === '' ? null : Str::limit($text, $limit, '…', preserveWords: true);
     }
 }

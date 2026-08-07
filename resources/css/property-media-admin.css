@@ -19,6 +19,19 @@
 .remove-new-media { background: #fff0ed; border: 0; border-radius: 7px; color: #a33c27; font-size: .65rem; padding: .4rem .55rem; width: 100%; }
 .media-help { align-items: center; color: var(--muted); display: flex; font-size: .68rem; gap: .45rem; line-height: 1.5; margin: 1rem 0 0; }
 .media-help span { color: var(--sage); }
+
+/* Per-file upload feedback: progress while it runs, the reason plus a retry when it fails. */
+.media-notice { border-radius: 10px; font-size: .7rem; margin: .8rem 0 0; padding: .6rem .8rem; }
+.media-notice[hidden] { display: none; }
+.media-notice[data-tone="info"] { background: #eef4f9; color: #1e4b73; }
+.media-notice[data-tone="error"] { background: #fdecea; color: #9b2c1c; }
+.media-upload-card { background: #f5f7f4; border: 1px dashed #9eaca3; border-radius: 12px; display: flex; flex-direction: column; gap: .45rem; justify-content: center; min-height: 150px; padding: .85rem; }
+.media-upload-card.media-upload-failed { background: #fdecea; border-color: #e0a79c; }
+.media-upload-name { font-size: .68rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.media-upload-bar { background: #dbe4dd; border-radius: 999px; display: block; height: 6px; overflow: hidden; }
+.media-upload-bar i { background: var(--sage); display: block; height: 100%; transition: width .2s; }
+.media-upload-state { color: var(--muted); font-size: .65rem; }
+.media-upload-error { color: #9b2c1c; font-size: .65rem; line-height: 1.4; margin: 0; }
 .youtube-editor-list { display: grid; gap: .75rem; }
 .youtube-editor-row { align-items: end; background: #f7f9f6; border-radius: 11px; display: grid; gap: .75rem; grid-template-columns: 1.3fr 1fr auto; padding: .85rem; }
 .youtube-empty { align-items: center; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); display: flex; flex-direction: column; padding: 1.5rem; text-align: center; }

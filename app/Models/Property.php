@@ -23,6 +23,26 @@ class Property extends Model
         ];
     }
 
+    /**
+     * Next free correlative code (CM-001, CM-002…). Codes are generated rather than
+     * typed, so two advisors filling in a form at the same time cannot pick the same
+     * one; the loop closes the small gap between reading the highest code and the
+     * insert that follows. Non-numeric legacy suffixes simply count as zero.
+     */
+    public static function nextCode(string $prefix = 'CM-'): string
+    {
+        $highest = (int) static::where('code', 'like', $prefix.'%')
+            ->pluck('code')
+            ->map(fn ($code) => (int) preg_replace('/\D+/', '', mb_substr((string) $code, mb_strlen($prefix))))
+            ->max();
+
+        do {
+            $code = $prefix.str_pad((string) ++$highest, 3, '0', STR_PAD_LEFT);
+        } while (static::where('code', $code)->exists());
+
+        return $code;
+    }
+
     public function deals()
     {
         return $this->hasMany(Deal::class);

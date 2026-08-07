@@ -19,8 +19,17 @@
     @csrf
     @if($record->exists) @method('put') @endif
 
+    {{-- Every problem at once: showing only $errors->first() meant fixing one field,
+         saving, and discovering the next one. --}}
     @if($errors->any())
-        <div class="form-error"><strong>Revisa la información:</strong> {{ $errors->first() }}</div>
+        <div class="form-error" role="alert" tabindex="-1" data-form-error>
+            <strong>Revisa la información ({{ $errors->count() }} {{ $errors->count() === 1 ? 'problema' : 'problemas' }}):</strong>
+            <ul class="form-error-list">
+                @foreach($errors->all() as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     @include('admin.properties.form-basic')

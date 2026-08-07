@@ -81,6 +81,9 @@ class GeneratePropertyPresentationJob implements ShouldQueue
 
             $croquisResult = $croquis->generate($property, $options, $theme['accent']);
             $addUsage($croquisResult['usage']);
+            // A brochure that is otherwise fine still counts as "done", but the advisor
+            // has to be told the croquis is missing instead of finding out by reading it.
+            $warnings = array_values(array_filter([$croquisResult['warning'] ?? null]));
 
             $generated = [
                 'title' => $titleResult['title'],
@@ -106,7 +109,7 @@ class GeneratePropertyPresentationJob implements ShouldQueue
                 'pdf_disk' => 'public',
                 'pdf_path' => $path,
                 'page_count' => $rendered['page_count'],
-                'ai_content' => $generated,
+                'ai_content' => $generated + ['warnings' => $warnings],
                 'input_tokens' => $usage['input_tokens'],
                 'output_tokens' => $usage['output_tokens'],
                 'cached_tokens' => $usage['cached_tokens'],

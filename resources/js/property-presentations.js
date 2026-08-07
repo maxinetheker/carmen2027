@@ -1,3 +1,4 @@
+import { captureCroquisMap, clearCroquisCapture } from './croquis-capture';
 import { handlePresentationFormChange, syncPresentationForm } from './presentation-form-controls';
 import { pollPresentation } from './presentation-polling';
 
@@ -65,6 +66,10 @@ if (dialog) {
             faqRemove.closest('.youtube-editor-row').remove();
             syncFaqIndexes(list);
         }
+        const capture = event.target.closest('[data-croquis-capture]');
+        if (capture) captureCroquisMap(capture.closest('[data-presentation-form]'));
+        const clearCapture = event.target.closest('[data-croquis-clear]');
+        if (clearCapture) clearCroquisCapture(clearCapture.closest('[data-presentation-form]'));
     });
 
     dialog.addEventListener('change', (event) => {

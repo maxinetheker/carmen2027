@@ -41,6 +41,8 @@ class CrmTest extends TestCase
         $response = $this->actingAs($user)->post(
             route('admin.properties.store'), [
                 'title' => 'Departamento de prueba',
+                // Posted on purpose: the code is generated server-side, so this must be
+                // ignored rather than saved.
                 'code' => 'TEST-1',
                 'district' => 'Miraflores',
                 'type' => 'departamento',
@@ -74,9 +76,11 @@ class CrmTest extends TestCase
                 ]],
             ]
         );
-        $response->assertRedirect(route('admin.properties.index'));
-        $this->assertDatabaseHas('properties', ['code' => 'TEST-1']);
-        $property = Property::where('code', 'TEST-1')->firstOrFail();
+        $property = Property::where('title', 'Departamento de prueba')->firstOrFail();
+        // Creating lands on the edit screen, where the gallery can upload without a limit.
+        $response->assertRedirect(route('admin.properties.edit', $property));
+        $this->assertDatabaseMissing('properties', ['code' => 'TEST-1']);
+        $this->assertMatchesRegularExpression('/^CM-\d{3}$/', $property->code);
         $this->assertSame(-12.1211, $property->latitude);
         $this->assertSame(-77.0297, $property->longitude);
         $this->assertCount(3, $property->media);

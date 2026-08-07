@@ -4,15 +4,12 @@
     $googleMapsUrl = 'https://www.google.com/maps/search/?'.http_build_query([
         'api' => 1, 'query' => $latitude.','.$longitude,
     ]);
-    $embedUrl = $googleMapsKey
-        ? 'https://www.google.com/maps/embed/v1/place?'.http_build_query([
-            'key' => $googleMapsKey, 'q' => $latitude.','.$longitude,
-            'zoom' => 16, 'language' => 'es', 'region' => 'PE',
-        ])
-        : 'https://maps.google.com/maps?'.http_build_query([
-            'q' => $latitude.','.$longitude, 'z' => 16,
-            'hl' => 'es', 'output' => 'embed',
-        ]);
+    // Keyless Google Maps embed on purpose: this project uses no Google API key, so
+    // there is nothing to configure, no billing account and no quota to run out of.
+    $embedUrl = 'https://maps.google.com/maps?'.http_build_query([
+        'q' => $latitude.','.$longitude, 'z' => 16,
+        'hl' => 'es', 'output' => 'embed',
+    ]);
 @endphp
 <section class="property-map-section">
     <div class="property-map-heading">

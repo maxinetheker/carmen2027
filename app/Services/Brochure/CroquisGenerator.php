@@ -5,15 +5,18 @@ namespace App\Services\Brochure;
 use App\Models\Property;
 use App\Services\Ai\AiSettings;
 use App\Services\Ai\OpenAiClient;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Draws a simplified inline-SVG location sketch. "Automático" fetches a Google
- * Static Maps image of the property's own registered coordinates via PHP (no
- * upload needed); "Manual" uses an uploaded screenshot instead (still combined
- * with the auto-fetched map when available, for extra context). With no reference
- * image at all we skip the section rather than let the model invent a street layout.
+ * Draws a simplified inline-SVG location sketch from a picture of the property's
+ * surroundings.
+ *
+ * That picture always arrives from the browser: the presentation modal shows a keyless
+ * Google Maps embed, and its capture button crops a frame of the tab down to the map.
+ * An advisor can also attach a screenshot by hand. This project deliberately uses no
+ * Google API key, so there is no server-side map download to fall back on — with no
+ * reference image the section is skipped and the reason is reported, rather than
+ * letting the model invent a street layout it cannot verify.
  */
 class CroquisGenerator
 {
@@ -25,7 +28,7 @@ class CroquisGenerator
     ) {}
 
     /**
-     * @return array{svg:?string,usage:array}
+     * @return array{svg:?string,usage:array,warning:?string}
      */
     public function generate(Property $property, array $options, string $accentColor): array
     {
@@ -33,12 +36,19 @@ class CroquisGenerator
         $mode = $options['croquis_mode'] ?? 'off';
 
         if ($mode === 'off') {
-            return ['svg' => null, 'usage' => $emptyUsage];
+            return ['svg' => null, 'usage' => $emptyUsage, 'warning' => null];
         }
 
+        // Returning null without a reason is what made a missing croquis invisible: the
+        // page simply rendered without it and nobody knew why. Every give-up path below
+        // now names its cause so the presentation row can show it.
         $references = $this->collectReferenceImages($property, $options);
         if (! $references) {
-            return ['svg' => null, 'usage' => $emptyUsage];
+            return [
+                'svg' => null,
+                'usage' => $emptyUsage,
+                'warning' => $this->missingReferenceReason($property, $options),
+            ];
         }
 
         $prompt = "Ubicación real: {$property->address}, {$property->district}, Lima, Perú. "
@@ -60,61 +70,45 @@ class CroquisGenerator
         $result = $this->ai->vision($prompt, $references, null, $instructions);
         $svg = $this->sanitizer->sanitize($result['text'] ?? null);
 
-        return ['svg' => $svg, 'usage' => $result['usage'] ?? $emptyUsage];
+        return [
+            'svg' => $svg,
+            'usage' => $result['usage'] ?? $emptyUsage,
+            'warning' => $svg ? null : 'La IA no devolvió un croquis válido a partir de la imagen entregada. Vuelve a intentarlo o usa una captura más nítida.',
+        ];
+    }
+
+    /** Explains, in the advisor's terms, why no reference image could be assembled. */
+    private function missingReferenceReason(Property $property, array $options): string
+    {
+        if (empty($options['croquis_reference_path'])) {
+            return $property->latitude && $property->longitude
+                ? 'No se generó el croquis: no se adjuntó ninguna imagen del mapa. Abre el formulario, '
+                    .'pulsa «Capturar mapa para la IA» sobre el mapa de la propiedad o sube una captura.'
+                : 'No se generó el croquis: la propiedad no tiene ubicación marcada en el mapa y no se '
+                    .'adjuntó ninguna captura. Marca el punto en la ficha y vuelve a generar.';
+        }
+
+        return 'No se generó el croquis: la captura del mapa no se pudo leer. Vuelve a capturarla o sube otra imagen.';
     }
 
     /**
+     * The only source is the image that came with the request: the browser capture of the
+     * Google embed, or a screenshot the advisor attached. Nothing is downloaded here.
+     *
      * @return string[] data: URIs
      */
     private function collectReferenceImages(Property $property, array $options): array
     {
-        $references = [];
-
-        if (! empty($options['croquis_reference_path'])) {
-            try {
-                $references[] = $this->encoder->fromDisk('local', $options['croquis_reference_path'], 512);
-            } catch (\Throwable $e) {
-                Log::warning('No se pudo leer la imagen de referencia del croquis', ['error' => $e->getMessage()]);
-            }
-        }
-
-        if ($static = $this->fetchStaticMap($property)) {
-            $references[] = $static;
-        }
-
-        return $references;
-    }
-
-    private function fetchStaticMap(Property $property): ?string
-    {
-        if (! $property->latitude || ! $property->longitude) {
-            return null;
-        }
-
-        $key = config('services.google_maps.key');
-        if (! $key) {
-            return null;
+        if (empty($options['croquis_reference_path'])) {
+            return [];
         }
 
         try {
-            $response = Http::timeout(15)->get('https://maps.googleapis.com/maps/api/staticmap', [
-                'center' => "{$property->latitude},{$property->longitude}",
-                'zoom' => 17,
-                'size' => '640x400',
-                'maptype' => 'roadmap',
-                'markers' => "color:red|{$property->latitude},{$property->longitude}",
-                'key' => $key,
-            ]);
-
-            if ($response->failed()) {
-                return null;
-            }
-
-            return $this->encoder->encode($response->body(), 512);
+            return [$this->encoder->fromDisk('local', $options['croquis_reference_path'], 512)];
         } catch (\Throwable $e) {
-            Log::warning('No se pudo obtener el mapa estático de Google para el croquis', ['error' => $e->getMessage()]);
+            Log::warning('No se pudo leer la imagen de referencia del croquis', ['error' => $e->getMessage()]);
 
-            return null;
+            return [];
         }
     }
 }

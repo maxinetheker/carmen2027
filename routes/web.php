@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\NotificationSettingController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\PropertyDocumentController;
+use App\Http\Controllers\Admin\PropertyMediaController;
 use App\Http\Controllers\Admin\PropertyPresentationController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
@@ -73,6 +74,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     ]]);
 
     Route::prefix('properties/{property}')->group(function () {
+        Route::post('/media', [PropertyMediaController::class, 'store'])
+            ->name('properties.media.store');
+        Route::delete('/media/{media}', [PropertyMediaController::class, 'destroy'])
+            ->name('properties.media.destroy');
+
         Route::post('/documentos', [PropertyDocumentController::class, 'store'])
             ->name('properties.documents.store');
         Route::delete('/documentos/{document}', [PropertyDocumentController::class, 'destroy'])

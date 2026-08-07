@@ -84,22 +84,36 @@
   .photo-sheet-row figure { display: table-cell; vertical-align: top; width: 50%; }
   .photo-sheet-row img { display: block; width: 100%; }
 
-  .cta { position: absolute; top: 260mm; left: 0; width: 210mm; height: 37mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; padding: 6mm 14mm; display: table; }
-  .cta .ctaleft { display: table-cell; vertical-align: middle; }
-  .cta-logo { display: inline-block; vertical-align: middle; height: 15mm; margin-right: 5mm; }
-  .cta-logo-text { display: inline-block; vertical-align: middle; }
-  .cta .contact { display: table-cell; vertical-align: middle; text-align: right; font-size: 9.5pt; line-height: 1.6; }
-  .cta .name { font-size: 12.5pt; font-weight: 800; }
-  .cta .role { font-size: 8.5pt; color: {{ $theme['accent'] }}; text-transform: uppercase; letter-spacing: 2px; margin-top: 1mm; }
-  .cta .addr { font-size: 7.5pt; opacity: 0.8; margin-top: 1.5mm; }
-  .cta .contact b { color: {{ $theme['accent'] }}; font-size: 13pt; }
+  {{-- Footer panels are plain BLOCKS, never `display:table`. CSS treats `height` on a
+       table box as a *minimum* and does not apply `overflow` to it, so the old
+       `display:table` footers silently grew past 297mm and got sliced by the page edge
+       (measured: .cta painted to 309mm, .foot1 to 313mm). A block honours both the fixed
+       height and `overflow:hidden`, so the panel can never leave the sheet. The columns
+       live in an inner table with explicit widths — the logo needs its own cell, because
+       as an inline-block it was being pushed onto a line of its own by the shrink-to-fit
+       text next to it, which is what made the panels overflow in the first place. --}}
+  {{-- Columns are absolutely positioned, not table cells: dompdf ignores
+       `table-layout: fixed`, auto-sized the logo cell to twice its width and wrapped
+       the agent name onto three lines. Absolute left/width is honoured exactly. --}}
+  .cta { position: absolute; top: 260mm; left: 0; width: 210mm; height: 37mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; }
+  .cta .ctalogo { position: absolute; left: 14mm; top: 12mm; width: 26mm; }
+  .cta .ctaleft { position: absolute; left: 44mm; top: 9mm; width: 82mm; }
+  .cta-nologo .ctaleft { left: 14mm; width: 112mm; }
+  .cta-logo { height: 12mm; }
+  .cta .contact { position: absolute; left: 128mm; top: 9mm; width: 68mm; text-align: right; font-size: 9pt; line-height: 1.45; }
+  .cta .name { font-size: 12pt; font-weight: 800; line-height: 1.15; }
+  .cta .role { font-size: 8pt; color: {{ $theme['accent'] }}; text-transform: uppercase; letter-spacing: 1.6px; margin-top: 1mm; line-height: 1.2; }
+  .cta .addr { font-size: 7pt; opacity: 0.8; margin-top: 1mm; line-height: 1.2; }
+  .cta .contact b { color: {{ $theme['accent'] }}; font-size: 12.5pt; }
 
   {{-- Slim one-line footer for the cover page, which is already tightly packed
        (hero image + hook + cards + quote): the full .cta panel is reserved for
        the content pages below, where there is room to spare. --}}
-  .foot1 { position: absolute; top: 270mm; left: 0; width: 210mm; height: 27mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; font-size: 8.5pt; padding: 8mm 14mm; display: table; }
-  .foot1 span { display: table-cell; vertical-align: middle; }
-  .foot1 span:last-child { text-align: right; }
+  .foot1 { position: absolute; top: 270mm; left: 0; width: 210mm; height: 27mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; font-size: 8.5pt; }
+  .foot1 .foot1-mark { position: absolute; left: 14mm; top: 9.5mm; width: 22mm; }
+  .foot1 .foot1-who { position: absolute; left: 40mm; top: 9mm; width: 76mm; line-height: 1.3; }
+  .foot1-nologo .foot1-who { left: 14mm; width: 102mm; }
+  .foot1 .foot1-contact { position: absolute; left: 120mm; top: 9mm; width: 76mm; text-align: right; line-height: 1.3; }
   .foot1 b { color: {{ $theme['accent'] }}; }
-  .foot1-logo { display: inline-block; vertical-align: middle; height: 9mm; margin-right: 2.5mm; }
+  .foot1-logo { height: 8mm; }
 </style>

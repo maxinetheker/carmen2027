@@ -61,7 +61,7 @@ class PublicSiteTest extends TestCase
             ->assertDontSee('Oficina premium con vista urbana');
     }
 
-    public function test_property_location_always_uses_an_embedded_google_map(): void
+    public function test_property_location_uses_the_keyless_google_map_embed(): void
     {
         $this->seed();
         $property = Property::firstOrFail();
@@ -69,11 +69,11 @@ class PublicSiteTest extends TestCase
         $this->get(route('properties.show', $property))->assertOk()
             ->assertSee('Abrir en Google Maps')
             ->assertSee('maps.google.com/maps', false)
-            ->assertDontSee('openstreetmap.org', false);
-        config(['services.google_maps.key' => 'testing-key']);
-        $this->get(route('properties.show', $property))->assertOk()
-            ->assertSee('google.com/maps/embed/v1/place', false)
-            ->assertSee('testing-key', false);
+            ->assertDontSee('openstreetmap.org', false)
+            // The project uses no Google API key, so the paid Embed API endpoint (the
+            // only one that takes a key) must never appear.
+            ->assertDontSee('maps/embed/v1/place', false)
+            ->assertDontSee('key=', false);
     }
 
     public function test_zero_rooms_are_hidden_and_bathroom_decimals_only_show_when_needed(): void

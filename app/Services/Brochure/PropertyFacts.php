@@ -4,6 +4,7 @@ namespace App\Services\Brochure;
 
 use App\Models\Property;
 use App\Models\SiteSetting;
+use Illuminate\Support\Str;
 
 /**
  * Small text/data derivations shared by the renderer and its preview, kept out of
@@ -82,16 +83,24 @@ class PropertyFacts
         ]));
     }
 
+    /**
+     * Footer copy is clamped here rather than in the template: the panels have a fixed
+     * height, so an unbounded service_area (a long "Miraflores · San Isidro · …" list)
+     * used to wrap and push the address line off the bottom of the sheet.
+     */
     public function agent(): array
     {
         $settings = SiteSetting::values();
+        $clamp = fn (?string $value, int $limit) => $value
+            ? Str::limit(trim($value), $limit, '…', preserveWords: true)
+            : null;
 
         return [
-            'name' => config('app.name', 'Carmen Mestanza'),
-            'role' => $settings['ceo_title'] ?? 'Asesora Inmobiliaria',
-            'address' => $settings['service_area'] ?? null,
-            'phone' => $settings['phone'] ?? $settings['whatsapp'] ?? null,
-            'email' => $settings['email'] ?? null,
+            'name' => $clamp(config('app.name', 'Carmen Mestanza'), 42),
+            'role' => $clamp($settings['ceo_title'] ?? 'Asesora Inmobiliaria', 34),
+            'address' => $clamp($settings['service_area'] ?? null, 66),
+            'phone' => $clamp($settings['phone'] ?? $settings['whatsapp'] ?? null, 24),
+            'email' => $clamp($settings['email'] ?? null, 42),
             'website' => preg_replace('#^https?://(www\.)?#', '', (string) config('app.url')),
         ];
     }

@@ -112,6 +112,7 @@ class PropertyPresentationController extends Controller
             'pdf_url' => $presentation->pdf_url,
             'page_count' => $presentation->page_count,
             'error_message' => $presentation->error_message,
+            'warnings' => $presentation->warnings,
         ]);
     }
 

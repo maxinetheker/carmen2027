@@ -13,6 +13,13 @@ const applyStatus = (row, data, labels) => {
         error.textContent = data.error_message;
         error.hidden = false;
     }
+    // A finished PDF can still be missing a piece (typically the croquis); say so
+    // rather than letting the advisor discover it by reading the document.
+    const warning = row.querySelector('[data-presentation-warning]');
+    if (warning && data.warnings?.length) {
+        warning.textContent = data.warnings.join(' ');
+        warning.hidden = false;
+    }
     if (data.status === 'done' || data.status === 'failed') row.dataset.pollDone = '1';
 };
 
