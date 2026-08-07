@@ -22,7 +22,8 @@ class SettingController extends Controller
         'service_area' => ['Zona de atención', 'text'],
         'seo_title' => ['Título SEO principal', 'text'],
         'seo_description' => ['Descripción SEO principal', 'textarea'],
-        'ai_openai_model' => ['Modelo de OpenAI', 'text'],
+        'ai_openai_model' => ['Modelo de OpenAI (texto)', 'text'],
+        'ai_image_model' => ['Modelo de OpenAI para imágenes', 'text'],
         'ai_base_prompt' => ['Instrucciones base para la IA', 'textarea'],
     ];
 
@@ -36,6 +37,7 @@ class SettingController extends Controller
             'seo_title' => 'Carmen Mestanza · Tu asesora inmobiliaria de confianza en Lima',
             'seo_description' => 'Compra, vende o alquila propiedades en Lima con Carmen Mestanza, tu asesora de confianza. Acompañamiento cercano, estrategia y claridad de principio a fin.',
             'ai_openai_model' => AiSettings::DEFAULT_MODEL,
+            'ai_image_model' => AiSettings::DEFAULT_IMAGE_MODEL,
         ];
         unset($settings['ai_openai_api_key']);
 

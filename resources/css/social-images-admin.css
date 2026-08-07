@@ -1,0 +1,35 @@
+/* Social-image modal: format picker, generated-image history and its cards. */
+.format-picker { display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); }
+.format-option { background: #f7f9f6; border: 2px solid var(--line); border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .35rem; padding: .9rem .6rem; text-align: center; transition: border-color .15s, background .15s; }
+.format-option:hover { border-color: var(--sage); }
+.format-option input { position: absolute; opacity: 0; pointer-events: none; }
+.format-option:has(input:checked) { background: #eef4f9; border-color: var(--sage); }
+.format-option strong { font-size: .78rem; }
+.format-option small { color: var(--muted); font-size: .63rem; line-height: 1.35; }
+.format-shape { background: #cfd8d2; border-radius: 4px; display: block; }
+.format-cuadrado .format-shape { height: 30px; width: 30px; }
+.format-vertical .format-shape { height: 36px; width: 24px; }
+.format-horizontal .format-shape { height: 24px; width: 36px; }
+.format-option:has(input:checked) .format-shape { background: var(--sage); }
+
+.checkbox-row { align-items: center; display: flex; gap: .5rem; font-size: .75rem; }
+.checkbox-row input { flex: none; }
+
+.social-gallery { display: grid; gap: .85rem; }
+.social-card { align-items: center; background: #f7f9f6; border-radius: 12px; display: grid; gap: .85rem; grid-template-columns: 84px 1fr auto; padding: .8rem; }
+.social-thumb { display: block; }
+.social-thumb[hidden] { display: none; }
+.social-thumb img { border-radius: 8px; display: block; height: 84px; object-fit: cover; width: 84px; }
+.social-card-info { display: grid; gap: .2rem; min-width: 0; }
+.social-card-info strong { font-size: .8rem; }
+.social-card-info small { color: var(--muted); font-size: .66rem; line-height: 1.45; }
+.social-card-actions { display: flex; flex-direction: column; gap: .4rem; }
+.social-card-actions .mini-button[hidden] { display: none; }
+
+@media (max-width: 560px) {
+    .format-picker { grid-template-columns: 1fr; }
+    .format-option { flex-direction: row; justify-content: flex-start; text-align: left; }
+    .social-card { grid-template-columns: 64px 1fr; }
+    .social-thumb img { height: 64px; width: 64px; }
+    .social-card-actions { flex-direction: row; grid-column: 1 / -1; }
+}

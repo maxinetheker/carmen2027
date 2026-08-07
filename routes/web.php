@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\PropertyDocumentController;
 use App\Http\Controllers\Admin\PropertyMediaController;
 use App\Http\Controllers\Admin\PropertyPresentationController;
+use App\Http\Controllers\Admin\PropertySocialImageController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TaskController;
@@ -83,6 +84,15 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             ->name('properties.documents.store');
         Route::delete('/documentos/{document}', [PropertyDocumentController::class, 'destroy'])
             ->name('properties.documents.destroy');
+
+        Route::get('/imagenes/panel', [PropertySocialImageController::class, 'panel'])
+            ->name('properties.social.panel');
+        Route::post('/imagenes', [PropertySocialImageController::class, 'store'])
+            ->name('properties.social.store');
+        Route::get('/imagenes/{socialImage}/estado', [PropertySocialImageController::class, 'status'])
+            ->name('properties.social.status');
+        Route::delete('/imagenes/{socialImage}', [PropertySocialImageController::class, 'destroy'])
+            ->name('properties.social.destroy');
 
         Route::get('/presentaciones/panel', [PropertyPresentationController::class, 'panel'])
             ->name('properties.presentations.panel');

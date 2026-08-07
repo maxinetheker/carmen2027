@@ -54,14 +54,22 @@ class CroquisGenerator
 
         $prompt = "Ubicación real: {$property->address}, {$property->district}, Lima, Perú. "
             ."Coordenadas GPS: {$property->latitude}, {$property->longitude}. "
-            .'Observa la(s) imagen(es) de referencia (captura de mapa) adjuntas y dibuja un croquis '
-            .'esquemático simplificado en SVG (viewBox="0 0 560 310") en el estilo de un plano técnico: '
-            .'calles principales visibles en la imagen como rectángulos/líneas con su nombre si es legible, '
-            .'un marcador o polígono resaltado para la ubicación de la propiedad, y una rosa de los vientos. '
-            .'Usa el color de acento '.$accentColor.' para resaltar la propiedad. No agregues calles, '
-            .'comercios o referencias que no puedas verificar en la imagen entregada — si no se distingue '
-            .'con claridad, omítelo en vez de inventarlo. Responde solo con el bloque <svg>...</svg>, sin texto '
-            .'adicional.';
+            .'Observa la(s) imagen(es) de referencia (mapa) adjuntas y dibuja un croquis esquemático '
+            .'en SVG (viewBox="0 0 560 310") con el estilo limpio de un plano de ubicación impreso.'
+            ."\n\nReglas de dibujo:"
+            ."\n- Fondo blanco o gris muy claro. Máximo 6 vías: solo las avenidas y calles principales."
+            ."\n- Cada vía es una franja gris clara con borde fino; nada de dobles contornos recargados."
+            ."\n- Rotula las vías con su nombre real leído del mapa, en 11-13px, horizontal siempre que "
+            .'se pueda; si la vía es vertical usa transform="rotate(-90 x y)". Ningún texto debe salirse '
+            .'del lienzo ni pisar otro texto.'
+            ."\n- La propiedad es el elemento dominante: un polígono relleno en {$accentColor} con borde "
+            .'oscuro de 2px y la etiqueta "LA PROPIEDAD" en negrita sobre él o justo al lado. Debe verse '
+            .'de inmediato cuál es, no un punto pequeño perdido entre calles.'
+            ."\n- Una rosa de los vientos discreta (flecha + letra N) en una esquina, de menos de 40px."
+            ."\n- Sin manzanas decorativas sueltas, sin cuadrados sin significado, sin leyenda."
+            ."\n\nNo agregues calles, comercios ni referencias que no puedas verificar en la imagen "
+            .'entregada: si no se distingue con claridad, omítelo en vez de inventarlo. Responde solo '
+            .'con el bloque <svg>...</svg>, sin texto adicional.';
 
         if (! $property->latitude || ! $property->longitude) {
             $prompt .= ' No hay coordenadas GPS registradas: usa únicamente la captura de mapa adjunta como referencia.';

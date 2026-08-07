@@ -1,4 +1,8 @@
 {
+  "_presentation-form-controls-bRUFi2QO.js": {
+    "file": "assets/presentation-form-controls-bRUFi2QO.js",
+    "name": "presentation-form-controls"
+  },
   "node_modules/leaflet/dist/images/layers-2x.png": {
     "file": "assets/layers-2x-Bpkbi35X.png",
     "src": "node_modules/leaflet/dist/images/layers-2x.png"
@@ -12,7 +16,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-Da_snINq.css",
+    "file": "assets/app-nRUCWSMS.css",
     "name": "app",
     "names": [
       "app.css"
@@ -21,7 +25,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-C9P8YDhQ.js",
+    "file": "assets/app-BdXURT_7.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -29,7 +33,8 @@
       "resources/js/property-gallery.js",
       "resources/js/property-location.js",
       "resources/js/catalog-filters.js",
-      "resources/js/property-presentations.js"
+      "resources/js/property-presentations.js",
+      "resources/js/property-social-images.js"
     ]
   },
   "resources/js/catalog-filters.js": {
@@ -59,9 +64,21 @@
     ]
   },
   "resources/js/property-presentations.js": {
-    "file": "assets/property-presentations-BidOMUnC.js",
+    "file": "assets/property-presentations-B_Fo622R.js",
     "name": "property-presentations",
     "src": "resources/js/property-presentations.js",
-    "isDynamicEntry": true
+    "isDynamicEntry": true,
+    "imports": [
+      "_presentation-form-controls-bRUFi2QO.js"
+    ]
+  },
+  "resources/js/property-social-images.js": {
+    "file": "assets/property-social-images-C80yBdvG.js",
+    "name": "property-social-images",
+    "src": "resources/js/property-social-images.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_presentation-form-controls-bRUFi2QO.js"
+    ]
   }
 }

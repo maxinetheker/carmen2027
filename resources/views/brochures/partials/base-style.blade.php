@@ -42,7 +42,9 @@
   .trust b { color: {{ $theme['heading'] }}; }
 
   .stats { display: table; table-layout: fixed; width: 182mm; height: 24mm; overflow: hidden; margin: 5mm 14mm 0; border-collapse: separate; border-spacing: 4mm 0; }
-  .stat { display: table-cell; vertical-align: top; background: {{ $theme['panel'] }}; border-top: 3px solid {{ $theme['accent'] }}; padding: 3mm; overflow: hidden; text-align: center; }
+  {{-- Centred, not top-aligned: the tiles are taller than their two short lines, so
+       top alignment left the value floating with a large empty gap beneath it. --}}
+  .stat { display: table-cell; vertical-align: middle; background: {{ $theme['panel'] }}; border-top: 3px solid {{ $theme['accent'] }}; padding: 3mm; overflow: hidden; text-align: center; }
   .stat .n { font-size: 13pt; font-weight: 800; color: {{ $theme['heading'] }}; }
   .stat .d { font-size: 7pt; color: {{ $theme['muted'] }}; margin-top: 1mm; line-height: 1.2; }
 

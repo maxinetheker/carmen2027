@@ -19,6 +19,9 @@ if (document.querySelector('[data-catalog-filters]')) {
 if (document.querySelector('[data-presentation-dialog]')) {
     import('./property-presentations');
 }
+if (document.querySelector('[data-social-dialog]')) {
+    import('./property-social-images');
+}
 
 const menuButton = document.querySelector('[data-menu-toggle]');
 const menu = document.querySelector('[data-menu]');

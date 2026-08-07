@@ -9,6 +9,9 @@ class AiSettings
 {
     public const DEFAULT_MODEL = 'gpt-5.6-luna';
 
+    /** OpenAI's current flagship image model (snapshot gpt-image-2-2026-04-21). */
+    public const DEFAULT_IMAGE_MODEL = 'gpt-image-2';
+
     public function apiKey(): ?string
     {
         $value = SiteSetting::where('key', 'ai_openai_api_key')->value('value');
@@ -31,6 +34,11 @@ class AiSettings
     public function model(): string
     {
         return SiteSetting::where('key', 'ai_openai_model')->value('value') ?: self::DEFAULT_MODEL;
+    }
+
+    public function imageModel(): string
+    {
+        return SiteSetting::where('key', 'ai_image_model')->value('value') ?: self::DEFAULT_IMAGE_MODEL;
     }
 
     public function basePrompt(): ?string

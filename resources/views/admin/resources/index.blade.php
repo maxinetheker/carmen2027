@@ -43,11 +43,16 @@
                         </td>
                     @endforeach
                     @if($route === 'properties')
-                        <td data-label="Brochure">
+                        <td data-label="Material">
                             <button class="icon-button" type="button" data-open-presentation-dialog
                                 data-panel-url="{{ route('admin.properties.presentations.panel', $record) }}"
                                 title="Generar/ver presentación PDF">
                                 <span class="material-symbols-rounded">description</span>
+                            </button>
+                            <button class="icon-button" type="button" data-open-social-dialog
+                                data-panel-url="{{ route('admin.properties.social.panel', $record) }}"
+                                title="Generar/ver imágenes para redes sociales">
+                                <span class="material-symbols-rounded">imagesmode</span>
                             </button>
                         </td>
                     @endif
@@ -76,6 +81,9 @@
 @if($route === 'properties')
     <dialog class="presentation-modal" data-presentation-dialog>
         <div data-dialog-body><p class="document-empty">Cargando…</p></div>
+    </dialog>
+    <dialog class="presentation-modal" data-social-dialog>
+        <div data-social-body><p class="document-empty">Cargando…</p></div>
     </dialog>
 @endif
 @endsection

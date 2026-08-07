@@ -78,6 +78,12 @@ class Property extends Model
             ->orderByDesc('id');
     }
 
+    public function socialImages()
+    {
+        return $this->hasMany(PropertySocialImage::class)
+            ->orderByDesc('id');
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);
