@@ -14,6 +14,7 @@ class PageAssembler
         private BrochureImageFitter $fitter,
         private PropertyFacts $facts,
         private PageContentLimiter $content,
+        private SvgSanitizer $sanitizer,
     ) {}
 
     public function assemble(Property $property, array $options, array $generated, array $theme): array
@@ -56,8 +57,11 @@ class PageAssembler
         $contentPages = [];
         $highlightItems = $galleryItems->take(4)->values()->all();
         $hasRichHighlights = ! empty($interest['trust_paragraph']) || ! empty($interest['stats']);
+        // Prefer the AI's rewrite of the description: the raw field is often pasted from
+        // a listing in SHOUTING CAPS with a phone number glued to the end, which read as
+        // if nothing had been edited at all.
         $propertySummary = $hasRichHighlights ? null : $this->content->shortText(
-            strip_tags((string) $property->description), 220
+            $interest['summary_paragraph'] ?? strip_tags((string) $property->description), 240
         );
         if ($highlightItems || ! empty($interest)) {
             $contentPages[] = [
@@ -65,7 +69,7 @@ class PageAssembler
                 'data' => [
                     'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
                     'heading' => 'Conozca <span>'.e($property->district).'</span> más de cerca',
-                    'gallery' => $this->galleryFigures($highlightItems, $hasRichHighlights ? 45 : 60),
+                    'gallery' => $this->fitter->rowOf($highlightItems, $hasRichHighlights ? 45 : 60),
                     'specs' => array_slice($this->facts->specs($property), 0, 4),
                     'trustParagraph' => $this->content->htmlExcerpt($interest['trust_paragraph'] ?? null, 320),
                     'stats' => $this->content->stats(array_slice($interest['stats'] ?? [], 0, 4)),
@@ -77,8 +81,12 @@ class PageAssembler
         }
 
         $croquisSvg = $generated['croquis_svg'] ?? null;
-        $faqs = $this->content->faqs($generated['faqs'] ?? [], $croquisSvg ? 3 : 5, $croquisSvg ? 110 : 125);
-        $description = $this->content->shortText(strip_tags((string) $property->description), 220);
+        // Limits sit above what the prompts ask for, so a well-behaved answer arrives
+        // whole and only a runaway one is trimmed.
+        $faqs = $this->content->faqs($generated['faqs'] ?? [], $croquisSvg ? 3 : 5, 165);
+        $description = $this->content->shortText(
+            $interest['summary_paragraph'] ?? strip_tags((string) $property->description), 240
+        );
         if ($croquisSvg || $faqs || $description) {
             $planoItem = $galleryItems->get(4) ?? $galleryItems->first();
             $contentPages[] = [
@@ -86,7 +94,7 @@ class PageAssembler
                 'data' => [
                     'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
                     'heading' => 'Lo que necesita saber <span>antes de decidir</span>',
-                    'croquisSvg' => $croquisSvg,
+                    'croquisImage' => $this->sanitizer->dataUri($croquisSvg),
                     'planoImage' => $croquisSvg && $planoItem
                         ? $this->fitter->fitMm($planoItem->disk, $planoItem->path, 67, 62)
                         : null,
@@ -110,7 +118,7 @@ class PageAssembler
                 'data' => [
                     'theme' => $theme, 'agent' => $agent, 'logo' => $logo, 'ref' => $property->code,
                     'heading' => 'Recorra cada <span>detalle</span>',
-                    'rows' => $this->galleryRows($photos, $imageHeight),
+                    'rows' => $this->fitter->rowsOfTwo($photos, $imageHeight),
                     'imageHeight' => $imageHeight,
                 ],
             ];
@@ -129,20 +137,6 @@ class PageAssembler
         $path = storage_path(config('brochure_templates.logos_path').'/'.$logos[$key]['file']);
 
         return is_file($path) ? $this->fitter->fitContainMm(file_get_contents($path), 34, 18) : null;
-    }
-
-    private function galleryFigures(array $items, int $height): array
-    {
-        $width = 182 / max(1, count($items));
-
-        return array_map(fn ($item) => [
-            'src' => $this->fitter->fitMm($item->disk, $item->path, $width, $height),
-        ], $items);
-    }
-
-    private function galleryRows(array $items, int $height): array
-    {
-        return array_map(fn ($row) => $this->galleryFigures($row, $height), array_chunk($items, 2));
     }
 
 }

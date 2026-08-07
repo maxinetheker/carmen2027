@@ -15,6 +15,27 @@ class BrochureImageFitter
     private const DPI = 96;
 
     /**
+     * Media items fitted to share one row, each taking an equal slice of the 182mm
+     * content width.
+     *
+     * @return array<int,array{src:string}>
+     */
+    public function rowOf(array $items, int $heightMm): array
+    {
+        $width = 182 / max(1, count($items));
+
+        return array_map(fn ($item) => [
+            'src' => $this->fitMm($item->disk, $item->path, $width, $heightMm),
+        ], $items);
+    }
+
+    /** @return array<int,array<int,array{src:string}>> the same, chunked into pairs */
+    public function rowsOfTwo(array $items, int $heightMm): array
+    {
+        return array_map(fn ($row) => $this->rowOf($row, $heightMm), array_chunk($items, 2));
+    }
+
+    /**
      * @return string a ready-to-embed `data:image/jpeg;base64,...` URI
      */
     public function fitMm(string $disk, string $path, float $widthMm, float $heightMm, int $quality = 78): string

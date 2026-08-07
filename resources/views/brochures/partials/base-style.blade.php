@@ -17,7 +17,9 @@
 
   .hook { background: {{ $theme['accent'] }}; color: {{ $theme['on_accent'] }}; height: 17mm; overflow: hidden; text-align: center; padding: 4mm 14mm; font-size: 11pt; font-weight: 800; line-height: 1.25; }
 
-  .cards { display: table; table-layout: fixed; width: 182mm; height: 33mm; overflow: hidden; margin: 5mm 14mm 0; border-collapse: separate; border-spacing: 4mm 0; }
+  {{-- 44mm, not 33: at the old height a three-line description was clipped, so the text
+       had to be cut short to fit. The cover had ~33mm of unused space above the footer. --}}
+  .cards { display: table; table-layout: fixed; width: 182mm; height: 44mm; overflow: hidden; margin: 5mm 14mm 0; border-collapse: separate; border-spacing: 4mm 0; }
   .card { display: table-cell; vertical-align: top; background: {{ $theme['panel'] }}; border-top: 3px solid {{ $theme['accent'] }}; padding: 3.5mm; overflow: hidden; }
   .card .t { font-size: 10pt; font-weight: 800; color: {{ $theme['heading'] }}; margin-bottom: 1.5mm; }
   .card .d { font-size: 8.2pt; line-height: 1.32; color: {{ $theme['text'] }}; }
@@ -53,7 +55,7 @@
 
   .croquis { display: table; width: 182mm; margin: 6mm 14mm 0; border-collapse: separate; border-spacing: 5mm 0; }
   .croquis .map { display: table-cell; vertical-align: top; width: 63%; background: {{ $theme['panel'] }}; border-top: 3px solid {{ $theme['accent'] }}; padding: 3mm; }
-  .croquis .map svg { width: 100%; height: auto; display: block; }
+  .croquis .map img { width: 100%; height: 62mm; display: block; }
   .croquis .plano { display: table-cell; vertical-align: top; width: 37%; }
   .croquis .plano img { width: 100%; height: 62mm; display: block; }
   .croquis figcaption { font-size: 7.5pt; color: {{ $theme['muted'] }}; margin-top: 1.5mm; text-align: center; }
@@ -68,8 +70,10 @@
 
   .faq { max-height: 61mm; overflow: hidden; padding: 4mm 14mm 0; }
   .faq h3 { font-size: 10pt; color: {{ $theme['heading'] }}; text-transform: uppercase; letter-spacing: 1.2px; border-bottom: 2px solid {{ $theme['accent'] }}; padding-bottom: 1.5mm; margin-bottom: 2mm; }
-  .faq p { font-size: 8pt; line-height: 1.3; margin-bottom: 1.5mm; color: {{ $theme['text'] }}; }
-  .details-compact .faq { max-height: 39mm; }
+  .faq p { font-size: 8pt; line-height: 1.35; margin-bottom: 2mm; color: {{ $theme['text'] }}; }
+  {{-- 62mm, not 39: three questions need ~41mm and were being sliced through the middle
+       of the third answer, while the page still had room before the footer at 260mm. --}}
+  .details-compact .faq { max-height: 62mm; }
   {{-- Without a croquis the details page has more room. Reserve it inside a
        bounded information panel so the page stays balanced and cannot flow
        into the footer. --}}
@@ -103,7 +107,9 @@
   .cta .contact { position: absolute; left: 128mm; top: 9mm; width: 68mm; text-align: right; font-size: 9pt; line-height: 1.45; }
   .cta .name { font-size: 12pt; font-weight: 800; line-height: 1.15; }
   .cta .role { font-size: 8pt; color: {{ $theme['accent'] }}; text-transform: uppercase; letter-spacing: 1.6px; margin-top: 1mm; line-height: 1.2; }
-  .cta .addr { font-size: 7pt; opacity: 0.8; margin-top: 1mm; line-height: 1.2; }
+  {{-- The service area is a list of districts and is meant to wrap onto a second line
+       rather than be cut mid-district; the panel has the vertical room for it. --}}
+  .cta .addr { font-size: 7pt; opacity: 0.8; margin-top: 1mm; line-height: 1.25; max-height: 8mm; overflow: hidden; }
   .cta .contact b { color: {{ $theme['accent'] }}; font-size: 12.5pt; }
 
   {{-- Slim one-line footer for the cover page, which is already tightly packed
@@ -114,10 +120,11 @@
        columns wrapped and left a word dangling on a second line. The columns below are
        sized from the measured width of that real content, with room to spare. --}}
   .foot1 { position: absolute; top: 270mm; left: 0; width: 210mm; height: 27mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; font-size: 7.5pt; }
-  .foot1 .foot1-mark { position: absolute; left: 14mm; top: 10mm; width: 18mm; }
-  .foot1 .foot1-who { position: absolute; left: 34mm; top: 9.5mm; width: 80mm; line-height: 1.3; }
-  .foot1-nologo .foot1-who { left: 14mm; width: 100mm; }
-  .foot1 .foot1-contact { position: absolute; left: 116mm; top: 9.5mm; width: 80mm; text-align: right; line-height: 1.3; }
+  .foot1 .foot1-mark { position: absolute; left: 14mm; top: 7.5mm; width: 30mm; }
+  .foot1 .foot1-who { position: absolute; left: 48mm; top: 9.5mm; width: 74mm; line-height: 1.3; }
+  .foot1-nologo .foot1-who { left: 14mm; width: 108mm; }
+  .foot1 .foot1-contact { position: absolute; left: 124mm; top: 9.5mm; width: 72mm; text-align: right; line-height: 1.3; }
   .foot1 b { color: {{ $theme['accent'] }}; }
-  .foot1-logo { height: 7mm; }
+  {{-- The cover mark matches the content pages' 12mm logo: at 7mm it read as a smudge. --}}
+  .foot1-logo { height: 12mm; }
 </style>

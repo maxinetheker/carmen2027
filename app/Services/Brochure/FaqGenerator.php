@@ -43,7 +43,12 @@ class FaqGenerator
             .'propiedad, con sus respuestas. Basa las respuestas solo en los datos de arriba. Si una pregunta '
             .'típica (por ejemplo sobre situación registral, deudas o gastos) no tiene respaldo suficiente en '
             .'los datos, respóndela de forma genérica invitando a confirmar el detalle con la asesora, sin '
-            .'inventar el dato específico. Completa las preguntas pedidas en vez de devolver menos.';
+            .'inventar el dato específico. Completa las preguntas pedidas en vez de devolver menos.'
+            // The brochure box is fixed, so text is budgeted at the source: a short
+            // complete answer reads far better than a long one chopped mid-sentence.
+            ."\n\nCada pregunta: máximo 85 caracteres. Cada respuesta: máximo 150 caracteres, "
+            .'una idea completa terminada en punto. Prefiere una respuesta breve y cerrada antes '
+            .'que una extensa; el folleto tiene un espacio fijo y el texto que sobra se pierde.';
 
         $schema = [
             'name' => 'brochure_faq',

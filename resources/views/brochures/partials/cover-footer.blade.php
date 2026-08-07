@@ -6,12 +6,14 @@
     // sizes so the left and right halves stay visually matched.
     use App\Services\Brochure\TextFit;
 
+    // These widths MUST match .foot1-who / .foot1-contact in base-style.blade.php. When
+    // they drifted apart (74mm in CSS, 80mm here) the text was sized for a column wider
+    // than it actually had, and wrapped again.
     $who = trim($agent['name'].(! empty($agent['role']) ? ' · '.$agent['role'] : ''));
     $contact = trim(($agent['phone'] ?? '').(! empty($agent['email']) ? ' · '.$agent['email'] : ''), ' ·');
-    $column = empty($logo) ? 100 : 80;
     $footSize = min(
-        (float) TextFit::toWidth($who, $column),
-        (float) TextFit::toWidth($contact, 80)
+        (float) TextFit::toWidth($who, empty($logo) ? 108 : 74),
+        (float) TextFit::toWidth($contact, 72)
     ).'pt';
 @endphp
 <div class="foot1 @empty($logo) foot1-nologo @endempty" style="font-size: {{ $footSize }}">

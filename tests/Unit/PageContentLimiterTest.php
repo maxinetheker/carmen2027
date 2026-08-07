@@ -63,7 +63,9 @@ class PageContentLimiterTest extends TestCase
             'description' => str_repeat('Detalle útil de la propiedad. ', 10),
         ]]);
 
-        $this->assertLessThanOrEqual(45, mb_strlen($cards[0]['title']));
-        $this->assertLessThanOrEqual(111, mb_strlen($cards[0]['description']));
+        // Ceilings sit just above the budget the prompt asks for (38/135), so a card
+        // written to spec arrives whole and only a runaway one is trimmed.
+        $this->assertLessThanOrEqual(47, mb_strlen($cards[0]['title']));
+        $this->assertLessThanOrEqual(151, mb_strlen($cards[0]['description']));
     }
 }

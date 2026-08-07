@@ -44,8 +44,41 @@ class SvgSanitizer
         }
 
         $this->clean($dom->documentElement);
+        $this->normalizeRoot($dom->documentElement);
 
         return $dom->saveXML($dom->documentElement) ?: null;
+    }
+
+    /**
+     * Data URI of the sanitized markup, which is the only form dompdf actually draws.
+     *
+     * Inline <svg> is NOT rendered by dompdf: it silently drops every shape and reflows
+     * the <text> nodes as ordinary HTML, which is why a croquis came out as a paragraph
+     * of loose street names. The same markup inside <img src="data:image/svg+xml;..."/>
+     * goes through php-svg-lib and renders properly.
+     */
+    public function dataUri(?string $svg): ?string
+    {
+        $clean = $this->sanitize($svg);
+
+        return $clean ? 'data:image/svg+xml;base64,'.base64_encode($clean) : null;
+    }
+
+    /** php-svg-lib needs the namespace, and intrinsic dimensions to scale against. */
+    private function normalizeRoot(\DOMElement $root): void
+    {
+        $root->setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+        $viewBox = preg_split('/[\s,]+/', trim($root->getAttribute('viewBox'))) ?: [];
+        if (count($viewBox) !== 4) {
+            $root->setAttribute('viewBox', '0 0 560 310');
+            $viewBox = ['0', '0', '560', '310'];
+        }
+
+        if (! $root->getAttribute('width') || ! $root->getAttribute('height')) {
+            $root->setAttribute('width', (string) (float) $viewBox[2]);
+            $root->setAttribute('height', (string) (float) $viewBox[3]);
+        }
     }
 
     private function clean(?\DOMNode $node): void

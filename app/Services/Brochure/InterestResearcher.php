@@ -59,48 +59,18 @@ class InterestResearcher
             .'encuentras una, no la incluyas. Prefiere completar la cantidad máxima de tarjetas y estadísticas '
             .'pedidas en vez de devolver pocas, siempre que encuentres respaldo real para cada una.';
         $prompt .= "\nEl campo trust_paragraph puede incluir HTML simple para dar énfasis (p, strong, em, ul, li y br), "
-            .'sin CSS, scripts ni enlaces. Mantén ese bloque en un máximo de 700 caracteres visibles.';
+            .'sin CSS, scripts ni enlaces. Mantén ese bloque en un máximo de 700 caracteres visibles.'
+            // Budgeted at the source: the brochure boxes are fixed, so a short complete
+            // sentence beats a long one chopped mid-word.
+            ."\nCada tarjeta: título de máximo 38 caracteres y descripción de máximo 135, siempre "
+            .'una frase completa terminada en punto. La quote: máximo 110 caracteres.'
+            // Not source-gated below, because it only restates what the advisor already
+            // wrote — the raw description was reaching the PDF in SHOUTING CAPS.
+            ."\nDevuelve además summary_paragraph: la descripción de la propiedad reescrita en 1-2 "
+            .'frases claras y vendedoras (máximo 240 caracteres), en mayúsculas y minúsculas normales, '
+            .'sin teléfonos ni datos de contacto, sin añadir ningún dato que no esté en la descripción.';
 
-        $schema = [
-            'name' => 'brochure_interest',
-            'schema' => [
-                'type' => 'object',
-                'properties' => [
-                    'hook' => ['type' => ['string', 'null']],
-                    'hook_source' => ['type' => ['string', 'null']],
-                    'cards' => [
-                        'type' => 'array',
-                        'items' => [
-                            'type' => 'object',
-                            'properties' => [
-                                'title' => ['type' => 'string'],
-                                'description' => ['type' => 'string'],
-                            ],
-                            'required' => ['title', 'description'],
-                            'additionalProperties' => false,
-                        ],
-                    ],
-                    'quote' => ['type' => ['string', 'null']],
-                    'trust_paragraph' => ['type' => ['string', 'null']],
-                    'trust_sources' => ['type' => 'array', 'items' => ['type' => 'string']],
-                    'stats' => [
-                        'type' => 'array',
-                        'items' => [
-                            'type' => 'object',
-                            'properties' => [
-                                'value' => ['type' => 'string'],
-                                'label' => ['type' => 'string'],
-                                'source' => ['type' => ['string', 'null']],
-                            ],
-                            'required' => ['value', 'label', 'source'],
-                            'additionalProperties' => false,
-                        ],
-                    ],
-                ],
-                'required' => ['hook', 'hook_source', 'cards', 'quote', 'trust_paragraph', 'trust_sources', 'stats'],
-                'additionalProperties' => false,
-            ],
-        ];
+        $schema = InterestSchema::definition();
 
         $instructions = PromptContext::instructions($this->aiSettings->basePrompt(), $options['extra_prompt'] ?? null);
         $result = $this->ai->text($prompt, $schema, true, $instructions);
@@ -111,6 +81,9 @@ class InterestResearcher
             'hook' => $this->sourced($data['hook'] ?? null, $data['hook_source'] ?? null, $sources),
             'cards' => array_slice(array_values($data['cards'] ?? []), 0, $cardCount),
             'quote' => $data['quote'] ?? null,
+            // Deliberately not passed through sourced()/groundedParagraph(): it adds no
+            // market claim, it only rewrites the advisor's own description.
+            'summary_paragraph' => $data['summary_paragraph'] ?? null,
             'trust_paragraph' => $this->html->clean(
                 $this->groundedParagraph($data['trust_paragraph'] ?? null, $data['trust_sources'] ?? [], $sources)
             ),

@@ -1,13 +1,15 @@
-{{-- expects: $heading, $croquisSvg (nullable sanitized <svg>), $planoImage, $faqs, $ficha, $description, $agent --}}
-<div class="page {{ $croquisSvg ? 'details-compact' : 'details-spacious' }}">
+{{-- expects: $heading, $croquisImage (nullable data URI), $planoImage, $faqs, $ficha, $description, $agent --}}
+<div class="page {{ $croquisImage ? 'details-compact' : 'details-spacious' }}">
   <div class="content-head">
     <h2>{!! $heading !!}</h2>
   </div>
 
-  @if($croquisSvg)
+  @if($croquisImage)
     <div class="croquis">
+      {{-- An <img> data URI, never inline <svg>: dompdf drops the shapes of an inline
+           SVG and reflows only its text, which turned the croquis into loose prose. --}}
       <figure class="map">
-        {!! $croquisSvg !!}
+        <img src="{{ $croquisImage }}" alt="Croquis de ubicación">
         <figcaption>Croquis referencial de ubicación, sin escala</figcaption>
       </figure>
       @if($planoImage)

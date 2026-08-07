@@ -10,11 +10,11 @@ class PageContentLimiter
 
     public function cards(array $cards): array
     {
+        // Above the budget the prompt asks for (38/135), so a card written to spec is
+        // never cut and only a runaway one is trimmed. The box grew to match.
         return collect($cards)->map(fn ($card) => [
-            'title' => $this->shortText($card['title'] ?? null, 44),
-            // 110, not 120: with a two-line title the card box only has room for
-            // three-and-a-bit description lines before .card clips the last one.
-            'description' => $this->shortText($card['description'] ?? null, 110),
+            'title' => $this->shortText($card['title'] ?? null, 46),
+            'description' => $this->shortText($card['description'] ?? null, 150),
         ])->filter(fn ($card) => $card['title'] && $card['description'])->take(3)->values()->all();
     }
 

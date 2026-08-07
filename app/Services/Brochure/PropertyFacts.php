@@ -102,7 +102,8 @@ class PropertyFacts
         return [
             'name' => $clamp(config('app.name', 'Carmen Mestanza'), 48),
             'role' => $clamp($settings['ceo_title'] ?? 'Asesora Inmobiliaria', 52),
-            'address' => $clamp($settings['service_area'] ?? null, 74),
+            // Two lines' worth: the address wraps in the panel instead of being cut.
+            'address' => $clamp($settings['service_area'] ?? null, 130),
             // Never shortened in practice: contact details must stay usable.
             'phone' => $clamp($settings['phone'] ?? $settings['whatsapp'] ?? null, 30),
             'email' => $clamp($settings['email'] ?? null, 70),
