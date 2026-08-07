@@ -84,9 +84,13 @@ class PropertyFacts
     }
 
     /**
-     * Footer copy is clamped here rather than in the template: the panels have a fixed
-     * height, so an unbounded service_area (a long "Miraflores · San Isidro · …" list)
-     * used to wrap and push the address line off the bottom of the sheet.
+     * Footer copy, with generous ceilings rather than tight ones.
+     *
+     * The footers now size their own text to the width available (see TextFit::toWidth),
+     * so length is handled by shrinking rather than cutting. These limits only exist to
+     * stop absurd input; contact details in particular are left long enough to survive
+     * intact, because a truncated e-mail or phone number is worse than small type — you
+     * cannot write to "carmen.contacto@remaxintegri…".
      */
     public function agent(): array
     {
@@ -96,11 +100,12 @@ class PropertyFacts
             : null;
 
         return [
-            'name' => $clamp(config('app.name', 'Carmen Mestanza'), 42),
-            'role' => $clamp($settings['ceo_title'] ?? 'Asesora Inmobiliaria', 34),
-            'address' => $clamp($settings['service_area'] ?? null, 66),
-            'phone' => $clamp($settings['phone'] ?? $settings['whatsapp'] ?? null, 24),
-            'email' => $clamp($settings['email'] ?? null, 42),
+            'name' => $clamp(config('app.name', 'Carmen Mestanza'), 48),
+            'role' => $clamp($settings['ceo_title'] ?? 'Asesora Inmobiliaria', 52),
+            'address' => $clamp($settings['service_area'] ?? null, 74),
+            // Never shortened in practice: contact details must stay usable.
+            'phone' => $clamp($settings['phone'] ?? $settings['whatsapp'] ?? null, 30),
+            'email' => $clamp($settings['email'] ?? null, 70),
             'website' => preg_replace('#^https?://(www\.)?#', '', (string) config('app.url')),
         ];
     }

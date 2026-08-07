@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Log;
  * Draws a simplified inline-SVG location sketch from a picture of the property's
  * surroundings.
  *
- * That picture always arrives from the browser: the presentation modal shows a keyless
- * Google Maps embed, and its capture button crops a frame of the tab down to the map.
- * An advisor can also attach a screenshot by hand. This project deliberately uses no
- * Google API key, so there is no server-side map download to fall back on — with no
- * reference image the section is skipped and the reason is reported, rather than
- * letting the model invent a street layout it cannot verify.
+ * The reference image comes from OpenStreetMap by default: the server builds it from the
+ * coordinates already stored on the property, so the croquis needs no clicks, no browser
+ * permission and no API key. An advisor can additionally capture the Google embed in the
+ * modal or attach a screenshot; when both exist both are sent, since more angles give the
+ * model more to verify against. With no image at all the section is skipped and the
+ * reason reported, rather than letting the model invent a street layout.
  */
 class CroquisGenerator
 {
@@ -25,6 +25,7 @@ class CroquisGenerator
         private VisionImageEncoder $encoder,
         private SvgSanitizer $sanitizer,
         private AiSettings $aiSettings,
+        private OsmStaticMap $staticMap,
     ) {}
 
     /**
@@ -80,35 +81,41 @@ class CroquisGenerator
     /** Explains, in the advisor's terms, why no reference image could be assembled. */
     private function missingReferenceReason(Property $property, array $options): string
     {
-        if (empty($options['croquis_reference_path'])) {
-            return $property->latitude && $property->longitude
-                ? 'No se generó el croquis: no se adjuntó ninguna imagen del mapa. Abre el formulario, '
-                    .'pulsa «Capturar mapa para la IA» sobre el mapa de la propiedad o sube una captura.'
-                : 'No se generó el croquis: la propiedad no tiene ubicación marcada en el mapa y no se '
-                    .'adjuntó ninguna captura. Marca el punto en la ficha y vuelve a generar.';
+        if (! $property->latitude || ! $property->longitude) {
+            return 'No se generó el croquis: la propiedad no tiene ubicación marcada en el mapa. '
+                .'Márcala en la ficha o adjunta una captura del mapa y vuelve a generar.';
         }
 
-        return 'No se generó el croquis: la captura del mapa no se pudo leer. Vuelve a capturarla o sube otra imagen.';
+        return 'No se generó el croquis: no se pudo obtener la imagen del mapa para esas coordenadas. '
+            .'Revisa la conexión del servidor o captura el mapa desde el formulario.';
     }
 
     /**
-     * The only source is the image that came with the request: the browser capture of the
-     * Google embed, or a screenshot the advisor attached. Nothing is downloaded here.
+     * The automatic OpenStreetMap render of the property's own coordinates, plus whatever
+     * capture the advisor sent, if any. The upload is listed first so the model sees the
+     * deliberately-framed image before the generic one.
      *
      * @return string[] data: URIs
      */
     private function collectReferenceImages(Property $property, array $options): array
     {
-        if (empty($options['croquis_reference_path'])) {
-            return [];
+        $references = [];
+
+        if (! empty($options['croquis_reference_path'])) {
+            try {
+                $references[] = $this->encoder->fromDisk('local', $options['croquis_reference_path'], 512);
+            } catch (\Throwable $e) {
+                Log::warning('No se pudo leer la imagen de referencia del croquis', ['error' => $e->getMessage()]);
+            }
         }
 
-        try {
-            return [$this->encoder->fromDisk('local', $options['croquis_reference_path'], 512)];
-        } catch (\Throwable $e) {
-            Log::warning('No se pudo leer la imagen de referencia del croquis', ['error' => $e->getMessage()]);
-
-            return [];
+        if ($property->latitude && $property->longitude) {
+            $png = $this->staticMap->png((float) $property->latitude, (float) $property->longitude);
+            if ($png) {
+                $references[] = $this->encoder->encode($png, 640);
+            }
         }
+
+        return $references;
     }
 }

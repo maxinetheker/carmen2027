@@ -46,35 +46,47 @@
 
     <div data-croquis-reference>
         @if($hasLocation)
-            {{-- Keyless Google embed. A cross-origin iframe cannot be read by JS, so the
-                 capture button grabs a frame of this tab and crops it to the map instead. --}}
-            <div class="croquis-map" data-croquis-frame>
-                <iframe title="Ubicación de la propiedad en Google Maps" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps?q={{ $record->latitude }},{{ $record->longitude }}&z=17&hl=es&output=embed"></iframe>
-            </div>
-            <div class="croquis-actions">
-                <button class="mini-button" type="button" data-croquis-capture>Capturar mapa para la IA</button>
-                <button class="mini-button mini-button-muted" type="button" data-croquis-clear hidden>Quitar captura</button>
-            </div>
-            <p class="field-hint" data-croquis-state>
-                Encuadra el mapa (arrastra y haz zoom) y pulsa capturar. El navegador pedirá permiso
-                para compartir <strong>esta pestaña</strong>: acéptalo y se recortará solo el mapa.
+            <p class="croquis-ready">
+                <span class="material-symbols-rounded">check_circle</span>
+                El mapa se arma solo con la ubicación guardada de la propiedad. No tienes que hacer nada más.
             </p>
-            <img class="croquis-preview" data-croquis-preview alt="Captura del mapa que recibirá la IA" hidden>
+            <details class="croquis-advanced">
+                <summary>Enviar además la imagen de Google Maps (opcional)</summary>
+                {{-- Keyless Google embed. A cross-origin iframe cannot be read by JS, so the
+                     capture button grabs a frame of this tab and crops it to the map instead. --}}
+                <div class="croquis-map" data-croquis-frame>
+                    <iframe title="Ubicación de la propiedad en Google Maps" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps?q={{ $record->latitude }},{{ $record->longitude }}&z=17&hl=es&output=embed"></iframe>
+                </div>
+                <div class="croquis-actions">
+                    <button class="mini-button" type="button" data-croquis-capture>Capturar mapa para la IA</button>
+                    <button class="mini-button mini-button-muted" type="button" data-croquis-clear hidden>Quitar captura</button>
+                </div>
+                <p class="field-hint" data-croquis-state>
+                    Encuadra el mapa y pulsa capturar. El navegador pedirá permiso para compartir
+                    <strong>esta pestaña</strong>: acéptalo y se recortará solo el mapa. Se enviará
+                    junto al mapa automático, no en su lugar.
+                </p>
+                <img class="croquis-preview" data-croquis-preview alt="Captura del mapa que recibirá la IA" hidden>
+                {{-- The capture button writes the cropped PNG into this input, so it has to
+                     exist in this branch too — not only in the no-location one below. --}}
+                <label class="field">
+                    <span>O sube una captura hecha a mano</span>
+                    <input type="file" name="croquis_reference" accept="image/jpeg,image/png,image/webp" data-croquis-file>
+                </label>
+            </details>
         @else
             <p class="modal-error">
                 Esta propiedad no tiene ubicación marcada. Abre la ficha, marca el punto en
-                «Ubicación en el mapa» y guarda; sin coordenadas la IA no puede dibujar el croquis.
+                «Ubicación en el mapa» y guarda; sin coordenadas no hay mapa que dibujar.
             </p>
+            <label class="field">
+                <span>O sube una captura de mapa</span>
+                <input type="file" name="croquis_reference" accept="image/jpeg,image/png,image/webp" data-croquis-file>
+            </label>
         @endif
-
-        <label class="field">
-            <span>{{ $hasLocation ? 'O sube una captura hecha a mano' : 'Sube una captura de mapa' }}</span>
-            <input type="file" name="croquis_reference" accept="image/jpeg,image/png,image/webp" data-croquis-file>
-        </label>
     </div>
-    <p class="field-hint">Sin captura ni coordenadas la presentación se marca con un aviso en vez de omitir el croquis en silencio.</p>
 </fieldset>
 
 <fieldset class="modal-fieldset">

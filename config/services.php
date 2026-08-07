@@ -22,6 +22,17 @@ return [
         'key' => env('RESEND_API_KEY'),
     ],
 
+    /*
+     * Raster map tiles for the AI croquis reference. OpenStreetMap needs no API key and
+     * no billing account; the User-Agent is required by its usage policy so the traffic
+     * can be identified. Swap the URL for another {z}/{x}/{y} provider if volume grows.
+     */
+    'map_tiles' => [
+        'url' => env('MAP_TILE_URL', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
+        'agent' => env('MAP_TILE_AGENT', 'CarmenMestanzaInmobiliaria/1.0 (+https://carmenmestanza.com)'),
+        'zoom' => (int) env('MAP_TILE_ZOOM', 16),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

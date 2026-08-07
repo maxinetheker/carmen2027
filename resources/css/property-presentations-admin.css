@@ -15,6 +15,13 @@
 .presentation-warning { color: #8a5a12 !important; }
 .presentation-warning[hidden], .presentation-error[hidden] { display: none; }
 
+/* The croquis needs no input at all when the property has coordinates; the Google
+   capture is folded away as an opt-in so the common case stays a single glance. */
+.croquis-ready { align-items: center; background: #eef6ef; border-radius: 10px; color: #2f6b3f; display: flex; font-size: .72rem; gap: .45rem; line-height: 1.5; margin-top: .75rem; padding: .6rem .8rem; }
+.croquis-ready span { font-size: 1.05rem; }
+.croquis-advanced { margin-top: .75rem; }
+.croquis-advanced summary { color: var(--muted); cursor: pointer; font-size: .7rem; }
+
 /* Google Maps embed used as the croquis reference, plus the cropped capture preview. */
 .croquis-map { background: #eef1f4; border: 1px solid var(--line); border-radius: 12px; margin-top: .75rem; overflow: hidden; }
 .croquis-map iframe { border: 0; display: block; height: 260px; width: 100%; }

@@ -28,8 +28,11 @@ class BrochureFooterTest extends TestCase
         // Deliberately longer than anything the panel was designed around.
         SiteSetting::create(['key' => 'service_area', 'value' => 'Miraflores · San Isidro · Barranco · Surco · La Molina · San Borja, Jesús María, Pueblo Libre, Magdalena']);
         SiteSetting::create(['key' => 'ceo_title', 'value' => 'Agente Inmobiliario Certificado RE/MAX Integrity']);
-        SiteSetting::create(['key' => 'email', 'value' => 'cmestanzaremaxintegrity@gmail.com']);
-        SiteSetting::create(['key' => 'phone', 'value' => '+51 925081702']);
+        // Deliberately long contact details: footers size their own text to fit, so these
+        // must shrink rather than wrap off the sheet — and must arrive intact, since a
+        // truncated e-mail address is useless to whoever reads the brochure.
+        SiteSetting::create(['key' => 'email', 'value' => 'carmen.mestanza.inmobiliaria.contacto@remaxintegrityperu.com.pe']);
+        SiteSetting::create(['key' => 'phone', 'value' => '+51 925 081 702']);
 
         $property = Property::create([
             'title' => 'Local industrial I-2 de 1,005 m² en Villa El Salvador',
@@ -61,6 +64,11 @@ class BrochureFooterTest extends TestCase
             -0.5,
             $lowest,
             "Se dibujó contenido {$lowest}pt por debajo del borde inferior de la hoja (el pie se está recortando)."
+        );
+        $this->assertStringContainsString(
+            'carmen.mestanza.inmobiliaria.contacto@remaxintegrityperu.com.pe',
+            app(\App\Services\Brochure\PropertyFacts::class)->agent()['email'],
+            'El correo se está recortando; debe caber reduciendo el tamaño, no cortando el texto.'
         );
     }
 

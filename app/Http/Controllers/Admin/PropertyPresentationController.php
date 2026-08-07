@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PresentationRules;
 use App\Jobs\GeneratePropertyPresentationJob;
 use App\Models\Property;
 use App\Models\PropertyPresentation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class PropertyPresentationController extends Controller
 {
@@ -21,33 +21,7 @@ class PropertyPresentationController extends Controller
 
     public function store(Property $property, Request $request)
     {
-        $templateKeys = array_keys(config('brochure_templates.templates'));
-        $logoKeys = array_keys(config('brochure_templates.logos'));
-        $images = config('brochure_templates.max_images');
-        $pages = config('brochure_templates.max_pages');
-
-        $data = $request->validate([
-            'template_key' => ['required', Rule::in($templateKeys)],
-            'logo_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
-            'logo_key' => ['required_if:logo_mode,manual', 'nullable', Rule::in($logoKeys)],
-            'images_mode' => ['required', Rule::in(['auto', 'manual'])],
-            'selected_image_ids' => ['required_if:images_mode,manual', 'array', "max:{$images['max']}"],
-            'selected_image_ids.*' => ['integer', 'distinct'],
-            'cover_media_id' => ['required_if:images_mode,manual', 'nullable', 'integer'],
-            'interest_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
-            'interest_manual' => ['required_if:interest_mode,manual', 'nullable', 'string', 'max:4000'],
-            'faq_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
-            'faq_manual' => ['nullable', 'array'],
-            'faq_manual.*.question' => ['nullable', 'string', 'max:200'],
-            'faq_manual.*.answer' => ['nullable', 'string', 'max:1000'],
-            'title_mode' => ['required', Rule::in(['auto', 'manual', 'off'])],
-            'title_manual' => ['required_if:title_mode,manual', 'nullable', 'string', 'max:160'],
-            'max_pages' => ['required', 'integer', "between:{$pages['min']},{$pages['max']}"],
-            'audience' => ['required', Rule::in(['personas', 'empresas'])],
-            'croquis_mode' => ['required', Rule::in(['auto', 'off'])],
-            'croquis_reference' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
-            'extra_prompt' => ['nullable', 'string', 'max:2000'],
-        ]);
+        $data = $request->validate(PresentationRules::all($property, $request));
 
         $validMediaIds = $property->media()->where('type', 'image')->pluck('id')->all();
         $selectedIds = array_values(array_intersect(

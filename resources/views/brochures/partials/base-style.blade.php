@@ -109,11 +109,15 @@
   {{-- Slim one-line footer for the cover page, which is already tightly packed
        (hero image + hook + cards + quote): the full .cta panel is reserved for
        the content pages below, where there is room to spare. --}}
-  .foot1 { position: absolute; top: 270mm; left: 0; width: 210mm; height: 27mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; font-size: 8.5pt; }
-  .foot1 .foot1-mark { position: absolute; left: 14mm; top: 9.5mm; width: 22mm; }
-  .foot1 .foot1-who { position: absolute; left: 40mm; top: 9mm; width: 76mm; line-height: 1.3; }
-  .foot1-nologo .foot1-who { left: 14mm; width: 102mm; }
-  .foot1 .foot1-contact { position: absolute; left: 120mm; top: 9mm; width: 76mm; text-align: right; line-height: 1.3; }
+  {{-- 7.5pt, not 8.5: at the larger size "Carmen Mestanza Inmobiliaria · Agente
+       Inmobiliario" plus a long e-mail needed ~207mm of the 182mm available, so both
+       columns wrapped and left a word dangling on a second line. The columns below are
+       sized from the measured width of that real content, with room to spare. --}}
+  .foot1 { position: absolute; top: 270mm; left: 0; width: 210mm; height: 27mm; overflow: hidden; background: {{ $theme['primary'] }}; color: {{ $theme['on_primary'] }}; font-size: 7.5pt; }
+  .foot1 .foot1-mark { position: absolute; left: 14mm; top: 10mm; width: 18mm; }
+  .foot1 .foot1-who { position: absolute; left: 34mm; top: 9.5mm; width: 80mm; line-height: 1.3; }
+  .foot1-nologo .foot1-who { left: 14mm; width: 100mm; }
+  .foot1 .foot1-contact { position: absolute; left: 116mm; top: 9.5mm; width: 80mm; text-align: right; line-height: 1.3; }
   .foot1 b { color: {{ $theme['accent'] }}; }
-  .foot1-logo { height: 8mm; }
+  .foot1-logo { height: 7mm; }
 </style>
