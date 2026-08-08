@@ -6,6 +6,7 @@ use App\Http\Resources\LeadResource;
 use App\Models\Contact;
 use App\Models\Deal;
 use App\Models\Lead;
+use App\Support\PeopleFields;
 
 class LeadController extends CrudController
 {
@@ -17,15 +18,11 @@ class LeadController extends CrudController
 
     protected function rules(?int $id = null): array
     {
-        return [
-            'first_name' => ['required', 'max:80'], 'last_name' => ['nullable', 'max:80'],
-            'email' => ['nullable', 'email', 'max:120'], 'phone' => ['required', 'max:30'],
-            'source' => ['required'], 'status' => ['required'], 'score' => ['required', 'integer', 'between:0,100'],
-            'budget' => ['nullable', 'numeric', 'min:0'], 'interest' => ['nullable', 'max:160'],
-            'assigned_to' => ['nullable', 'exists:users,id'], 'last_contact_at' => ['nullable', 'date'],
-            'follow_up_status' => ['required', 'in:active,paused,do_not_contact'],
-            'next_contact_at' => ['nullable', 'date'],
-            'notes' => ['nullable', 'max:5000'],
+        return PeopleFields::rules() + [
+            'source' => ['required'], 'status' => ['required'],
+            'score' => ['required', 'integer', 'between:0,100'],
+            'budget' => ['nullable', 'numeric', 'min:0'],
+            'assigned_to' => ['nullable', 'exists:users,id'],
         ];
     }
 
@@ -34,9 +31,13 @@ class LeadController extends CrudController
         $lead = Lead::findOrFail($record);
         $contact = Contact::firstOrCreate(
             ['phone' => $lead->phone],
-            $lead->only('first_name', 'last_name', 'email', 'phone', 'notes',
-                'last_contact_at', 'follow_up_status', 'next_contact_at')
+            $lead->only('first_name', 'last_name', 'email', 'phone', 'notes', 'party_type',
+                'last_contact_at', 'follow_up_status', 'next_contact_at',
+                'notify_email', 'notify_push', 'device_contact_name')
         );
+        $lead->contactLogs()->update([
+            'subject_type' => Contact::class, 'subject_id' => $contact->id,
+        ]);
         Deal::firstOrCreate(['lead_id' => $lead->id], [
             'contact_id' => $contact->id, 'owner_id' => $lead->assigned_to,
             'title' => 'Oportunidad · '.$lead->full_name, 'value' => $lead->budget ?? 0,

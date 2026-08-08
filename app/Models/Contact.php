@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksFollowUp;
 use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
+    use TracksFollowUp;
+
     protected $guarded = [];
 
     protected function casts(): array
@@ -14,6 +17,8 @@ class Contact extends Model
             'birthday' => 'date',
             'last_contact_at' => 'datetime',
             'next_contact_at' => 'datetime',
+            'notify_email' => 'boolean',
+            'notify_push' => 'boolean',
         ];
     }
 

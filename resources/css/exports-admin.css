@@ -1,0 +1,21 @@
+/* Pestaña de exportación: dos tarjetas, resumen semanal y volcado completo. */
+.export-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); margin: 0 auto; max-width: 1100px; }
+.export-card { display: flex; flex-direction: column; margin: 0; }
+
+.export-preview { border: 1px solid #e9ece7; border-radius: 11px; list-style: none; margin: 0 0 1.1rem; padding: .7rem .85rem; }
+.export-preview li { align-items: center; display: flex; font-size: .74rem; gap: .55rem; padding: .28rem 0; }
+.export-preview li + li { border-top: 1px solid #f2f4f1; }
+.export-preview i { border-radius: 4px; display: inline-block; flex: 0 0 auto; height: 13px; width: 13px; }
+.export-preview strong { margin-left: auto; }
+
+.export-form { align-items: end; display: grid; gap: .8rem; grid-template-columns: 1fr 1fr auto; margin-top: auto; }
+.export-form-block { grid-template-columns: 1fr; }
+.export-form .button { white-space: nowrap; }
+
+.export-sections { border: 1px solid #e9ece7; border-radius: 11px; display: flex; flex-wrap: wrap; gap: .5rem 1.1rem; margin: 0 0 .3rem; padding: .8rem .9rem; }
+.export-sections legend { color: var(--muted); font-size: .62rem; letter-spacing: .08em; padding: 0 .35rem; text-transform: uppercase; }
+
+@media (max-width: 560px) {
+    .export-form { grid-template-columns: 1fr; }
+    .export-form .button { width: 100%; }
+}

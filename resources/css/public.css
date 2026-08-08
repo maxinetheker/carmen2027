@@ -1,9 +1,12 @@
 .hero { background: linear-gradient(135deg, #06182f, #0f3b70); color: #fff; display: grid; grid-template-columns: .9fr 1.1fr; min-height: max(620px, calc(100svh - 28px)); overflow: hidden; }
-.hero-copy { align-self: center; max-width: 720px; padding: clamp(2.75rem, 6vh, 4.5rem) 3rem clamp(2.75rem, 6vh, 4.5rem) max(2rem, calc((100vw - 1260px)/2)); }
-.hero h1 { font-size: clamp(3rem, 4.3vw, 5rem); letter-spacing: -.035em; line-height: 1; margin: 1rem 0 1.25rem; }
-.hero-copy > p { color: rgba(255,255,255,.7); font-size: 1.12rem; line-height: 1.7; max-width: 540px; }
+.hero-copy { align-self: center; display: flex; flex-direction: column; justify-content: center; max-height: 100%; max-width: 720px; padding: clamp(2rem, 6vh, 4.5rem) 3rem clamp(2rem, 6vh, 4.5rem) max(2rem, calc((100vw - 1260px)/2)); }
+/* Solo este bloque se encoge: la firma de abajo queda siempre a la vista, sea cual
+   sea el largo del titular que se cargue desde "Editar sitio web". */
+.hero-headline { display: flex; flex-direction: column; min-height: 0; }
+.hero h1 { font-size: clamp(2.4rem, min(4.3vw, 7.4svh), 5rem); letter-spacing: -.035em; line-height: 1; margin: clamp(.6rem, 1.6vh, 1rem) 0 clamp(.75rem, 2vh, 1.25rem); }
+.hero-headline > p { color: rgba(255,255,255,.7); font-size: clamp(.98rem, 1.9svh, 1.12rem); line-height: 1.65; max-width: 540px; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin: clamp(1.35rem, 2.5vh, 1.8rem) 0 clamp(1.5rem, 3vh, 2.25rem); }
-.hero-note { align-items: center; display: flex; gap: .9rem; }
+.hero-note { align-items: center; display: flex; flex: 0 0 auto; gap: .9rem; }
 .hero-note p { margin: 0; }
 .hero-note strong, .hero-note small { display: block; }
 .hero-note small { color: rgba(255,255,255,.55); margin-top: .2rem; }

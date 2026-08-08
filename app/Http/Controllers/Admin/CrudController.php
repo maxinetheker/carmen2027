@@ -15,6 +15,8 @@ abstract class CrudController extends Controller
     protected string $labelPlural;
     protected array $columns = [];
     protected array $search = [];
+    /** Texto que explica para qué sirve la sección, encima del listado. */
+    protected string $intro = '';
 
     abstract protected function fields(): array;
     abstract protected function rules(?int $id = null): array;
@@ -39,6 +41,7 @@ abstract class CrudController extends Controller
             'route' => $this->route,
             'label' => $this->label,
             'labelPlural' => $this->labelPlural,
+            'intro' => $this->intro,
         ]);
     }
 
@@ -93,7 +96,17 @@ abstract class CrudController extends Controller
             'fields' => $this->fields(),
             'route' => $this->route,
             'label' => $this->label,
+            'intro' => $this->intro,
+            // Bloques extra (por ejemplo la bitácora de contacto) que solo tienen
+            // sentido cuando el registro ya existe y por tanto tiene historial.
+            'panels' => $record->exists ? $this->panels($record) : [],
         ]);
+    }
+
+    /** @return array<int, string> Vistas Blade a incluir debajo del formulario. */
+    protected function panels(Model $record): array
+    {
+        return [];
     }
 
     protected function prepare(array $data, Request $request): array

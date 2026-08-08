@@ -5,6 +5,7 @@
 @section('eyebrow', 'Gestión comercial')
 
 @section('content')
+@include('admin.partials.section-intro')
 <div class="page-actions">
     <form class="table-search" method="get">
         <input name="q" value="{{ request('q') }}" placeholder="Buscar en {{ strtolower($labelPlural) }}...">
@@ -13,6 +14,9 @@
         </select>
         <button>Buscar</button>
     </form>
+    @if($route === 'properties')
+        <button class="button button-ghost-dark" type="button" data-open-import>Importar desde enlace</button>
+    @endif
     <a class="button button-accent" href="{{ route("admin.$route.create") }}">+ Nuevo {{ strtolower($label) }}</a>
 </div>
 <section class="data-card">
@@ -29,7 +33,7 @@
                     @foreach($columns as $field => $heading)
                         @php($value = data_get($record, $field))
                         <td data-label="{{ $heading }}">
-                            @if(in_array($field, ['status', 'stage', 'priority', 'source', 'operation', 'follow_up_status']))
+                            @if(in_array($field, ['status', 'stage', 'priority', 'source', 'operation', 'follow_up_status', 'party_type', 'type']))
                                 <span class="status-pill status-{{ $value }}">{{ \App\Support\CrmLabels::get($value) }}</span>
                             @elseif(in_array($field, ['price', 'value', 'budget']) && is_numeric($value))
                                 <strong>US$ {{ number_format((float) $value) }}</strong>
@@ -85,5 +89,6 @@
     <dialog class="presentation-modal" data-social-dialog>
         <div data-social-body><p class="document-empty">Cargando…</p></div>
     </dialog>
+    @include('admin.properties.import-modal')
 @endif
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Services\Ai\AiSettings;
+use App\Support\SiteSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,6 +15,9 @@ class SettingController extends Controller
         'hero_eyebrow' => ['Etiqueta principal', 'text'],
         'hero_title' => ['Título principal', 'text'],
         'hero_subtitle' => ['Texto principal', 'textarea'],
+        'stats_years' => ['Años acompañando decisiones', 'number'],
+        'stats_clients' => ['Clientes satisfechos', 'number'],
+        'certifications_title' => ['Título del bloque de certificaciones', 'text'],
         'phone' => ['Teléfono', 'text'],
         'whatsapp' => ['WhatsApp', 'text'],
         'email' => ['Correo', 'email'],
@@ -34,6 +38,9 @@ class SettingController extends Controller
     public function edit()
     {
         $settings = SiteSetting::values() + [
+            'stats_years' => SiteSettings::DEFAULT_YEARS,
+            'stats_clients' => SiteSettings::DEFAULT_CLIENTS,
+            'certifications_title' => SiteSettings::DEFAULT_CERTIFICATIONS_TITLE,
             'seo_title' => 'Carmen Mestanza · Tu asesora inmobiliaria de confianza en Lima',
             'seo_description' => 'Compra, vende o alquila propiedades en Lima con Carmen Mestanza, tu asesora de confianza. Acompañamiento cercano, estrategia y claridad de principio a fin.',
             'ai_openai_model' => AiSettings::DEFAULT_MODEL,

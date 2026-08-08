@@ -46,10 +46,24 @@ MAIL_FROM_ADDRESS=correo@tu-dominio.com
 MAIL_FROM_NAME="Carmen Mestanza Inmobiliaria"
 ```
 
-Después ejecuta `php artisan config:clear`. En `/admin/notificaciones` puedes
-elegir hasta 10 destinatarios, frecuencia, hora, día semanal y anticipación.
-Agenda y tareas también admiten alertas inmediatas por minutos, registradas
-para evitar duplicados. **Procesar ahora** permite comprobar la configuración.
+Después ejecuta `php artisan config:clear`. En `/admin/notificaciones` eliges
+hasta 10 destinatarios y, para cada tipo de aviso (clientes por contactar,
+agenda y tareas), por qué canal llega: correo, notificación de la app o ambos.
+
+Hay dos clases de aviso y conviene no confundirlas:
+
+- **Por registro.** Cada tarea o cita con «Avisarme» activado genera su propio
+  aviso: uno de anticipación (30 minutos antes por defecto, configurable por
+  registro), otro a la hora exacta y, si queda sin cerrar, un recordatorio
+  diario mientras siga dentro del margen de días de vencimiento. El texto dice
+  qué es, con quién y para cuándo; tocarlo en el celular abre esa ficha.
+- **Resúmenes.** Una vez al día, a la hora configurada: agenda del día, tareas
+  pendientes y lista de clientes por contactar.
+
+**Revisar ahora** fuerza una pasada completa y **Enviar prueba** comprueba que
+el correo y el push llegan. La pantalla muestra además la hora de la última
+revisión automática: si está desactualizada, el cron del hosting no corre cada
+minuto y los avisos se acumulan hasta la siguiente ejecución.
 
 En cPanel crea un solo trabajo cron con minuto, hora, día, mes y semana en `*`.
 Usa como comando, ajustando la ruta del proyecto y la ruta de PHP:

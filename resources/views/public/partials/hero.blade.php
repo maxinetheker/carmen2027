@@ -1,11 +1,15 @@
 <section class="hero">
+    {{-- La firma (logo + «Hablas directamente con Carmen») va fuera del bloque que
+         se encoge: por largo que sea el título, nunca queda fuera de la pantalla. --}}
     <div class="hero-copy">
-        <span class="eyebrow">{{ $settings['hero_eyebrow'] ?? 'Carmen Mestanza · Experiencia y cercanía en Lima' }}</span>
-        <h1>{{ $settings['hero_title'] ?? 'Tu asesora inmobiliaria de confianza, en cada decisión.' }}</h1>
-        <p>{{ $settings['hero_subtitle'] ?? 'Compra, vende o alquila con información clara, estrategia y acompañamiento directo de principio a fin.' }}</p>
-        <div class="hero-actions">
-            <a class="button button-accent" href="{{ route('properties.index') }}">Explorar propiedades</a>
-            <a class="button button-ghost" href="#contacto">Quiero asesoría</a>
+        <div class="hero-headline">
+            <span class="eyebrow">{{ $settings['hero_eyebrow'] ?? 'Carmen Mestanza · Experiencia y cercanía en Lima' }}</span>
+            <h1>{{ $settings['hero_title'] ?? 'Tu asesora inmobiliaria de confianza, en cada decisión.' }}</h1>
+            <p>{{ $settings['hero_subtitle'] ?? 'Compra, vende o alquila con información clara, estrategia y acompañamiento directo de principio a fin.' }}</p>
+            <div class="hero-actions">
+                <a class="button button-accent" href="{{ route('properties.index') }}">Explorar propiedades</a>
+                <a class="button button-ghost" href="#contacto">Quiero asesoría</a>
+            </div>
         </div>
         <div class="hero-note">
             <span class="avatar-logo"><img src="{{ asset('images/carmen-mestanza-logo.webp') }}" alt="Logo de Carmen Mestanza"></span>

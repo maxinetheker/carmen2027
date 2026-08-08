@@ -1,0 +1,28 @@
+/* Explicación de cada sección y bitácora de contacto de prospectos y contactos. */
+.section-intro { background: #eef3fb; border: 1px solid #dbe4f1; border-left: 3px solid var(--sage, #5e83b4); border-radius: 12px; color: var(--muted); font-size: .72rem; line-height: 1.55; margin: 0 auto 1rem; max-width: 1100px; padding: .8rem 1rem; }
+.section-intro strong { color: var(--ink); }
+
+.contact-log-card { margin-top: 1rem; }
+.contact-log-form { align-items: end; display: grid; gap: .8rem; grid-template-columns: repeat(5, 1fr); }
+.contact-log-form .field-wide { grid-column: 1 / -1; }
+.contact-log-form > button { grid-column: 1 / -1; justify-self: start; }
+.contact-log-empty { color: var(--muted); font-size: .72rem; margin: 1.2rem 0 0; }
+
+.contact-log-list { border-top: 1px solid #edf0ec; list-style: none; margin: 1.2rem 0 0; padding: .4rem 0 0; }
+.contact-log-item { align-items: flex-start; border-bottom: 1px solid #f2f4f1; display: flex; gap: .8rem; justify-content: space-between; padding: .7rem 0 .7rem .8rem; position: relative; }
+.contact-log-item::before { background: #cfd8e6; border-radius: 3px; content: ""; height: calc(100% - 1.1rem); left: 0; position: absolute; top: .55rem; width: 3px; }
+.contact-log-call::before { background: #5e83b4; }
+.contact-log-whatsapp::before { background: #4caf7d; }
+.contact-log-email::before { background: #c98a3e; }
+.contact-log-meeting::before, .contact-log-visit::before { background: #8b6bb1; }
+.contact-log-item strong { display: block; font-size: .76rem; }
+.contact-log-meta { color: var(--muted); display: block; font-size: .64rem; margin-top: .1rem; }
+.contact-log-item p { font-size: .72rem; margin: .35rem 0 0; }
+.contact-log-device { color: var(--muted); display: block; font-size: .62rem; margin-top: .25rem; }
+
+@media (max-width: 900px) {
+    .contact-log-form { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+    .contact-log-form { grid-template-columns: 1fr; }
+}

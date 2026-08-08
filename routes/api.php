@@ -3,11 +3,13 @@
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\ContactLogController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DealController;
 use App\Http\Controllers\Api\DeviceTokenController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\NotificationSettingController;
+use App\Http\Controllers\Api\PhoneSyncController;
 use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\PropertyMediaController;
 use App\Http\Controllers\Api\ReportController;
@@ -29,6 +31,19 @@ Route::middleware(['auth:sanctum', ForceUnescapedJson::class])->name('api.')->gr
 
     Route::apiResource('leads', LeadController::class);
     Route::post('/leads/{record}/convert', [LeadController::class, 'convert'])->name('leads.convert');
+
+    // Bitácora de contacto: `type` es "leads" o "contacts".
+    Route::get('/{type}/{record}/contact-logs', [ContactLogController::class, 'index'])
+        ->whereIn('type', ['leads', 'contacts'])->name('contact-logs.index');
+    Route::post('/{type}/{record}/contact-logs', [ContactLogController::class, 'store'])
+        ->whereIn('type', ['leads', 'contacts'])->name('contact-logs.store');
+    Route::delete('/contact-logs/{log}', [ContactLogController::class, 'destroy'])
+        ->name('contact-logs.destroy');
+
+    // Sincronización con la agenda y el registro de llamadas del celular.
+    Route::post('/phone-sync/preview', [PhoneSyncController::class, 'preview'])->name('phone-sync.preview');
+    Route::post('/phone-sync/contacts', [PhoneSyncController::class, 'importContacts'])->name('phone-sync.contacts');
+    Route::post('/phone-sync/calls', [PhoneSyncController::class, 'importCalls'])->name('phone-sync.calls');
 
     Route::apiResource('properties', PropertyController::class);
     Route::post('/properties/{property}/photos', [PropertyMediaController::class, 'storePhoto'])->name('properties.photos.store');

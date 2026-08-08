@@ -16,7 +16,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-GG-6iA1z.css",
+    "file": "assets/app-CBQ_r3Rg.css",
     "name": "app",
     "names": [
       "app.css"
@@ -25,7 +25,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-BdXURT_7.js",
+    "file": "assets/app-BVZfkND8.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -34,7 +34,8 @@
       "resources/js/property-location.js",
       "resources/js/catalog-filters.js",
       "resources/js/property-presentations.js",
-      "resources/js/property-social-images.js"
+      "resources/js/property-social-images.js",
+      "resources/js/property-import.js"
     ]
   },
   "resources/js/catalog-filters.js": {
@@ -47,6 +48,12 @@
     "file": "assets/property-gallery-4bNqWl6T.js",
     "name": "property-gallery",
     "src": "resources/js/property-gallery.js",
+    "isDynamicEntry": true
+  },
+  "resources/js/property-import.js": {
+    "file": "assets/property-import-BPLGtTSD.js",
+    "name": "property-import",
+    "src": "resources/js/property-import.js",
     "isDynamicEntry": true
   },
   "resources/js/property-location.js": {

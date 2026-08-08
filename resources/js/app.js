@@ -22,6 +22,9 @@ if (document.querySelector('[data-presentation-dialog]')) {
 if (document.querySelector('[data-social-dialog]')) {
     import('./property-social-images');
 }
+if (document.querySelector('[data-import-dialog]')) {
+    import('./property-import');
+}
 
 const menuButton = document.querySelector('[data-menu-toggle]');
 const menu = document.querySelector('[data-menu]');

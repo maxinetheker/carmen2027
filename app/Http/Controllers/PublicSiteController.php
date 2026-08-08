@@ -9,6 +9,7 @@ use App\Models\SiteSetting;
 use App\Notifications\NewLeadReceived;
 use App\Services\PropertyCatalogSearch;
 use App\Services\PropertySharePreview;
+use App\Support\SiteSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
@@ -27,15 +28,13 @@ class PublicSiteController extends Controller
                 ->where('status', 'available')->ranked()->take(5)->get();
         }
 
+        $settings = SiteSetting::values();
+
         return view('public.home', [
             'featured' => $selection->isNotEmpty() ? $selection : $heroProperties,
             'heroProperties' => $heroProperties,
-            'settings' => SiteSetting::values(),
-            'stats' => [
-                'properties' => Property::published()->count(),
-                'clients' => Lead::where('status', 'won')->count() + 48,
-                'years' => 6,
-            ],
+            'settings' => $settings,
+            'stats' => SiteSettings::stats($settings),
         ]);
     }
 

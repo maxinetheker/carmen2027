@@ -22,6 +22,7 @@
             <span class="nav-label">Resumen</span>
             <a class="@if(request()->routeIs('admin.dashboard')) active @endif" href="{{ route('admin.dashboard') }}"><i>⌂</i> Panel general</a>
             <a class="@if(request()->routeIs('admin.reports')) active @endif" href="{{ route('admin.reports') }}"><i>↗</i> Reportes</a>
+            <a class="@if(request()->routeIs('admin.exports.*')) active @endif" href="{{ route('admin.exports.index') }}"><i>⤓</i> Exportación</a>
             <span class="nav-label">Relaciones</span>
             <a class="@if(request()->routeIs('admin.leads.*')) active @endif" href="{{ route('admin.leads.index') }}"><i>◎</i> Prospectos</a>
             <a class="@if(request()->routeIs('admin.contacts.*')) active @endif" href="{{ route('admin.contacts.index') }}"><i>◉</i> Contactos</a>

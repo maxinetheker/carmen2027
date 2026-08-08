@@ -1,14 +1,29 @@
+@php
+    $banner = [
+        'overdue' => '🔴 **Ya venció.** Esto debió atenderse antes de la fecha indicada.',
+        'now' => '🟠 **Es ahora.** Empieza en este momento.',
+        'soon' => '🟡 **Falta poco.** Está por empezar.',
+    ][$urgency ?? 'normal'] ?? null;
+@endphp
 <x-mail::message>
 # {{ $heading }}
 
 {{ $intro }}
 
+@if($banner)
+{{ $banner }}
+@endif
+
 @foreach($items as $item)
 <x-mail::panel>
-**{{ $item['title'] }}**  
+**{{ $item['title'] }}**
 {{ $item['meta'] }}
+@if(!empty($item['detail']))
 
-[Abrir registro]({{ $item['url'] }})
+{{ $item['detail'] }}
+@endif
+
+[{{ $item['action'] ?? 'Abrir en el CRM' }}]({{ $item['url'] }})
 </x-mail::panel>
 @endforeach
 
@@ -16,7 +31,7 @@
 Abrir panel del CRM
 </x-mail::button>
 
-Este correo fue generado automáticamente según tu configuración de notificaciones.
+Puedes cambiar qué avisos recibes, por qué canal y a qué hora en **CRM → Notificaciones**.
 
 Saludos,<br>
 {{ config('app.name') }}

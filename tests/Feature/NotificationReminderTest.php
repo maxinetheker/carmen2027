@@ -22,11 +22,11 @@ class NotificationReminderTest extends TestCase
         $this->seed();
         $user = User::firstOrFail();
         $this->actingAs($user)->get(route('admin.notifications.edit'))
-            ->assertOk()->assertSee('Clientes por contactar')->assertSee('Agenda y reuniones');
+            ->assertOk()->assertSee('Clientes por contactar')->assertSee('Agenda (citas y visitas)');
 
         $this->actingAs($user)->put(route('admin.notifications.update'), [
             'recipient_emails' => "avisos@example.com\nequipo@example.com",
-            'timezone' => 'America/Lima',
+            'timezone' => 'America/Lima', 'overdue_days' => 5,
             'follow_up_enabled' => 1, 'follow_up_frequency' => 'weekly',
             'follow_up_time' => '09:15', 'follow_up_weekday' => 2, 'follow_up_days' => 10,
             'appointment_enabled' => 1, 'appointment_frequency' => 'daily',
@@ -116,7 +116,7 @@ class NotificationReminderTest extends TestCase
 
         Notification::assertSentOnDemand(CrmReminderDigest::class,
             fn (CrmReminderDigest $notice) => collect($notice->items)->pluck('title')->all()
-                === ['Contactar']);
+                === ['Contactar · Comprador']);
         Notification::assertCount(1);
     }
 }

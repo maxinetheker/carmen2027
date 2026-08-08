@@ -1,0 +1,43 @@
+/* Modal de importación desde un enlace del portal. */
+.import-modal { background: #fff; border: 0; border-radius: 18px; box-shadow: 0 30px 80px rgba(7,27,53,.28); max-height: 90vh; max-width: min(960px, 94vw); padding: 1.6rem 1.8rem 1.8rem; position: relative; width: 100%; }
+.import-modal::backdrop { background: rgba(7,27,53,.55); }
+.import-modal h2 { font-size: 1.15rem; margin: 0 0 .35rem; }
+.import-modal > .import-step > p { color: var(--muted); font-size: .74rem; margin: 0 0 1.1rem; }
+.import-close { position: absolute; right: .9rem; top: .8rem; }
+.import-close button { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1.4rem; line-height: 1; }
+.import-step { max-height: calc(90vh - 4rem); overflow-y: auto; }
+
+.import-tabs { border-bottom: 1px solid #e6eae4; display: flex; gap: .3rem; margin-bottom: 1rem; }
+.import-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; font-size: .74rem; padding: .5rem .8rem; }
+.import-tabs button.active { border-bottom-color: var(--accent); color: var(--ink); font-weight: 600; }
+
+.import-error { background: #fdecec; border: 1px solid #f4c9c9; border-radius: 10px; color: #9b2c2c; font-size: .72rem; line-height: 1.5; margin: .9rem 0 0; padding: .7rem .85rem; }
+.import-duplicate { background: #fff7e8; border: 1px solid #f2dfb8; border-radius: 10px; color: #8a5b12; font-size: .72rem; margin: 0 0 1rem; padding: .7rem .85rem; }
+.import-actions { display: flex; gap: .7rem; justify-content: flex-end; margin-top: 1.2rem; }
+
+.import-grid { display: grid; gap: .9rem; grid-template-columns: repeat(3, 1fr); }
+.import-field { display: flex; flex-direction: column; gap: .35rem; }
+.import-field-wide { grid-column: 1 / -1; }
+.import-field-head { align-items: center; display: flex; font-size: .7rem; font-weight: 600; gap: .4rem; }
+.import-field-head input { accent-color: var(--sage); height: 15px; width: 15px; }
+.import-field input, .import-field select, .import-field textarea { border: 1px solid #dfe4dd; border-radius: 9px; font: inherit; font-size: .78rem; padding: .5rem .6rem; width: 100%; }
+.import-field :disabled + span { color: var(--muted); }
+
+.import-gallery-heading { align-items: center; border-top: 1px solid #edf0ec; display: flex; font-size: .76rem; justify-content: space-between; margin-top: 1.3rem; padding-top: 1rem; }
+.import-gallery { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); margin-top: .8rem; }
+.import-photo { border: 2px solid transparent; border-radius: 11px; cursor: pointer; display: block; overflow: hidden; position: relative; }
+.import-photo:has(:checked) { border-color: var(--accent); }
+.import-photo img { aspect-ratio: 4/3; display: block; object-fit: cover; width: 100%; }
+.import-photo input { left: .4rem; position: absolute; top: .4rem; z-index: 2; }
+.import-photo span { background: rgba(7,27,53,.72); border-radius: 6px; bottom: .4rem; color: #fff; font-size: .58rem; left: .4rem; padding: .1rem .35rem; position: absolute; }
+.import-empty { color: var(--muted); font-size: .72rem; }
+
+@media (max-width: 760px) {
+    .import-modal { padding: 1.2rem; }
+    .import-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+    .import-grid { grid-template-columns: 1fr; }
+    .import-actions { flex-direction: column-reverse; }
+    .import-actions .button { width: 100%; }
+}

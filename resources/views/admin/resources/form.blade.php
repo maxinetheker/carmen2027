@@ -5,6 +5,7 @@
 @section('eyebrow', 'Gestión comercial')
 
 @section('content')
+@include('admin.partials.section-intro')
 <form class="resource-form" method="post" data-dirty-form action="{{ $record->exists ? route("admin.$route.update", $record) : route("admin.$route.store") }}">
     @csrf
     @if($record->exists) @method('put') @endif
@@ -28,8 +29,12 @@
                 @endphp
                 <label class="field @if($field['wide'] ?? false) field-wide @endif @if($type === 'checkbox') checkbox-field @endif">
                     @if($type === 'checkbox')
-                        <input type="checkbox" name="{{ $name }}" value="1" @checked(old($name, $record->{$name}))>
+                        {{-- `?? true`: en un registro nuevo el atributo todavía no
+                             existe y el valor por defecto de la columna es activo. --}}
+                        <input type="checkbox" name="{{ $name }}" value="1"
+                            @checked(old($name, $record->{$name} ?? ($field['default'] ?? true)))>
                         <span>{{ $field['label'] }}</span>
+                        @if($field['help'] ?? false)<small class="field-help">{{ $field['help'] }}</small>@endif
                     @else
                         <span>{{ $field['label'] }}</span>
                         @if($type === 'textarea')
@@ -71,4 +76,9 @@
         <button class="button button-accent" type="submit" data-save-button>Guardar</button>
     </div>
 </form>
+{{-- Fuera del formulario principal: los paneles traen sus propios <form> y el HTML
+     no permite anidarlos. --}}
+@foreach($panels ?? [] as $panel)
+    <div class="resource-form">@include($panel)</div>
+@endforeach
 @endsection

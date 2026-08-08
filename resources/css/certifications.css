@@ -1,0 +1,29 @@
+/* Bloque de certificaciones: fondo oscuro y acentos dorados, como los diplomas
+   originales de RE/MAX, para que se lea como un sello y no como otra sección más. */
+.certifications { background: linear-gradient(140deg, #0a0a0c, #1b1b20 55%, #0a0a0c); color: #f4efe6; padding: clamp(2.5rem, 6vw, 3.75rem) clamp(1.2rem, 5vw, 3rem); }
+.certifications-title { color: #d8b26a; font-size: clamp(.82rem, 1.6vw, .95rem); font-weight: 700; letter-spacing: .3em; margin: 0 auto clamp(1.75rem, 4vw, 2.5rem); max-width: 1260px; position: relative; text-align: center; text-transform: uppercase; }
+.certifications-title::before, .certifications-title::after { background: linear-gradient(90deg, transparent, rgba(216,178,106,.55)); content: ""; height: 1px; position: absolute; top: 50%; width: min(22%, 240px); }
+.certifications-title::before { left: 0; }
+.certifications-title::after { background: linear-gradient(270deg, transparent, rgba(216,178,106,.55)); right: 0; }
+
+.certification-list { display: grid; gap: clamp(1.5rem, 3vw, 2rem); grid-template-columns: repeat(4, 1fr); list-style: none; margin: 0 auto; max-width: 1260px; padding: 0; }
+.certification { display: flex; flex-direction: column; gap: .55rem; padding: 0 clamp(.5rem, 2vw, 1.5rem); position: relative; text-align: center; }
+.certification + .certification::before { background: linear-gradient(180deg, transparent, rgba(216,178,106,.35), transparent); content: ""; height: 100%; left: 0; position: absolute; top: 0; width: 1px; }
+.certification-mark { align-self: center; color: #d8b26a; display: block; height: clamp(48px, 6vw, 64px); width: clamp(48px, 6vw, 64px); }
+.certification-mark svg { height: 100%; width: 100%; }
+.certification strong { font-size: clamp(.78rem, 1.4vw, .88rem); letter-spacing: .06em; line-height: 1.35; text-transform: uppercase; }
+.certification span:not(.certification-mark) { color: rgba(244,239,230,.62); font-size: clamp(.68rem, 1.2vw, .76rem); line-height: 1.45; }
+
+@media (max-width: 860px) {
+    .certification-list { grid-template-columns: repeat(2, 1fr); row-gap: 2rem; }
+    /* Con dos columnas el separador solo debe ir entre pares, no al inicio de fila. */
+    .certification + .certification::before { display: none; }
+    .certification:nth-child(2n)::before { display: block; }
+    .certifications-title::before, .certifications-title::after { width: 12%; }
+}
+
+@media (max-width: 480px) {
+    .certification-list { grid-template-columns: 1fr; }
+    .certification:nth-child(2n)::before { display: none; }
+    .certification + .certification { border-top: 1px solid rgba(216,178,106,.22); padding-top: 1.5rem; }
+}

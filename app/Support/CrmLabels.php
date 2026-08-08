@@ -22,6 +22,8 @@ class CrmLabels
         'lead' => 'Prospecto', 'contact' => 'Contacto',
         'property' => 'Propiedad', 'deal' => 'Oportunidad',
         'active' => 'Activo', 'paused' => 'Pausado', 'do_not_contact' => 'No contactar',
+        'buyer' => 'Comprador', 'seller' => 'Vendedor', 'both' => 'Comprador y vendedor',
+        'other' => 'Otro', 'capture' => 'Captación',
     ];
 
     public static function get(mixed $value): string

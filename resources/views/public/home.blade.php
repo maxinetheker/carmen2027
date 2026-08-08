@@ -33,6 +33,8 @@
         </div>
     </section>
 
+    @include('public.partials.certifications')
+
     <section class="section services-section" id="servicios">
         <div class="services-intro">
             <span class="eyebrow eyebrow-light">Una asesoría de principio a fin</span>

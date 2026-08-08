@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NotificationSettingRules;
 use App\Models\DeviceToken;
 use App\Models\NotificationSetting;
-use App\Notifications\CrmReminderDigest;
 use App\Services\CrmReminderDispatcher;
+use App\Services\Reminders\Reminder;
 use App\Services\FcmSender;
+use App\Services\Reminders\ReminderSender;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Validation\Rule;
 
 class NotificationSettingController extends Controller
 {
@@ -20,20 +20,17 @@ class NotificationSettingController extends Controller
             'setting' => NotificationSetting::current(),
             'weekdays' => [1 => 'Lunes', 2 => 'Martes', 3 => 'Miércoles',
                 4 => 'Jueves', 5 => 'Viernes', 6 => 'Sábado', 7 => 'Domingo'],
-            'timezones' => ['America/Lima' => 'Lima', 'America/Bogota' => 'Bogotá',
-                'America/Mexico_City' => 'Ciudad de México', 'America/New_York' => 'Nueva York'],
+            'timezones' => NotificationSettingRules::TIMEZONES,
+            'devices' => DeviceToken::count(),
+            'lastRun' => NotificationSetting::current()->last_run_at,
         ]);
     }
 
     public function update(Request $request)
     {
-        $data = $request->validate($this->rules());
-        foreach (['follow_up', 'appointment', 'task'] as $key) {
-            $data["{$key}_enabled"] = $request->boolean("{$key}_enabled");
-        }
-        foreach (['appointment', 'task'] as $key) {
-            $data["{$key}_immediate_enabled"] = $request->boolean("{$key}_immediate_enabled");
-        }
+        $data = NotificationSettingRules::withBooleans(
+            $request->validate($this->rules()), $request
+        );
         $emails = $this->parseEmails($data['recipient_emails']);
         $data['recipient_emails'] = $emails;
         $data['recipient_email'] = $emails[0];
@@ -45,49 +42,57 @@ class NotificationSettingController extends Controller
     public function run(CrmReminderDispatcher $dispatcher)
     {
         $sent = $dispatcher->run(true);
-        $message = $sent
-            ? 'Se procesaron los avisos activos. Revisa el correo configurado.'
-            : 'No hay registros que requieran un aviso en este momento.';
 
-        return back()->with('success', $message);
+        return back()->with('success', $sent
+            ? 'Se enviaron '.count($sent).' aviso(s): '.implode(' · ', array_slice($sent, 0, 6))
+            : 'Revisado: en este momento no hay nada que avisar.');
     }
 
-    public function sendTest(FcmSender $fcm)
+    public function sendTest(ReminderSender $sender)
     {
         $setting = NotificationSetting::current();
-        $recipients = $setting->recipients();
-
-        $notification = new CrmReminderDigest(
-            'Notificación de prueba',
-            'Este es un mensaje de prueba enviado desde el panel de notificaciones del CRM.',
-            [[
+        $sender->send($setting, new Reminder(
+            type: 'task',
+            heading: 'Notificación de prueba',
+            intro: 'Si estás leyendo esto, los avisos del CRM llegan correctamente a este buzón.',
+            items: [[
                 'title' => 'Prueba de entrega',
-                'meta' => 'Enviada el '.now($setting->timezone)->format('d/m/Y H:i'),
+                'meta' => 'Enviada el '.$setting->now()->format('d/m/Y H:i'),
+                'detail' => 'Así se verá el detalle de cada tarea o cita.',
                 'url' => route('admin.dashboard'),
+                'action' => 'Abrir el panel',
             ]],
-        );
-        foreach ($recipients as $email) {
-            Notification::route('mail', $email)->notify(clone $notification);
+            pushTitle: '🔔 Prueba de notificación',
+            pushBody: 'Los avisos del CRM llegan bien a este celular.',
+            pushData: ['route' => 'dashboard'],
+        ));
+
+        return back()->with('success', $this->testSummary($setting));
+    }
+
+    private function testSummary(NotificationSetting $setting): string
+    {
+        $devices = DeviceToken::count();
+        $channels = $setting->channelsFor('task');
+        $message = $channels['mail']
+            ? 'Correo de prueba enviado a '.count($setting->recipients()).' destinatario(s).'
+            : 'Correo no enviado: el canal de correo está desactivado para tareas.';
+
+        if (! $channels['push']) {
+            return $message.' Push no enviado: el canal de notificaciones está desactivado.';
+        }
+        if (! app(FcmSender::class)->isConfigured()) {
+            return $message.' Push no enviado: faltan las credenciales de Firebase en el servidor.';
         }
 
-        $tokens = DeviceToken::query()->pluck('token')->all();
-        $message = 'Correo de prueba enviado a '.count($recipients).' destinatario(s).';
-
-        if (! $fcm->isConfigured()) {
-            $message .= ' Push no enviado: faltan las credenciales de Firebase en el servidor.';
-        } elseif (! $tokens) {
-            $message .= ' Push no enviado: todavía no hay dispositivos Android registrados.';
-        } else {
-            $fcm->send($tokens, 'Notificación de prueba', 'Este es un mensaje de prueba enviado desde el panel del CRM.');
-            $message .= ' Push enviado a '.count($tokens).' dispositivo(s) registrado(s).';
-        }
-
-        return back()->with('success', $message);
+        return $message.($devices
+            ? " Push enviado a {$devices} dispositivo(s)."
+            : ' Push no enviado: todavía no hay celulares con la app registrada.');
     }
 
     private function rules(): array
     {
-        $rules = [
+        return NotificationSettingRules::shared() + [
             'recipient_emails' => ['required', 'string', 'max:2000',
                 function (string $attribute, mixed $value, \Closure $fail): void {
                     $emails = $this->parseEmails((string) $value);
@@ -99,22 +104,7 @@ class NotificationSettingController extends Controller
                         }
                     }
                 }],
-            'timezone' => ['required', Rule::in(['America/Lima', 'America/Bogota',
-                'America/Mexico_City', 'America/New_York'])],
         ];
-        foreach (['follow_up', 'appointment', 'task'] as $key) {
-            $rules["{$key}_enabled"] = ['nullable', 'boolean'];
-            $rules["{$key}_frequency"] = ['required', Rule::in(['daily', 'weekly'])];
-            $rules["{$key}_time"] = ['required', 'date_format:H:i'];
-            $rules["{$key}_weekday"] = ['required', 'integer', 'between:1,7'];
-            $rules["{$key}_days"] = ['required', 'integer', 'between:0,365'];
-        }
-        foreach (['appointment', 'task'] as $key) {
-            $rules["{$key}_immediate_enabled"] = ['nullable', 'boolean'];
-            $rules["{$key}_lead_minutes"] = ['required', 'integer', 'between:5,10080'];
-        }
-
-        return $rules;
     }
 
     private function parseEmails(string $value): array

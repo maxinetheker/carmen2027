@@ -4,12 +4,15 @@ use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\BrochureAssetController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ContactLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DealController;
+use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\NotificationSettingController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\PropertyDocumentController;
+use App\Http\Controllers\Admin\PropertyImportController;
 use App\Http\Controllers\Admin\PropertyMediaController;
 use App\Http\Controllers\Admin\PropertyPresentationController;
 use App\Http\Controllers\Admin\PropertySocialImageController;
@@ -52,6 +55,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/cuenta/correo', [AccountController::class, 'updateEmail'])->name('account.email');
     Route::put('/cuenta/contrasena', [AccountController::class, 'updatePassword'])->name('account.password');
     Route::get('/reportes', ReportController::class)->name('reports');
+    Route::get('/exportar', [ExportController::class, 'index'])->name('exports.index');
+    Route::get('/exportar/resumen-semanal', [ExportController::class, 'weekly'])->name('exports.weekly');
+    Route::get('/exportar/datos', [ExportController::class, 'data'])->name('exports.data');
     Route::get('/sitio', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('/sitio', [SettingController::class, 'update'])->name('settings.update');
     Route::get('/notificaciones', [NotificationSettingController::class, 'edit'])->name('notifications.edit');
@@ -60,7 +66,18 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::post('/notificaciones/prueba', [NotificationSettingController::class, 'sendTest'])->name('notifications.test');
     Route::post('/leads/{record}/convertir', [LeadController::class, 'convert'])
         ->name('leads.convert');
+    Route::post('/leads/{record}/registro-contacto', [ContactLogController::class, 'storeForLead'])
+        ->name('leads.logs.store');
+    Route::post('/contacts/{record}/registro-contacto', [ContactLogController::class, 'storeForContact'])
+        ->name('contacts.logs.store');
+    Route::delete('/registro-contacto/{log}', [ContactLogController::class, 'destroy'])
+        ->name('contact-logs.destroy');
     Route::get('/logos-remax/{key}', [BrochureAssetController::class, 'logo'])->name('brochure.logo');
+
+    Route::post('/properties/importar/leer', [PropertyImportController::class, 'preview'])
+        ->name('properties.import.preview');
+    Route::post('/properties/importar', [PropertyImportController::class, 'store'])
+        ->name('properties.import.store');
 
     Route::resources([
         'properties' => PropertyController::class,
