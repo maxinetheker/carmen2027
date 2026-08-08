@@ -37,6 +37,19 @@ class PropertyImportTest extends TestCase
         $this->assertNotEmpty($parsed['description']);
     }
 
+    public function test_commercial_listings_are_typed_as_local(): void
+    {
+        $parser = app(RemaxPropertyParser::class);
+        $badge = fn (string $text) => '<html><body><span class="badge badge-blue">'.$text.'</span>'
+            .'<div class="titulo_01"><h1>Ficha</h1></div>'
+            .'<div class="titulo_04"><ul><li>USD 100,000.00</li></ul></div></body></html>';
+
+        $this->assertSame('local', $parser->parse($badge('LOCAL EN VENTA'))['type']);
+        $this->assertSame('local', $parser->parse($badge('PROPIEDAD INDUSTRIAL EN VENTA'))['type']);
+        $this->assertSame('oficina', $parser->parse($badge('OFICINA EN ALQUILER'))['type']);
+        $this->assertSame('departamento', $parser->parse($badge('DEPARTAMENTO EN VENTA'))['type']);
+    }
+
     public function test_pasted_html_is_previewed_without_touching_the_portal(): void
     {
         Http::fake();

@@ -13,7 +13,7 @@
         </label>
         <label class="field"><span>Distrito</span><input name="district" required value="{{ old('district', $record->district) }}"></label>
         <label class="field"><span>Tipo</span><select name="type" required>
-            @foreach(['departamento' => 'Departamento', 'casa' => 'Casa', 'oficina' => 'Oficina', 'terreno' => 'Terreno'] as $value => $label)
+            @foreach(\App\Models\Property::TYPES as $value => $label)
                 <option value="{{ $value }}" @selected(old('type', $record->type) === $value)>{{ $label }}</option>
             @endforeach
         </select></label>

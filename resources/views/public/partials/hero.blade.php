@@ -67,7 +67,7 @@
         <select name="operation"><option value="">Comprar o alquilar</option><option value="venta">Comprar</option><option value="alquiler">Alquilar</option></select>
     </label>
     <label><span>Tipo</span>
-        <select name="type"><option value="">Todos los inmuebles</option><option value="departamento">Departamento</option><option value="casa">Casa</option><option value="oficina">Oficina</option></select>
+        <select name="type"><option value="">Todos los inmuebles</option>@foreach(\App\Models\Property::TYPES as $value => $label)<option value="{{ $value }}">{{ $label }}</option>@endforeach</select>
     </label>
     <label><span>Distrito</span>
         <input name="district" placeholder="Ej. Miraflores">

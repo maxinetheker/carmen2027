@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Property;
 use App\Models\PropertyFeature;
 use App\Rules\YoutubeUrl;
 use Closure;
@@ -43,7 +44,7 @@ class PropertyRules
         return [
             'title' => ['required', 'max:160'],
             'district' => ['required', 'max:100'],
-            'type' => ['required', Rule::in(['departamento', 'casa', 'oficina', 'terreno'])],
+            'type' => ['required', Rule::in(array_keys(Property::TYPES))],
             'operation' => ['required', Rule::in(['venta', 'alquiler'])],
             'status' => ['required', Rule::in(['available', 'reserved', 'sold'])],
             'price' => ['required', 'numeric', 'min:0'],

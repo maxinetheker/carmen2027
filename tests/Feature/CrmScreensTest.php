@@ -101,6 +101,33 @@ class CrmScreensTest extends TestCase
         $this->assertDatabaseHas('task_items', ['title' => 'Pendiente sin fecha', 'due_at' => null]);
     }
 
+    public function test_local_comercial_is_offered_everywhere_a_type_is_chosen(): void
+    {
+        $this->seed();
+
+        $this->get(route('home'))->assertOk()->assertSee('Local comercial');
+        $this->get(route('properties.index'))->assertOk()->assertSee('Local comercial');
+        $this->actingAs(User::firstOrFail())->get(route('admin.properties.create'))
+            ->assertOk()->assertSee('Local comercial');
+    }
+
+    public function test_a_property_can_be_saved_and_filtered_as_local(): void
+    {
+        $this->seed();
+
+        $this->actingAs(User::firstOrFail())->post(route('admin.properties.store'), [
+            'title' => 'Local en La Victoria', 'district' => 'La Victoria', 'type' => 'local',
+            'operation' => 'venta', 'status' => 'available', 'price' => 250000,
+            'currency' => 'USD', 'area' => 200, 'bedrooms' => 0, 'bathrooms' => 2,
+            'priority' => 0, 'is_published' => '1',
+        ])->assertSessionHasNoErrors();
+
+        $property = \App\Models\Property::where('type', 'local')->firstOrFail();
+        $this->assertSame('Local comercial', $property->type_label);
+        $this->get(route('properties.index', ['type' => 'local']))
+            ->assertOk()->assertSee('Local en La Victoria');
+    }
+
     public function test_the_properties_index_offers_the_url_importer(): void
     {
         $this->seed();

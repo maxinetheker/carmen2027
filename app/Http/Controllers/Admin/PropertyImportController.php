@@ -65,7 +65,7 @@ class PropertyImportController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:160'],
             'district' => ['required', 'string', 'max:100'],
-            'type' => ['required', Rule::in(['departamento', 'casa', 'oficina', 'terreno'])],
+            'type' => ['required', Rule::in(array_keys(Property::TYPES))],
             'operation' => ['required', Rule::in(['venta', 'alquiler'])],
             'currency' => ['required', Rule::in(['USD', 'PEN'])],
             'price' => ['required', 'numeric', 'min:0'],

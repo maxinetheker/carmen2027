@@ -92,8 +92,9 @@ class RemaxPropertyParser
         return match (true) {
             str_contains($badge = mb_strtoupper($badge), 'DEPARTAMENTO') => 'departamento',
             str_contains($badge, 'TERRENO'), str_contains($badge, 'LOTE') => 'terreno',
-            str_contains($badge, 'LOCAL'), str_contains($badge, 'OFICINA'),
-            str_contains($badge, 'INDUSTRIAL') => 'oficina',
+            str_contains($badge, 'OFICINA') => 'oficina',
+            str_contains($badge, 'LOCAL'), str_contains($badge, 'INDUSTRIAL'),
+            str_contains($badge, 'COMERCIAL') => 'local',
             default => 'casa',
         };
     }

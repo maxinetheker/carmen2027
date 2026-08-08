@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Property extends Model
 {
+    public const TYPES = [
+        'departamento' => 'Departamento',
+        'casa' => 'Casa',
+        'oficina' => 'Oficina',
+        'local' => 'Local comercial',
+        'terreno' => 'Terreno',
+    ];
+
     protected $guarded = [];
 
     protected function casts(): array
@@ -111,7 +119,7 @@ class Property extends Model
 
     public function getTypeLabelAttribute(): string
     {
-        return ucfirst((string) $this->type);
+        return self::TYPES[$this->type] ?? ucfirst((string) $this->type);
     }
 
     public function getBathroomsLabelAttribute(): string

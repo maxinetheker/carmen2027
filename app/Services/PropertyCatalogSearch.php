@@ -83,7 +83,7 @@ class PropertyCatalogSearch
             'q' => mb_substr(trim((string) $request->input('q')), 0, 100) ?: null,
             'district' => mb_substr(trim((string) $request->input('district')), 0, 100) ?: null,
             'operation' => in_array($request->input('operation'), ['venta', 'alquiler'], true) ? $request->input('operation') : null,
-            'type' => in_array($request->input('type'), ['departamento', 'casa', 'oficina', 'terreno'], true) ? $request->input('type') : null,
+            'type' => array_key_exists((string) $request->input('type'), Property::TYPES) ? $request->input('type') : null,
             'currency' => $currency, 'min_price' => $minimum, 'max_price' => $maximum,
             'sort' => in_array($request->input('sort'), ['featured', 'price_asc', 'price_desc', 'area_desc', 'newest'], true) ? $request->input('sort') : 'featured',
             'latitude' => $this->coordinate($request->input('latitude'), -90, 90),

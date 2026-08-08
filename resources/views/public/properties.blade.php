@@ -27,7 +27,7 @@
                     <label class="catalog-keyword"><span>¿Qué estás buscando?</span><div><i class="material-symbols-rounded">search</i><input name="q" value="{{ $filters['q'] }}" placeholder="Código, dirección..."></div></label>
                     <div class="filter-pair">
                         <label><span>Operación</span><select name="operation"><option value="">Venta o alquiler</option><option value="venta" @selected($filters['operation'] === 'venta')>Venta</option><option value="alquiler" @selected($filters['operation'] === 'alquiler')>Alquiler</option></select></label>
-                        <label><span>Tipo</span><select name="type"><option value="">Todos</option>@foreach(['departamento' => 'Departamento', 'casa' => 'Casa', 'oficina' => 'Oficina', 'terreno' => 'Terreno'] as $value => $label)<option value="{{ $value }}" @selected($filters['type'] === $value)>{{ $label }}</option>@endforeach</select></label>
+                        <label><span>Tipo</span><select name="type"><option value="">Todos</option>@foreach(\App\Models\Property::TYPES as $value => $label)<option value="{{ $value }}" @selected($filters['type'] === $value)>{{ $label }}</option>@endforeach</select></label>
                     </div>
                     <label><span>Zona</span><select name="district"><option value="">Todo Lima</option>@foreach($zones as $zone)<option value="{{ $zone->district }}" @selected($filters['district'] === $zone->district)>{{ $zone->district }} ({{ $zone->properties_count }})</option>@endforeach</select></label>
                     <div class="filter-section">

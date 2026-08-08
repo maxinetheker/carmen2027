@@ -35,7 +35,7 @@ class PropertyController extends CrudController
             'title' => ['required', 'max:160'],
             'code' => ['required', 'max:30', Rule::unique('properties')->ignore($id)],
             'district' => ['required', 'max:100'],
-            'type' => ['required', Rule::in(['departamento', 'casa', 'oficina', 'terreno'])],
+            'type' => ['required', Rule::in(array_keys(Property::TYPES))],
             'operation' => ['required', Rule::in(['venta', 'alquiler'])],
             'status' => ['required', Rule::in(['available', 'reserved', 'sold'])],
             'price' => ['required', 'numeric', 'min:0'],
