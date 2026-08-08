@@ -66,11 +66,35 @@ revisión automática: si está desactualizada, el cron del hosting no corre cad
 minuto y los avisos se acumulan hasta la siguiente ejecución.
 
 En cPanel crea un solo trabajo cron con minuto, hora, día, mes y semana en `*`.
-Usa como comando, ajustando la ruta del proyecto y la ruta de PHP:
+Un único `schedule:run` cada minuto basta: Laravel decide adentro qué toca
+ejecutar. Comando en uso, ajustando usuario y ruta:
 
 ```cron
-cd /home/USUARIO/ruta-del-proyecto && /usr/local/bin/php artisan schedule:run >> /dev/null 2>&1
+cd /home/USUARIO/public_html/PROYECTO && /usr/local/bin/php artisan schedule:run > /dev/null 2>> /home/USUARIO/cron-errors.log && /bin/date -Iseconds > /home/USUARIO/cron.last
 ```
+
+Ese comando deja dos rastros que conviene entender porque responden preguntas
+distintas:
+
+- `cron.last` dice **que el cron se disparó**. `schedule:run` atrapa los fallos
+  de cada tarea y aun así termina con código 0, así que este archivo puede estar
+  al día mientras los avisos fallan.
+- La hora de «última revisión automática» del panel dice **que el comando de
+  avisos corrió de verdad**, porque la escribe `crm:send-reminders` en la base.
+- `cron-errors.log` recoge lo que PHP escriba en la salida de error. Vacío o de
+  pocos KB es señal de que todo está sano; si crece, ahí está el motivo. Como se
+  añade sin límite, vale la pena vaciarlo de vez en cuando con un segundo cron
+  semanal: `: > /home/USUARIO/cron-errors.log`.
+
+El mismo cron mueve la cola (`queue:work --stop-when-empty --max-time=55`), que
+es la que genera los PDF de presentación. Ver un proceso `php artisan queue:work`
+vivo casi todo el minuto es lo esperado, no una tarea colgada. Los correos de
+recordatorio no pasan por la cola: se envían dentro de `crm:send-reminders`, así
+que llegan en el mismo minuto aunque la cola esté detenida.
+
+La ruta `/usr/local/bin/php` es el PHP **de línea de comandos** del hosting y no
+sigue lo que se elija en MultiPHP Manager para el dominio. Debe ser 8.3 o
+superior; `php -v` en la terminal de cPanel lo confirma.
 
 En desarrollo puedes mantener el scheduler activo con `php artisan schedule:work`.
 El comando `php artisan schedule:list` confirma que el recordatorio está registrado.

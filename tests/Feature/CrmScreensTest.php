@@ -135,6 +135,8 @@ class CrmScreensTest extends TestCase
         $this->actingAs(User::firstOrFail())->get(route('admin.properties.index'))
             ->assertOk()
             ->assertSee('Importar desde enlace')
+            ->assertSee('Cargar archivo HTML')
+            ->assertSee('data-import-html-file', false)
             ->assertSee('data-import-dialog', false);
     }
 }

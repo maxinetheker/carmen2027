@@ -48,7 +48,7 @@
 .form-card-heading { align-items: center; border-bottom: 1px solid #edf0ec; display: flex; justify-content: space-between; margin-bottom: 1.4rem; padding-bottom: 1.2rem; }
 .form-card-heading h2 { font-size: 1.1rem; margin: 0; }
 .form-card-heading p { color: var(--muted); font-size: .7rem; margin: .3rem 0 0; }
-.form-card-heading > span { background: #eef1ee; border-radius: 99px; color: var(--muted); font-size: .62rem; padding: .4rem .65rem; }
+.form-card-heading > span, .form-card-tools > span { background: #eef1ee; border-radius: 99px; color: var(--muted); font-size: .62rem; padding: .4rem .65rem; white-space: nowrap; }
 .form-grid { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
 .field { color: var(--muted); font-size: .68rem; font-weight: 700; }
 .field-wide { grid-column: 1/-1; }

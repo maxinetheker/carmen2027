@@ -32,9 +32,9 @@
 
 @section('content')
 <div class="notification-intro">
+    {{-- La explicación se fue al botón «i» del título; aquí solo queda el pulso del
+         cron, que sí hay que ver de un vistazo cada vez que se entra. --}}
     <div>
-        <strong>Cada aviso dice qué es, con quién y para cuándo</strong>
-        <p>Los avisos por registro salen en el momento (antes de empezar, al empezar y si algo quedó vencido). Los resúmenes salen una sola vez al día a la hora que fijes aquí abajo.</p>
         @php($stale = ! $lastRun || $lastRun->lt(now()->subMinutes(15)))
         <p class="scheduler-heartbeat @if($stale) scheduler-stale @endif">
             @if($lastRun)

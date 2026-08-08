@@ -5,8 +5,6 @@
 @section('eyebrow', 'Informes')
 
 @section('content')
-<p class="section-intro">Descarga la información del CRM en archivos <strong>.xlsx</strong> que se abren directamente en Excel, Google Sheets o Numbers.</p>
-
 <div class="export-grid">
     <section class="form-card export-card">
         <div class="form-card-heading">

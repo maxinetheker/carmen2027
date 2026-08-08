@@ -13,6 +13,9 @@ use Illuminate\Validation\Rule;
 
 class ContactLogController extends Controller
 {
+    /** Identifica el modal que hay que volver a abrir tras guardar o al fallar. */
+    private const PANEL = 'contact-log';
+
     public function storeForLead(Request $request, int $record)
     {
         return $this->store($request, Lead::findOrFail($record));
@@ -27,12 +30,14 @@ class ContactLogController extends Controller
     {
         $log->delete();
 
-        return back()->with('success', 'Registro de contacto eliminado.');
+        return back()->with('success', 'Registro de contacto eliminado.')->with('openPanel', self::PANEL);
     }
 
     private function store(Request $request, Model $person)
     {
-        $data = $request->validate([
+        // Bolsa propia: los errores de este formulario no deben aparecer como si
+        // fueran del formulario de datos de la persona, que es otro <form>.
+        $data = $request->validateWithBag(self::PANEL, [
             'channel' => ['required', Rule::in(array_keys(ContactLog::CHANNELS))],
             'direction' => ['required', Rule::in(['outgoing', 'incoming'])],
             'outcome' => ['nullable', Rule::in(array_keys(ContactLog::OUTCOMES))],
@@ -65,6 +70,7 @@ class ContactLogController extends Controller
             'happened_at' => now(),
         ]);
 
-        return back()->with('success', 'Contacto registrado. Se actualizó la fecha de último contacto.');
+        return back()->with('success', 'Contacto registrado. Se actualizó la fecha de último contacto.')
+            ->with('openPanel', self::PANEL);
     }
 }

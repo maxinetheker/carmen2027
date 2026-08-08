@@ -5,7 +5,6 @@
 @section('eyebrow', 'Gestión comercial')
 
 @section('content')
-@include('admin.partials.section-intro')
 <div class="page-actions">
     <form class="table-search" method="get">
         <input name="q" value="{{ request('q') }}" placeholder="Buscar en {{ strtolower($labelPlural) }}...">

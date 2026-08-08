@@ -17,6 +17,9 @@ class NotificationSettingController extends Controller
     public function edit()
     {
         return view('admin.notifications.edit', [
+            'intro' => 'Cada aviso dice qué es, con quién y para cuándo. Los avisos **por registro** '
+                .'salen en el momento: antes de empezar, al empezar y si algo quedó vencido. '
+                .'Los **resúmenes** salen una sola vez al día, a la hora que fijes abajo.',
             'setting' => NotificationSetting::current(),
             'weekdays' => [1 => 'Lunes', 2 => 'Martes', 3 => 'Miércoles',
                 4 => 'Jueves', 5 => 'Viernes', 6 => 'Sábado', 7 => 'Domingo'],

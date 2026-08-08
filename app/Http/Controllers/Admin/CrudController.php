@@ -103,7 +103,7 @@ abstract class CrudController extends Controller
         ]);
     }
 
-    /** @return array<int, string> Vistas Blade a incluir debajo del formulario. */
+    /** @return array<string, string> Vista Blade => texto del botón que abre su modal. */
     protected function panels(Model $record): array
     {
         return [];

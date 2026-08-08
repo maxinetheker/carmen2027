@@ -20,6 +20,8 @@ class ExportController extends Controller
         $week = [now()->startOfWeek(), now()->endOfWeek()];
 
         return view('admin.exports', [
+            'intro' => 'Descarga la información del CRM en archivos **.xlsx** que se abren '
+                .'directamente en Excel, Google Sheets o Numbers.',
             'from' => $week[0]->toDateString(),
             'to' => $week[1]->toDateString(),
             'sections' => CrmDataExport::SECTIONS,

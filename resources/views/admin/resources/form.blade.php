@@ -5,14 +5,19 @@
 @section('eyebrow', 'Gestión comercial')
 
 @section('content')
-@include('admin.partials.section-intro')
 <form class="resource-form" method="post" data-dirty-form action="{{ $record->exists ? route("admin.$route.update", $record) : route("admin.$route.store") }}">
     @csrf
     @if($record->exists) @method('put') @endif
     <div class="form-card">
         <div class="form-card-heading">
             <div><h2>Información del {{ strtolower($label) }}</h2><p>Completa los datos y guarda los cambios.</p></div>
-            <span>{{ $record->exists ? '#'.$record->id : 'Nuevo registro' }}</span>
+            <div class="form-card-tools">
+                @foreach($panels ?? [] as $panelView => $panelLabel)
+                    <button class="button button-ghost-dark" type="button"
+                        data-panel-open="{{ Str::afterLast($panelView, '.') }}">{{ $panelLabel }}</button>
+                @endforeach
+                <span>{{ $record->exists ? '#'.$record->id : 'Nuevo registro' }}</span>
+            </div>
         </div>
         @if($errors->any())
             <div class="form-error"><strong>Revisa la información:</strong> {{ $errors->first() }}</div>
@@ -77,8 +82,18 @@
     </div>
 </form>
 {{-- Fuera del formulario principal: los paneles traen sus propios <form> y el HTML
-     no permite anidarlos. --}}
-@foreach($panels ?? [] as $panel)
-    <div class="resource-form">@include($panel)</div>
+     no permite anidarlos. Van en un modal para no alargar la ficha; el botón que
+     los abre está arriba, junto al número del registro. --}}
+@foreach($panels ?? [] as $panelView => $panelLabel)
+    @php($panelKey = Str::afterLast($panelView, '.'))
+    {{-- Se reabre solo cuando el panel acaba de guardar algo o cuando su propia
+         validación falló, para no dejar al usuario mirando la ficha sin contexto. --}}
+    <dialog class="panel-modal" data-panel-dialog="{{ $panelKey }}"
+        @if(session('openPanel') === $panelKey || $errors->hasBag($panelKey)) data-panel-autoopen @endif>
+        <form method="dialog" class="panel-modal-close">
+            <button type="submit" aria-label="Cerrar">×</button>
+        </form>
+        @include($panelView)
+    </dialog>
 @endforeach
 @endsection

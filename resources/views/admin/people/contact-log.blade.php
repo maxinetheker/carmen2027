@@ -11,6 +11,10 @@
         <span>{{ $logs->count() }} {{ $logs->count() === 1 ? 'registro' : 'registros' }}</span>
     </div>
 
+    @if($errors->hasBag('contact-log'))
+        <div class="form-error"><strong>Revisa el registro:</strong> {{ $errors->getBag('contact-log')->first() }}</div>
+    @endif
+
     <form class="contact-log-form" method="post" action="{{ $storeRoute }}">
         @csrf
         <label class="field"><span>Medio</span>

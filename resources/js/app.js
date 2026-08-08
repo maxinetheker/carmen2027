@@ -58,6 +58,22 @@ document.querySelectorAll('[data-auto-submit]').forEach((field) => {
     field.addEventListener('change', () => field.form?.requestSubmit());
 });
 
+const infoDialog = document.querySelector('[data-info-dialog]');
+document.querySelector('[data-info-open]')?.addEventListener('click', () => infoDialog?.showModal());
+
+document.querySelectorAll('[data-panel-open]').forEach((button) => {
+    const dialog = document.querySelector(`[data-panel-dialog="${button.dataset.panelOpen}"]`);
+    button.addEventListener('click', () => dialog?.showModal());
+});
+document.querySelector('[data-panel-autoopen]')?.showModal();
+
+// Cerrar tocando fuera de la tarjeta: <dialog> solo trae el Escape por defecto.
+document.querySelectorAll('.info-modal, .panel-modal').forEach((dialog) => {
+    dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+    });
+});
+
 document.querySelectorAll('.favorite-button').forEach((button) => {
     button.addEventListener('click', (event) => {
         event.preventDefault();

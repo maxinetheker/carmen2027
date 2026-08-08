@@ -44,7 +44,13 @@
     <div class="admin-shell">
         <header class="admin-topbar">
             <button class="sidebar-toggle" data-sidebar-toggle aria-label="Abrir navegación">☰</button>
-            <div><span>@yield('eyebrow', 'CRM inmobiliario')</span><h1>@yield('heading', 'Panel general')</h1></div>
+            <div>
+                <span>@yield('eyebrow', 'CRM inmobiliario')</span>
+                <div class="topbar-title">
+                    <h1>@yield('heading', 'Panel general')</h1>
+                    @include('admin.partials.info-button')
+                </div>
+            </div>
             <div class="topbar-actions">
                 <a href="{{ route('home') }}" target="_blank">Ver sitio ↗</a>
                 <span class="online-dot">En línea</span>

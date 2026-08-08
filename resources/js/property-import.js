@@ -1,4 +1,5 @@
 import { collectFields, renderFields } from './property-import-fields';
+import { bindHtmlFileInput } from './import-html-file';
 
 const dialog = document.querySelector('[data-import-dialog]');
 
@@ -12,6 +13,9 @@ if (dialog) {
     const gallery = dialog.querySelector('[data-import-gallery]');
     const readButton = dialog.querySelector('[data-import-read]');
     const saveButton = dialog.querySelector('[data-import-save]');
+    const htmlInput = dialog.querySelector('[data-import-html]');
+    const htmlFileInput = dialog.querySelector('[data-import-html-file]');
+    const fileName = dialog.querySelector('[data-import-file-name]');
     let parsed = null;
 
     const showStep = (name) => Object.entries(steps)
@@ -64,6 +68,9 @@ if (dialog) {
         });
     });
 
+    bindHtmlFileInput(htmlFileInput, htmlInput, fileName,
+        (message) => showError('[data-import-error]', message));
+
     readButton?.addEventListener('click', async () => {
         showError('[data-import-error]', '');
         readButton.disabled = true;
@@ -71,7 +78,7 @@ if (dialog) {
         try {
             const body = await post(readButton.dataset.previewUrl, {
                 url: dialog.querySelector('[data-import-url]').value.trim() || null,
-                html: dialog.querySelector('[data-import-html]').value.trim() || null,
+                html: htmlInput.value.trim() || null,
             });
             parsed = body.data;
             renderFields(fieldsBox, parsed);

@@ -6,6 +6,7 @@
         <div class="import-tabs" role="tablist">
             <button type="button" class="active" data-import-tab="link" role="tab">Enlace de la propiedad</button>
             <button type="button" data-import-tab="html" role="tab">Pegar el código de la página</button>
+            <button type="button" data-import-tab="file" role="tab">Cargar archivo HTML</button>
         </div>
         <div data-import-panel="link">
             <label class="field">
@@ -21,6 +22,14 @@
                     placeholder="Abre la propiedad en tu navegador, presiona Ctrl+U, copia todo y pégalo aquí."></textarea>
                 <small class="field-help">Úsalo solo si el portal bloquea la descarga automática.</small>
             </label>
+        </div>
+        <div data-import-panel="file" hidden>
+            <label class="field import-html-upload">
+                <span>Archivo HTML descargado</span>
+                <input type="file" accept=".html,.htm,.xhtml,text/html,application/xhtml+xml" data-import-html-file>
+                <small class="field-help">Selecciona el archivo HTML que guardaste desde el navegador. Se leerá localmente y se usará como el código fuente, sin guardar el archivo en el servidor.</small>
+            </label>
+            <p class="import-file-name" data-import-file-name aria-live="polite" hidden></p>
         </div>
         <p class="import-error" data-import-error hidden></p>
         <div class="import-actions">

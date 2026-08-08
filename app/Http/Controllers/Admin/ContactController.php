@@ -49,6 +49,6 @@ class ContactController extends CrudController
 
     protected function panels(Model $record): array
     {
-        return ['admin.people.contact-log'];
+        return ['admin.people.contact-log' => 'Registro de contacto ('.$record->contactLogs()->count().')'];
     }
 }
